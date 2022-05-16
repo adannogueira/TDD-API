@@ -15,7 +15,7 @@
     "test:integration": "yarn test -- --watch -c jest-integration-config.js",
     "test:staged": "yarn test -- --findRelatedTests",
     "test:ci": "yarn test -- --coverage",
-    "prepare": "husky install"
+    "prepare": ""
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^2.2.1",
