@@ -6,8 +6,8 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "start": "node dist/main/server.js",
-    "debug": "node --enable-source-maps --inspect=0.0.0.0:9222 --nolazy dist/main/server.js",
-    "up": "yarn build && docker-compose up -d",
+    "debug": "nodemon -L --watch ./dist --enable-source-maps --inspect=0.0.0.0:9222 --nolazy ./dist/main/server.js",
+    "up": "yarn build && docker-compose up -d && tsc -w",
     "down": "docker-compose down",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
@@ -47,6 +47,7 @@
     "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.4.1",
+    "nodemon": "^2.0.16",
     "validator": "^13.7.0"
   },
   "engines": {
