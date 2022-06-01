@@ -1,20 +1,38 @@
 version: 2.1
+
 orbs:
+  coveralls: coveralls/coveralls@1.0.6
   node: circleci/node@5.0.2
+
 jobs:
-  build_and_test:
+  build:
     executor: node/default
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
       - run:
-          command: yarn test:coveralls
-          name: Run coverage tests
-      - run:
           command: yarn build
           name: Build app
+  test:
+    executor: node/default
+    steps:
+      - run:
+        command: yarn test:coveralls
+        name: Run coverage tests
+      - coveralls/upload:
+        parallel: true
+        flag_name: coverage
+  done:
+    executor: node/default
+    steps:
+      - coveralls/upload:
+        parallel_finished: true
+
 workflows:
-  build_test_deploy:
+  build_test:
     jobs:
-      - build_and_test
+      - build
+      - test
+      - done:
+          requires: [build, test]
