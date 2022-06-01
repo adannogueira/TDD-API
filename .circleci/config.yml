@@ -9,30 +9,25 @@ jobs:
     executor: node/default
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: yarn
-      - run:
-          command: yarn build
-          name: Build app
-  test:
-    executor: node/default
-    steps:
-      - run:
-        command: yarn test:coveralls
-        name: Run coverage tests
+      - node/with-cache:
+          steps:
+            - run: yarn install
+            - run: yarn test:coveralls
       - coveralls/upload:
-        parallel: true
-        flag_name: coverage
+          parallel: true
+          flag_name: Test Coverage
+          verbose: true
+
   done:
-    executor: node/default
+    executor:
+      name: node/default
     steps:
       - coveralls/upload:
-        parallel_finished: true
+          parallel_finished: true
 
 workflows:
   build_test:
     jobs:
       - build
-      - test
       - done:
-          requires: [build, test]
+          requires: [build]
