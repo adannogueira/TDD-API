@@ -6,9 +6,7 @@ export const MongoHelper = {
 
   async connect (uri: string): Promise<void> {
     this.uri = uri
-    if (!this.client?.isConnected?.()) {
-      this.client = await MongoClient.connect(uri)
-    }
+    this.client = await MongoClient.connect(uri)
   },
 
   async disconnect (): Promise<void> {
@@ -17,7 +15,7 @@ export const MongoHelper = {
   },
 
   async getCollection (name: string): Promise<Collection> {
-    if (!this.client?.isConnected?.()) {
+    if (!this.client) {
       await this.connect(this.uri)
     }
     return this.client.db().collection(name)
