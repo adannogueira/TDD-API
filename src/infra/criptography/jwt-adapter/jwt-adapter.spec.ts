@@ -8,7 +8,7 @@ describe('Jwt Adapter', () => {
       const sut = makeSut()
       const signSpy = jest.spyOn(jwt, 'sign')
       await sut.encrypt('any_id')
-      expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, 'secret')
+      expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, 'secret', { expiresIn: 'any time' })
     })
 
     test('Should return a token on sign success', async () => {
@@ -71,7 +71,7 @@ jest.mock('jsonwebtoken', () => ({
 }))
 
 const makeSut = (): JwtAdapter => {
-  return new JwtAdapter('secret')
+  return new JwtAdapter('secret', 'any time')
 }
 
 const makeTokenError = (): jwt.TokenExpiredError => {
