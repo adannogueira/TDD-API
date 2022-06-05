@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { Decrypter } from '../../../data/protocols/criptography/decrypter'
 import { Encrypter } from '../../../data/protocols/criptography/encrypter'
+import { AuthExpiredError } from '../../../presentation/errors'
 
 export class JwtAdapter implements Encrypter, Decrypter {
   constructor (private readonly secret: string) {}
@@ -11,8 +12,15 @@ export class JwtAdapter implements Encrypter, Decrypter {
   }
 
   async decrypt (token: string): Promise<string> {
-    const value = jwt.verify(token, this.secret)
-    console.log(value)
-    return value as string
+    try {
+      const value = jwt.verify(token, this.secret)
+      console.log(value)
+      return value as string
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        throw new AuthExpiredError()
+      }
+      throw error
+    }
   }
 }
