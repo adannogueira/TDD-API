@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { AuthExpiredError } from '../../../presentation/errors'
 import { JwtAdapter } from './jwt-adapter'
 
 describe('Jwt Adapter', () => {
@@ -46,6 +47,16 @@ describe('Jwt Adapter', () => {
       const promise = sut.decrypt('any_token')
       await expect(promise).rejects.toThrow()
     })
+
+    test('Should throw AuthExpiredError if verify throws ExpiredTokenError', async () => {
+      const sut = makeSut()
+      jest.spyOn(jwt, 'verify')
+        .mockImplementationOnce(() => {
+          throw makeTokenError()
+        })
+      const promise = sut.decrypt('any_token')
+      await expect(promise).rejects.toThrow(new AuthExpiredError())
+    })
   })
 })
 
@@ -61,4 +72,17 @@ jest.mock('jsonwebtoken', () => ({
 
 const makeSut = (): JwtAdapter => {
   return new JwtAdapter('secret')
+}
+
+const makeTokenError = (): jwt.TokenExpiredError => {
+  class TokenExpiredError extends Error {
+    expiredAt: Date
+    inner: Error
+    constructor () {
+      super('any_error')
+      this.name = 'TokenExpiredError'
+      this.message = 'any_message'
+    }
+  }
+  return new TokenExpiredError()
 }
