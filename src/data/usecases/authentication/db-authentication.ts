@@ -7,7 +7,8 @@ import {
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository,
   RefreshEncrypter,
-  IdGenerator
+  IdGenerator,
+  UpdateRefreshTokenRepository
 } from './db-authentication-protocols'
 
 export class DbAuthentication implements Authentication {
@@ -16,6 +17,7 @@ export class DbAuthentication implements Authentication {
     private readonly hashComparer: HashComparer,
     private readonly encrypter: Encrypter,
     private readonly updateAccessTokenRepository: UpdateAccessTokenRepository,
+    private readonly updateRefreshTokenRepository: UpdateRefreshTokenRepository,
     private readonly idGenerator: IdGenerator
   ) {}
 
@@ -28,6 +30,7 @@ export class DbAuthentication implements Authentication {
         const jti = this.idGenerator.generate()
         const refreshToken = await this.encrypter.encryptRefresh(account.id, jti)
         await this.updateAccessTokenRepository.updateAccessToken(account.id, accessToken)
+        await this.updateRefreshTokenRepository.updateRefreshToken(account.id, jti)
         return { accessToken, refreshToken }
       }
     }
