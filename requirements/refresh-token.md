@@ -1,8 +1,8 @@
 # Refresh Token
 
 > ## Caso de Sucesso
-1. ⏳ Envia um refreshToken para o usuário na rota **/api/login**
-2. ⏳ **Atualiza** os dados do usuário com o refreshToken gerado
+1. 🏁 Envia um refreshToken para o usuário na rota **/api/login**
+2. 🏁 **Atualiza** os dados do usuário com o refreshToken gerado
 3. ⏳ Recebe uma requisição do tipo **POST** na rota **/api/refresh**
 4. ⏳ Valida o refreshToken recebido com o banco de dados
 5. ⏳ Cria um novo accessToken e um novo refreshToken
