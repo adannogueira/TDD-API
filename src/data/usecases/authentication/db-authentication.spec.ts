@@ -115,6 +115,14 @@ describe('DbAuthentication UseCase', () => {
     const promise = sut.auth(makeFakeAuthentication())
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should throw if UpdateRefreshTokenRepository throws', async () => {
+    const { sut, updateRefreshTokenRepositoryStub } = makeSut()
+    jest.spyOn(updateRefreshTokenRepositoryStub, 'updateRefreshToken')
+      .mockReturnValueOnce(Promise.reject(new Error()))
+    const promise = sut.auth(makeFakeAuthentication())
+    await expect(promise).rejects.toThrow()
+  })
 })
 
 const makeFakeAccount = (): AccountModel => ({
