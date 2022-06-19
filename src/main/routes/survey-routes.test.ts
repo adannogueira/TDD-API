@@ -10,7 +10,7 @@ let accountCollection: Collection
 
 describe('Survey Routes', () => {
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL)
+    await MongoHelper.connect(process.env.MONGO_URL!)
   })
 
   afterAll(async () => {
@@ -69,6 +69,40 @@ describe('Survey Routes', () => {
           }]
         })
         .expect(204)
+    })
+
+    test('Should return 403 when token is expired', async () => {
+      const result = await accountCollection.insertOne({
+        name: 'John Doe',
+        email: 'john@mail.com',
+        password: 'any_password',
+        role: 'admin'
+      })
+      const id = result.insertedId.toString()
+      const accessToken = sign({ id }, env.jwtSecret, { expiresIn: '1s' })
+      await accountCollection.updateOne({
+        _id: result.insertedId
+      }, {
+        $set: {
+          accessToken
+        }
+      })
+      jest.useFakeTimers()
+      jest.setTimeout(5000)
+      jest.advanceTimersByTime(1000)
+      await request(app)
+        .post('/api/surveys')
+        .set('x-access-token', accessToken)
+        .send({
+          question: 'Question',
+          answers: [{
+            answer: 'Answer 1',
+            image: 'http://image-name.com'
+          }, {
+            answer: 'Answer 2'
+          }]
+        })
+        .expect(403)
     })
   })
 })
