@@ -4,7 +4,7 @@ import { MongoHelper } from '../helpers/mongo-helper'
 
 describe('Account Mongodb Repository', () => {
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL)
+    await MongoHelper.connect(process.env.MONGO_URL!)
   })
 
   afterAll(async () => {
@@ -61,13 +61,14 @@ describe('Account Mongodb Repository', () => {
         email: 'any_email@mail.com',
         password: 'any_password'
       })
-      const result = await accountCollection.findOne({ name: 'any_name' })
-      expect(result.accessToken).toBeFalsy()
-      await sut.updateAccessToken(result._id.toString(), 'any_token')
+      const result = await sut.loadByEmail('any_email@mail.com')
+      // eslint-disable-next-line @typescript-eslint/dot-notation
+      expect(result['accessToken']).toBeFalsy()
+      await sut.updateAccessToken(result.id, 'any_token')
       const account = await accountCollection.findOne({ name: 'any_name' })
 
       expect(account).toBeTruthy()
-      expect(account.accessToken).toBe('any_token')
+      expect(account?.accessToken).toBe('any_token')
     })
   })
 
