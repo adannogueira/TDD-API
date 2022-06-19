@@ -7,7 +7,8 @@ import {
   RefreshEncrypter,
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository,
-  IdGenerator
+  IdGenerator,
+  UpdateRefreshTokenRepository
 } from './db-authentication-protocols'
 
 describe('DbAuthentication UseCase', () => {
@@ -100,6 +101,13 @@ describe('DbAuthentication UseCase', () => {
     expect(updateSpy).toHaveBeenCalledWith('valid_id', 'any_token')
   })
 
+  test('Should call UpdateRefreshTokenRepository with correct values', async () => {
+    const { sut, updateRefreshTokenRepositoryStub } = makeSut()
+    const updateSpy = jest.spyOn(updateRefreshTokenRepositoryStub, 'updateRefreshToken')
+    await sut.auth(makeFakeAuthentication())
+    expect(updateSpy).toHaveBeenCalledWith('valid_id', 'any_uuid')
+  })
+
   test('Should throw if UpdateAccessTokenRepository throws', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
     jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
@@ -169,6 +177,16 @@ const makeIdGenerator = (): IdGenerator => {
   }
   return new IdGeneratorStub()
 }
+
+const makeUpdateRefreshTokenRepository = (): UpdateRefreshTokenRepository => {
+  class UpdateRefreshTokenRepositoryStub implements UpdateRefreshTokenRepository {
+    async updateRefreshToken (id: string, token: string): Promise<void> {
+      return await Promise.resolve()
+    }
+  }
+  return new UpdateRefreshTokenRepositoryStub()
+}
+
 interface sutTypes {
   sut: DbAuthentication
   loadAccountByEmailRepository: LoadAccountByEmailRepository
@@ -176,6 +194,7 @@ interface sutTypes {
   encrypterStub: Encrypter
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
   idGeneratorStub: IdGenerator
+  updateRefreshTokenRepositoryStub: UpdateRefreshTokenRepository
 }
 
 const makeSut = (): sutTypes => {
@@ -184,11 +203,13 @@ const makeSut = (): sutTypes => {
   const encrypterStub = makeEncrypter()
   const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
   const idGeneratorStub = makeIdGenerator()
+  const updateRefreshTokenRepositoryStub = makeUpdateRefreshTokenRepository()
   const sut = new DbAuthentication(
     loadAccountByEmailRepository,
     hashComparerStub,
     encrypterStub,
     updateAccessTokenRepositoryStub,
+    updateRefreshTokenRepositoryStub,
     idGeneratorStub
   )
   return {
@@ -197,7 +218,8 @@ const makeSut = (): sutTypes => {
     hashComparerStub,
     encrypterStub,
     updateAccessTokenRepositoryStub,
-    idGeneratorStub
+    idGeneratorStub,
+    updateRefreshTokenRepositoryStub
   }
 }
 
