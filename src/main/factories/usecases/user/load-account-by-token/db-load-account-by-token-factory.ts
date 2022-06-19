@@ -5,9 +5,11 @@ import { AccountMongoRepository } from '../../../../../infra/db/mongodb/account/
 import env from '../../../../config/env'
 
 export const makeDbLoadAccountByToken = (): LoadAccountByToken => {
-  const secret = env.jwtSecret
-  const expiresIn = env.jwtExpiration
-  const jwtAdapter = new JwtAdapter(secret, expiresIn)
+  const jwtAdapter = new JwtAdapter(
+    env.jwtSecret,
+    env.accessTokenExpiration,
+    env.refreshTokenExpiration
+  )
   const accountMongoRepository = new AccountMongoRepository()
   return new DbLoadAccountByToken(jwtAdapter, accountMongoRepository)
 }
