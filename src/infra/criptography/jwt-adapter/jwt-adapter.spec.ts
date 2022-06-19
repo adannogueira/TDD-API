@@ -3,7 +3,7 @@ import { AuthExpiredError } from '../../../presentation/errors'
 import { JwtAdapter } from './jwt-adapter'
 
 describe('Jwt Adapter', () => {
-  describe('sign()', () => {
+  describe('encrypt()', () => {
     test('Should call sign with correct values', async () => {
       const sut = makeSut()
       const signSpy = jest.spyOn(jwt, 'sign')
@@ -26,8 +26,8 @@ describe('Jwt Adapter', () => {
     })
   })
 
-  describe('verify()', () => {
-    test('Should call sign with correct values', async () => {
+  describe('decrypt()', () => {
+    test('Should call verify with correct values', async () => {
       const sut = makeSut()
       const verifySpy = jest.spyOn(jwt, 'verify')
       await sut.decrypt('any_token')
@@ -59,7 +59,7 @@ describe('Jwt Adapter', () => {
     })
   })
 
-  describe('refreshEncrypt()', () => {
+  describe('encryptRefresh()', () => {
     test('Should call sign with correct values', async () => {
       const sut = makeSut()
       const signSpy = jest.spyOn(jwt, 'sign')
@@ -78,6 +78,29 @@ describe('Jwt Adapter', () => {
       jest.spyOn(jwt, 'sign')
         .mockImplementationOnce(() => { throw new Error() })
       const promise = sut.encryptRefresh('any_id', 'any_jti')
+      await expect(promise).rejects.toThrow()
+    })
+  })
+
+  describe('decryptRefresh()', () => {
+    test('Should call verify with correct values', async () => {
+      const sut = makeSut()
+      const verifySpy = jest.spyOn(jwt, 'verify')
+      await sut.decryptRefresh('any_token', 'any_jti')
+      expect(verifySpy).toHaveBeenCalledWith('any_token', 'secret', { jwtid: 'any_jti' })
+    })
+
+    test('Should return a value on verify success', async () => {
+      const sut = makeSut()
+      const token = await sut.decryptRefresh('any_token', 'any_jti')
+      expect(token).toBe('any_id')
+    })
+
+    test('Should throw if verify throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(jwt, 'verify')
+        .mockImplementationOnce(() => { throw new Error() })
+      const promise = sut.decryptRefresh('any_token', 'any_jti')
       await expect(promise).rejects.toThrow()
     })
   })
