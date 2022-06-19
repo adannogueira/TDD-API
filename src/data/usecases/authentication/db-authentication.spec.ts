@@ -3,86 +3,12 @@ import {
   AccountModel,
   AuthenticationModel,
   HashComparer,
-  Encrypter,
+  AccessEncrypter,
+  RefreshEncrypter,
   LoadAccountByEmailRepository,
-  UpdateAccessTokenRepository
+  UpdateAccessTokenRepository,
+  IdGenerator
 } from './db-authentication-protocols'
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'any_email@mail.com',
-  password: 'hashed_password'
-})
-
-const makeFakeAuthentication = (): AuthenticationModel => ({
-  email: 'any_email@mail.com',
-  password: 'any_password'
-})
-
-const makeLoadAccountByEmailRepo = (): LoadAccountByEmailRepository => {
-  class LoadAccountByEmailRepoStub implements LoadAccountByEmailRepository {
-    async loadByEmail (email: string): Promise<AccountModel> {
-      return await Promise.resolve(makeFakeAccount())
-    }
-  }
-  return new LoadAccountByEmailRepoStub()
-}
-
-const makeHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return await Promise.resolve(true)
-    }
-  }
-  return new HashComparerStub()
-}
-
-const makeEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    async encrypt (id: string): Promise<string> {
-      return await Promise.resolve('any_token')
-    }
-  }
-  return new EncrypterStub()
-}
-
-const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
-  class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async updateAccessToken (id: string, token: string): Promise<void> {
-      return await Promise.resolve()
-    }
-  }
-  return new UpdateAccessTokenRepositoryStub()
-}
-
-interface sutTypes {
-  sut: DbAuthentication
-  loadAccountByEmailRepository: LoadAccountByEmailRepository
-  hashComparerStub: HashComparer
-  encrypterStub: Encrypter
-  updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
-}
-
-const makeSut = (): sutTypes => {
-  const loadAccountByEmailRepository = makeLoadAccountByEmailRepo()
-  const hashComparerStub = makeHashComparer()
-  const encrypterStub = makeEncrypter()
-  const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
-  const sut = new DbAuthentication(
-    loadAccountByEmailRepository,
-    hashComparerStub,
-    encrypterStub,
-    updateAccessTokenRepositoryStub
-  )
-  return {
-    sut,
-    loadAccountByEmailRepository,
-    hashComparerStub,
-    encrypterStub: encrypterStub,
-    updateAccessTokenRepositoryStub
-  }
-}
 
 describe('DbAuthentication UseCase', () => {
   test('Should call LoadAccountByEmailRepo with correct email', async () => {
@@ -134,6 +60,13 @@ describe('DbAuthentication UseCase', () => {
     expect(generateSpy).toHaveBeenCalledWith('valid_id')
   })
 
+  test('Should call Encrypter refresh with correct id', async () => {
+    const { sut, encrypterStub } = makeSut()
+    const generateSpy = jest.spyOn(encrypterStub, 'encryptRefresh')
+    await sut.auth(makeFakeAuthentication())
+    expect(generateSpy).toHaveBeenCalledWith('valid_id', 'any_uuid')
+  })
+
   test('Should throw if Encrypter throws', async () => {
     const { sut, encrypterStub } = makeSut()
     jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()))
@@ -141,10 +74,23 @@ describe('DbAuthentication UseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should call Encrypter with correct id', async () => {
+  test('Should throw if Encrypter refresh throws', async () => {
+    const { sut, encrypterStub } = makeSut()
+    jest.spyOn(encrypterStub, 'encryptRefresh').mockReturnValueOnce(Promise.reject(new Error()))
+    const promise = sut.auth(makeFakeAuthentication())
+    await expect(promise).rejects.toThrow()
+  })
+
+  test('Should return an access token on auth success', async () => {
     const { sut } = makeSut()
-    const accessToken = await sut.auth(makeFakeAuthentication())
-    expect(accessToken).toBe('any_token')
+    const tokens = await sut.auth(makeFakeAuthentication())
+    expect(tokens.accessToken).toBe('any_token')
+  })
+
+  test('Should return a refresh token on auth success', async () => {
+    const { sut } = makeSut()
+    const tokens = await sut.auth(makeFakeAuthentication())
+    expect(tokens.refreshToken).toBe('any_refresh_token')
   })
 
   test('Should call UpdateAccessTokenRepository with correct values', async () => {
@@ -162,3 +108,97 @@ describe('DbAuthentication UseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 })
+
+const makeFakeAccount = (): AccountModel => ({
+  id: 'valid_id',
+  name: 'valid_name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password'
+})
+
+const makeFakeAuthentication = (): AuthenticationModel => ({
+  email: 'any_email@mail.com',
+  password: 'any_password'
+})
+
+const makeLoadAccountByEmailRepo = (): LoadAccountByEmailRepository => {
+  class LoadAccountByEmailRepoStub implements LoadAccountByEmailRepository {
+    async loadByEmail (email: string): Promise<AccountModel> {
+      return await Promise.resolve(makeFakeAccount())
+    }
+  }
+  return new LoadAccountByEmailRepoStub()
+}
+
+const makeHashComparer = (): HashComparer => {
+  class HashComparerStub implements HashComparer {
+    async compare (value: string, hash: string): Promise<boolean> {
+      return await Promise.resolve(true)
+    }
+  }
+  return new HashComparerStub()
+}
+
+const makeEncrypter = (): Encrypter => {
+  class EncrypterStub implements Encrypter {
+    async encrypt (id: string): Promise<string> {
+      return await Promise.resolve('any_token')
+    }
+
+    async encryptRefresh (id: string, jti: string): Promise<string> {
+      return await Promise.resolve('any_refresh_token')
+    }
+  }
+  return new EncrypterStub()
+}
+
+const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
+  class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
+    async updateAccessToken (id: string, token: string): Promise<void> {
+      return await Promise.resolve()
+    }
+  }
+  return new UpdateAccessTokenRepositoryStub()
+}
+
+const makeIdGenerator = (): IdGenerator => {
+  class IdGeneratorStub implements IdGenerator {
+    generate (): string {
+      return 'any_uuid'
+    }
+  }
+  return new IdGeneratorStub()
+}
+interface sutTypes {
+  sut: DbAuthentication
+  loadAccountByEmailRepository: LoadAccountByEmailRepository
+  hashComparerStub: HashComparer
+  encrypterStub: Encrypter
+  updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
+  idGeneratorStub: IdGenerator
+}
+
+const makeSut = (): sutTypes => {
+  const loadAccountByEmailRepository = makeLoadAccountByEmailRepo()
+  const hashComparerStub = makeHashComparer()
+  const encrypterStub = makeEncrypter()
+  const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
+  const idGeneratorStub = makeIdGenerator()
+  const sut = new DbAuthentication(
+    loadAccountByEmailRepository,
+    hashComparerStub,
+    encrypterStub,
+    updateAccessTokenRepositoryStub,
+    idGeneratorStub
+  )
+  return {
+    sut,
+    loadAccountByEmailRepository,
+    hashComparerStub,
+    encrypterStub,
+    updateAccessTokenRepositoryStub,
+    idGeneratorStub
+  }
+}
+
+interface Encrypter extends AccessEncrypter, RefreshEncrypter {}
