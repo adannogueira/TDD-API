@@ -3,48 +3,6 @@ import { badRequest, ok, serverError, unauthorized } from '../../../helpers/http
 import { HttpRequest, Authentication, Validation, AuthenticationModel } from './login-controller-protocols'
 import { LoginController } from './login-controller'
 
-const makeAuthentication = (): Authentication => {
-  class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string> {
-      return await Promise.resolve('any_token')
-    }
-  }
-  return new AuthenticationStub()
-}
-
-const makeValidation = (): Validation => {
-  class ValidationStub implements Validation {
-    validate (input: any): Error {
-      return null as any
-    }
-  }
-  return new ValidationStub()
-}
-
-const makeFakeRequest = (): HttpRequest => ({
-  body: {
-    email: 'any_email@mail.com',
-    password: 'any_password'
-  }
-})
-
-interface sutTypes {
-  sut: LoginController
-  authenticationStub: Authentication
-  validationStub: Validation
-}
-
-const makeSut = (): sutTypes => {
-  const validationStub = makeValidation()
-  const authenticationStub = makeAuthentication()
-  const sut = new LoginController(authenticationStub, validationStub)
-  return {
-    sut,
-    authenticationStub,
-    validationStub
-  }
-}
-
 describe('Login Controller', () => {
   test('Should return 500 if Authentication throws', async () => {
     const { sut, authenticationStub } = makeSut()
@@ -90,3 +48,45 @@ describe('Login Controller', () => {
     expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
 })
+
+const makeAuthentication = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async auth (authentication: AuthenticationModel): Promise<string> {
+      return await Promise.resolve('any_token')
+    }
+  }
+  return new AuthenticationStub()
+}
+
+const makeValidation = (): Validation => {
+  class ValidationStub implements Validation {
+    validate (input: any): Error {
+      return null as any
+    }
+  }
+  return new ValidationStub()
+}
+
+const makeFakeRequest = (): HttpRequest => ({
+  body: {
+    email: 'any_email@mail.com',
+    password: 'any_password'
+  }
+})
+
+interface sutTypes {
+  sut: LoginController
+  authenticationStub: Authentication
+  validationStub: Validation
+}
+
+const makeSut = (): sutTypes => {
+  const validationStub = makeValidation()
+  const authenticationStub = makeAuthentication()
+  const sut = new LoginController(authenticationStub, validationStub)
+  return {
+    sut,
+    authenticationStub,
+    validationStub
+  }
+}
