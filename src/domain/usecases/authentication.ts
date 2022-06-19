@@ -3,5 +3,10 @@ export interface AuthenticationModel {
   password: string
 }
 export interface Authentication {
-  auth: (authentication: AuthenticationModel) => Promise<string>
+  auth: (authentication: AuthenticationModel) => Promise<Tokens>
+}
+
+export interface Tokens {
+  accessToken: string
+  refreshToken: string
 }
