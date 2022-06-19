@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken'
-import { Decrypter } from '../../../data/protocols/criptography/decrypter'
-import { Encrypter } from '../../../data/protocols/criptography/encrypter'
+import { AccessDecrypter } from '../../../data/protocols/criptography/access-decrypter'
+import { AccessEncrypter } from '../../../data/protocols/criptography/access-encrypter'
 import { RefreshDecrypter } from '../../../data/protocols/criptography/refresh-decrypter'
 import { RefreshEncrypter } from '../../../data/protocols/criptography/refresh-encrypter'
 import { AuthExpiredError } from '../../../presentation/errors'
 
-export class JwtAdapter implements Encrypter, Decrypter, RefreshEncrypter, RefreshDecrypter {
+export class JwtAdapter implements AccessEncrypter, AccessDecrypter, RefreshEncrypter, RefreshDecrypter {
   constructor (
     private readonly secret: string,
     private readonly accessTokenExpiration: string,
