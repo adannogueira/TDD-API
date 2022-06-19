@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken'
 import { Decrypter } from '../../../data/protocols/criptography/decrypter'
 import { Encrypter } from '../../../data/protocols/criptography/encrypter'
+import { RefreshDecrypter } from '../../../data/protocols/criptography/refresh-decrypter'
 import { RefreshEncrypter } from '../../../data/protocols/criptography/refresh-encrypter'
 import { AuthExpiredError } from '../../../presentation/errors'
 
-export class JwtAdapter implements Encrypter, Decrypter, RefreshEncrypter {
+export class JwtAdapter implements Encrypter, Decrypter, RefreshEncrypter, RefreshDecrypter {
   constructor (
     private readonly secret: string,
     private readonly accessTokenExpiration: string,
@@ -23,7 +24,6 @@ export class JwtAdapter implements Encrypter, Decrypter, RefreshEncrypter {
   async decrypt (token: string): Promise<string> {
     try {
       const value = jwt.verify(token, this.secret)
-      console.log(value)
       return value as string
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
@@ -43,5 +43,10 @@ export class JwtAdapter implements Encrypter, Decrypter, RefreshEncrypter {
       }
     )
     return token
+  }
+
+  async decryptRefresh (token: string, jti: string): Promise<string> {
+    const value = jwt.verify(token, this.secret, { jwtid: jti })
+    return value as string
   }
 }
