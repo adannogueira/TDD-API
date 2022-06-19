@@ -1,6 +1,6 @@
 import { MissingParamError } from '../../../errors'
 import { badRequest, ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
-import { HttpRequest, Authentication, Validation, AuthenticationModel } from './login-controller-protocols'
+import { HttpRequest, Authentication, Validation, AuthenticationModel, Tokens } from './login-controller-protocols'
 import { LoginController } from './login-controller'
 
 describe('Login Controller', () => {
@@ -31,7 +31,10 @@ describe('Login Controller', () => {
   test('Should return 200 if valid credentials are provided', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(makeFakeRequest())
-    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
+    expect(httpResponse).toEqual(ok({
+      accessToken: 'any_token',
+      refreshToken: 'any_refresh_token'
+    }))
   })
 
   test('Should call Validation with correct value', async () => {
@@ -51,8 +54,11 @@ describe('Login Controller', () => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (authentication: AuthenticationModel): Promise<string> {
-      return await Promise.resolve('any_token')
+    async auth (authentication: AuthenticationModel): Promise<Tokens> {
+      return await Promise.resolve({
+        accessToken: 'any_token',
+        refreshToken: 'any_refresh_token'
+      })
     }
   }
   return new AuthenticationStub()
