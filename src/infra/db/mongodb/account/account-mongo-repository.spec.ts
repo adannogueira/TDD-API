@@ -72,6 +72,25 @@ describe('Account Mongodb Repository', () => {
     })
   })
 
+  describe('updateRefreshToken()', () => {
+    test('Should update the account refreshToken on updateRefreshToken success', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      })
+      const result = await sut.loadByEmail('any_email@mail.com')
+      // eslint-disable-next-line @typescript-eslint/dot-notation
+      expect(result['refreshToken']).toBeFalsy()
+      await sut.updateRefreshToken(result.id, 'any_uuid')
+      const account = await accountCollection.findOne({ name: 'any_name' })
+
+      expect(account).toBeTruthy()
+      expect(account?.refreshToken).toBe('any_uuid')
+    })
+  })
+
   describe('loadByToken()', () => {
     test('Should return an account on loadByToken without role', async () => {
       const sut = makeSut()
