@@ -58,6 +58,29 @@ describe('Jwt Adapter', () => {
       await expect(promise).rejects.toThrow(new AuthExpiredError())
     })
   })
+
+  describe('refreshEncrypt()', () => {
+    test('Should call sign with correct values', async () => {
+      const sut = makeSut()
+      const signSpy = jest.spyOn(jwt, 'sign')
+      await sut.encryptRefresh('any_id', 'any_jti')
+      expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, 'secret', { expiresIn: 'refresh time', jwtid: 'any_jti' })
+    })
+
+    test('Should return a token on sign success', async () => {
+      const sut = makeSut()
+      const token = await sut.encryptRefresh('any_id', 'any_jti')
+      expect(token).toBe('any_token')
+    })
+
+    test('Should throw if sign throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(jwt, 'sign')
+        .mockImplementationOnce(() => { throw new Error() })
+      const promise = sut.encryptRefresh('any_id', 'any_jti')
+      await expect(promise).rejects.toThrow()
+    })
+  })
 })
 
 jest.mock('jsonwebtoken', () => ({
@@ -71,7 +94,7 @@ jest.mock('jsonwebtoken', () => ({
 }))
 
 const makeSut = (): JwtAdapter => {
-  return new JwtAdapter('secret', 'any time')
+  return new JwtAdapter('secret', 'access time', 'refresh time')
 }
 
 const makeTokenError = (): jwt.TokenExpiredError => {
