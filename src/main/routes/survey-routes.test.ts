@@ -79,7 +79,7 @@ describe('Survey Routes', () => {
         role: 'admin'
       })
       const id = result.insertedId.toString()
-      const accessToken = sign({ id }, env.jwtSecret, { expiresIn: '1s' })
+      const accessToken = sign({ id }, env.jwtSecret, { expiresIn: '0s' })
       await accountCollection.updateOne({
         _id: result.insertedId
       }, {
@@ -87,9 +87,6 @@ describe('Survey Routes', () => {
           accessToken
         }
       })
-      jest.useFakeTimers()
-      jest.setTimeout(5000)
-      jest.advanceTimersByTime(1000)
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
