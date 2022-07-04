@@ -1,9 +1,9 @@
 import { AccountModel } from '../../../domain/models/account'
 import { AccessDecrypter } from '../../protocols/criptography/access-decrypter'
-import { DbLoadAccountByToken } from './db-load-account-by-token'
-import { LoadAccountByTokenRepository } from '../../protocols/db/account/load-account-by-token-repository'
+import { DbLoadAccountByAccessToken } from './db-load-account-by-access-token'
+import { LoadAccountByAccessTokenRepository } from '../../protocols/db/account/load-account-by-access-token-repository'
 
-describe('DbLoadAccountByToken Usecase', () => {
+describe('DbLoadAccountByAccessToken Usecase', () => {
   test('Should call Decrypter with correct values', async () => {
     const { sut, decrypterStub } = makeSut()
     const decryptSpy = jest.spyOn(decrypterStub, 'decrypt')
@@ -18,17 +18,17 @@ describe('DbLoadAccountByToken Usecase', () => {
     expect(account).toBeNull()
   })
 
-  test('Should call LoadAccountByTokenRepo with correct values', async () => {
-    const { sut, loadAccountByTokenRepoStub } = makeSut()
-    const loadByTokenSpy = jest.spyOn(loadAccountByTokenRepoStub, 'loadByToken')
+  test('Should call LoadAccountByAccessTokenRepo with correct values', async () => {
+    const { sut, loadAccountByAccessTokenRepoStub } = makeSut()
+    const loadByTokenSpy = jest.spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken')
     await sut.load('any_token', 'any_role')
     expect(loadByTokenSpy).toHaveBeenCalledWith('any_token', 'any_role')
   })
 
-  test('Should return null if LoadAccountByTokenRepo returns null', async () => {
-    const { sut, loadAccountByTokenRepoStub } = makeSut()
+  test('Should return null if LoadAccountByAccessTokenRepo returns null', async () => {
+    const { sut, loadAccountByAccessTokenRepoStub } = makeSut()
     jest
-      .spyOn(loadAccountByTokenRepoStub, 'loadByToken')
+      .spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken')
       .mockReturnValueOnce(Promise.resolve(null as any))
     const account = await sut.load('any_token', 'any_role')
     expect(account).toBeNull()
@@ -41,9 +41,9 @@ describe('DbLoadAccountByToken Usecase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should throw if LoadAccountByTokenRepo throws', async () => {
-    const { sut, loadAccountByTokenRepoStub } = makeSut()
-    jest.spyOn(loadAccountByTokenRepoStub, 'loadByToken').mockRejectedValueOnce(new Error())
+  test('Should throw if LoadAccountByAccessTokenRepo throws', async () => {
+    const { sut, loadAccountByAccessTokenRepoStub } = makeSut()
+    jest.spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken').mockRejectedValueOnce(new Error())
     const promise = sut.load('any_token', 'any_role')
     await expect(promise).rejects.toThrow()
   })
@@ -56,19 +56,19 @@ describe('DbLoadAccountByToken Usecase', () => {
 })
 
 interface sutTypes {
-  sut: DbLoadAccountByToken
+  sut: DbLoadAccountByAccessToken
   decrypterStub: AccessDecrypter
-  loadAccountByTokenRepoStub: LoadAccountByTokenRepository
+  loadAccountByAccessTokenRepoStub: LoadAccountByAccessTokenRepository
 }
 
 const makeSut = (): sutTypes => {
   const decrypterStub = makeDecrypter()
-  const loadAccountByTokenRepoStub = makeLoadAccountByTokenRepo()
-  const sut = new DbLoadAccountByToken(decrypterStub, loadAccountByTokenRepoStub)
+  const loadAccountByAccessTokenRepoStub = makeLoadAccountByAccessTokenRepo()
+  const sut = new DbLoadAccountByAccessToken(decrypterStub, loadAccountByAccessTokenRepoStub)
   return {
     sut,
     decrypterStub,
-    loadAccountByTokenRepoStub
+    loadAccountByAccessTokenRepoStub
   }
 }
 
@@ -81,13 +81,13 @@ const makeDecrypter = (): AccessDecrypter => {
   return new DecrypterStub()
 }
 
-const makeLoadAccountByTokenRepo = (): LoadAccountByTokenRepository => {
-  class LoadAccountByTokenRepoStub implements LoadAccountByTokenRepository {
-    async loadByToken (accessToken: string, role?: string): Promise<AccountModel> {
+const makeLoadAccountByAccessTokenRepo = (): LoadAccountByAccessTokenRepository => {
+  class LoadAccountByAccessTokenRepoStub implements LoadAccountByAccessTokenRepository {
+    async loadByAccessToken (accessToken: string, role?: string): Promise<AccountModel> {
       return await Promise.resolve(makeFakeAccount())
     }
   }
-  return new LoadAccountByTokenRepoStub()
+  return new LoadAccountByAccessTokenRepoStub()
 }
 
 const makeFakeAccount = (): AccountModel => ({
