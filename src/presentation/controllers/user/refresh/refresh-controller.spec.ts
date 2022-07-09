@@ -1,6 +1,6 @@
 import { HttpRequest, LoadAccountByRefreshToken, Validation } from './refresh-controller-protocols'
 import { RefreshController } from './refresh-controller'
-import { badRequest } from '../../../helpers/http/http-helper'
+import { badRequest, serverError } from '../../../helpers/http/http-helper'
 import { AccountModel } from '../../../../domain/models/account'
 
 describe('Refresh Controller', () => {
@@ -24,6 +24,13 @@ describe('Refresh Controller', () => {
     const loadSpy = jest.spyOn(loadAccountByRefreshTokenStub, 'load')
     await sut.handle(makeFakeRequest())
     expect(loadSpy).toHaveBeenCalledWith('any_token')
+  })
+
+  test('Should return 500 if LoadAccountByRefreshToken throws', async () => {
+    const { sut, loadAccountByRefreshTokenStub } = makeSut()
+    jest.spyOn(loadAccountByRefreshTokenStub, 'load').mockRejectedValueOnce(new Error())
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
 
