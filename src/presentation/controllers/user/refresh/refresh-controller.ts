@@ -3,13 +3,15 @@ import {
   Controller,
   HttpRequest,
   LoadAccountByRefreshToken,
+  TokenAuthentication,
   Validation
 } from './refresh-controller-protocols'
 
 export class RefreshController implements Controller {
   constructor (
     private readonly validation: Validation,
-    private readonly loadAccountByRefreshToken: LoadAccountByRefreshToken
+    private readonly loadAccountByRefreshToken: LoadAccountByRefreshToken,
+    private readonly tokenAuthentication: TokenAuthentication
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<any> {
@@ -19,7 +21,8 @@ export class RefreshController implements Controller {
         return badRequest(error)
       }
       const refreshToken = httpRequest.headers?.['x-refresh-token']
-      await this.loadAccountByRefreshToken.load(refreshToken)
+      const account = await this.loadAccountByRefreshToken.load(refreshToken)
+      await this.tokenAuthentication.authByAccount(account)
     } catch (error) {
       return serverError(error)
     }
