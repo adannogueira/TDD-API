@@ -24,6 +24,15 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
     await sut.load('any_token')
     expect(loadByTokenSpy).toHaveBeenCalledWith('any_token')
   })
+
+  test('Should return null if LoadAccountByRefreshTokenRepo returns null', async () => {
+    const { sut, loadAccountByRefreshTokenRepoStub } = makeSut()
+    jest
+      .spyOn(loadAccountByRefreshTokenRepoStub, 'loadByRefreshToken')
+      .mockReturnValueOnce(Promise.resolve(null as any))
+    const account = await sut.load('any_token')
+    expect(account).toBeNull()
+  })
 })
 
 interface sutTypes {
