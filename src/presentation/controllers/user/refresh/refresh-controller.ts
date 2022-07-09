@@ -1,3 +1,4 @@
+import { badRequest } from '../../../helpers/http/http-helper'
 import {
   Controller,
   HttpRequest,
@@ -10,6 +11,9 @@ export class RefreshController implements Controller {
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<any> {
-    this.validation.validate(httpRequest.headers)
+    const error = this.validation.validate(httpRequest.headers)
+    if (error) {
+      return badRequest(error)
+    }
   }
 }
