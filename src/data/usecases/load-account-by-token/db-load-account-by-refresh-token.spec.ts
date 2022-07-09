@@ -47,6 +47,12 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
     const promise = sut.load('any_token')
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+    const account = await sut.load('any_token')
+    expect(account).toEqual(makeFakeAccount())
+  })
 })
 
 interface sutTypes {
