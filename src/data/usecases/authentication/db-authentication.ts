@@ -1,3 +1,4 @@
+import { TokenAuthentication } from '../../../domain/usecases/token-authentication'
 import {
   PasswordAuthentication,
   Tokens,
@@ -8,10 +9,11 @@ import {
   UpdateAccessTokenRepository,
   RefreshEncrypter,
   IdGenerator,
-  UpdateRefreshTokenRepository
+  UpdateRefreshTokenRepository,
+  AccountModel
 } from './db-authentication-protocols'
 
-export class DbAuthentication implements PasswordAuthentication {
+export class DbAuthentication implements PasswordAuthentication, TokenAuthentication {
   constructor (
     private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository,
     private readonly hashComparer: HashComparer,
@@ -26,15 +28,36 @@ export class DbAuthentication implements PasswordAuthentication {
     if (account) {
       const isValid = await this.hashComparer.compare(authentication.password, account.password)
       if (isValid) {
-        const accessToken = await this.encrypter.encrypt(account.id)
-        const tokenId = this.idGenerator.generate()
-        const refreshToken = await this.encrypter.encryptRefresh(account.id, tokenId)
-        await this.updateAccessTokenRepository.updateAccessToken(account.id, accessToken)
-        await this.updateRefreshTokenRepository.updateRefreshToken(account.id, tokenId)
-        return { accessToken, refreshToken }
+        const accessToken = await this.getAccessToken(account.id)
+        const refreshToken = await this.getRefreshToken(account.id)
+        if (accessToken && refreshToken) {
+          return { accessToken, refreshToken }
+        }
       }
     }
     return null
+  }
+
+  async authByAccount (account: AccountModel): Promise<Tokens> {
+    const accessToken = await this.getAccessToken(account.id)
+    const refreshToken = await this.getRefreshToken(account.id)
+    if (accessToken && refreshToken) {
+      return { accessToken, refreshToken }
+    }
+    return null
+  }
+
+  private async getAccessToken (accountId: string): Promise<string> {
+    const accessToken = await this.encrypter.encrypt(accountId)
+    await this.updateAccessTokenRepository.updateAccessToken(accountId, accessToken)
+    return accessToken
+  }
+
+  private async getRefreshToken (accountId: string): Promise<string> {
+    const tokenId = this.idGenerator.generate()
+    const refreshToken = await this.encrypter.encryptRefresh(accountId, tokenId)
+    await this.updateRefreshTokenRepository.updateRefreshToken(accountId, tokenId)
+    return refreshToken
   }
 }
 
