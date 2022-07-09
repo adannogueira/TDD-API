@@ -12,7 +12,10 @@ export class DbLoadAccountByRefreshToken implements LoadAccountByRefreshToken {
   async load (refreshToken: string): Promise<AccountModel> {
     const token = await this.decrypter.decryptRefresh(refreshToken)
     if (token) {
-      await this.loadAccountByRefreshTokenRepository.loadByRefreshToken(refreshToken)
+      const account = await this.loadAccountByRefreshTokenRepository.loadByRefreshToken(refreshToken)
+      if (account) {
+        return account
+      }
     }
     return null
   }
