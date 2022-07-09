@@ -17,6 +17,16 @@ describe('Refresh Middleware', () => {
     })
     expect(httpResponse).toEqual(unauthorized())
   })
+
+  test('Should return 401 if no x-refresh-token exists in headers', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({
+      headers: {
+        'x-access-token': 'any_access_token'
+      }
+    })
+    expect(httpResponse).toEqual(unauthorized())
+  })
 })
 
 interface sutTypes {
