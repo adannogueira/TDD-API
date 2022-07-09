@@ -1,3 +1,3 @@
 export interface RefreshDecrypter {
-  decryptRefresh: (value: string, jti: string) => Promise<string>
+  decryptRefresh: (value: string) => Promise<string>
 }
