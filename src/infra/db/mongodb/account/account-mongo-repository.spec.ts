@@ -164,6 +164,21 @@ describe('Account Mongodb Repository', () => {
       const account = await sut.loadByRefreshToken('any_email@mail.com')
       expect(account).toBeFalsy()
     })
+
+    test('Should return an account on loadByRefreshToken success', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        refreshToken: 'any_token'
+      })
+      const account = await sut.loadByRefreshToken('any_token')
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('any_name')
+      expect(account.email).toBe('any_email@mail.com')
+      expect(account.password).toBe('any_password')
+    })
   })
 })
 
