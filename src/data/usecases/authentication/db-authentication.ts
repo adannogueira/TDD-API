@@ -1,5 +1,5 @@
 import {
-  Authentication,
+  PasswordAuthentication,
   Tokens,
   AuthenticationModel,
   HashComparer,
@@ -11,7 +11,7 @@ import {
   UpdateRefreshTokenRepository
 } from './db-authentication-protocols'
 
-export class DbAuthentication implements Authentication {
+export class DbAuthentication implements PasswordAuthentication {
   constructor (
     private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository,
     private readonly hashComparer: HashComparer,
@@ -21,7 +21,7 @@ export class DbAuthentication implements Authentication {
     private readonly idGenerator: IdGenerator
   ) {}
 
-  async auth (authentication: AuthenticationModel): Promise<Tokens> {
+  async authByPassword (authentication: AuthenticationModel): Promise<Tokens> {
     const account = await this.loadAccountByEmailRepository.loadByEmail(authentication.email)
     if (account) {
       const isValid = await this.hashComparer.compare(authentication.password, account.password)
