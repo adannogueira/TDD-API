@@ -171,9 +171,9 @@ describe('Account Mongodb Repository', () => {
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'any_password',
-        refreshToken: 'any_token'
+        tokenId: 'any_token_id'
       })
-      const account = await sut.loadByRefreshTokenId('any_token')
+      const account = await sut.loadByRefreshTokenId('any_token_id')
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('any_name')
       expect(account.email).toBe('any_email@mail.com')
