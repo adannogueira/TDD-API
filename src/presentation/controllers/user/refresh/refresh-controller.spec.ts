@@ -63,7 +63,7 @@ describe('Refresh Controller', () => {
         throw new AuthExpiredError()
       })
     const httpResponse = await sut.handle(makeFakeRequest())
-    await expect(httpResponse).toEqual(unauthorized())
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
 
@@ -95,8 +95,8 @@ const makeFakeAccount = (): AccountModel => ({
 })
 
 const makeFakeRequest = (): HttpRequest => ({
-  headers: {
-    'x-refresh-token': 'any_token'
+  body: {
+    refreshToken: 'any_token'
   }
 })
 

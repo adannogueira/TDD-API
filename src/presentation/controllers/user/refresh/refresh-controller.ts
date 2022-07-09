@@ -15,7 +15,7 @@ export class RefreshController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<any> {
     try {
-      const refreshToken = httpRequest.headers['x-refresh-token']
+      const { refreshToken } = httpRequest.body
       const account = await this.loadAccountByRefreshToken.load(refreshToken)
       if (!account) return unauthorized()
       const tokens = await this.tokenAuthentication.authByAccount(account)
