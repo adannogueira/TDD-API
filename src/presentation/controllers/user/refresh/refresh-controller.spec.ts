@@ -6,7 +6,7 @@ import {
   Validation
 } from './refresh-controller-protocols'
 import { RefreshController } from './refresh-controller'
-import { badRequest, ok, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import { AccountModel } from '../../../../domain/models/account'
 
 describe('Refresh Controller', () => {
@@ -61,6 +61,14 @@ describe('Refresh Controller', () => {
       accessToken: 'any_access_token',
       refreshToken: 'any_refresh_token'
     }))
+  })
+
+  test('Should return 401 if an invalid token is provided', async () => {
+    const { sut, loadAccountByRefreshTokenStub } = makeSut()
+    jest.spyOn(loadAccountByRefreshTokenStub, 'load')
+      .mockReturnValueOnce(Promise.resolve(null as any))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
 
