@@ -99,6 +99,20 @@ describe('Account Routes', () => {
         .send()
         .expect(401)
     })
+
+    test('Should return 200 on success', async () => {
+      const tokens = await makeAuthenticatedUserTokens('0s', '1m')
+      const result = await request(app)
+        .post('/api/refresh')
+        .set('x-access-token', tokens.accessToken)
+        .set('x-refresh-token', tokens.refreshToken)
+        .send()
+        .expect(200)
+      expect(result.body.accessToken).toBeTruthy()
+      expect(result.body.accessToken).not.toBe(tokens.accessToken)
+      expect(result.body.refreshToken).toBeTruthy()
+      expect(result.body.refreshToken).not.toBe(tokens.refreshToken)
+    })
   })
 })
 
