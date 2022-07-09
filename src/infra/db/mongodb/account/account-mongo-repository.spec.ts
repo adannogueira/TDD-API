@@ -149,12 +149,12 @@ describe('Account Mongodb Repository', () => {
       })
       const result = await sut.loadByEmail('any_email@mail.com')
       // eslint-disable-next-line @typescript-eslint/dot-notation
-      expect(result['refreshToken']).toBeFalsy()
-      await sut.updateRefreshToken(result.id, 'any_uuid')
+      expect(result['tokenId']).toBeFalsy()
+      await sut.updateRefreshToken(result.id, 'any_token_id')
       const account = await accountCollection.findOne({ name: 'any_name' })
 
       expect(account).toBeTruthy()
-      expect(account?.refreshToken).toBe('any_uuid')
+      expect(account?.tokenId).toBe('any_token_id')
     })
   })
 

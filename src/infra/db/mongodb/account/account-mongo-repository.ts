@@ -47,13 +47,11 @@ export class AccountMongoRepository implements
     return account && MongoHelper.map(account)
   }
 
-  async updateRefreshToken (id: string, token: string): Promise<any> {
+  async updateRefreshToken (id: string, tokenId: string): Promise<any> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.updateOne({
       _id: new ObjectId(id)
-    }, {
-      $set: { refreshToken: token }
-    })
+    }, { $set: { tokenId } })
   }
 
   async loadByRefreshToken (token: string): Promise<AccountModel> {

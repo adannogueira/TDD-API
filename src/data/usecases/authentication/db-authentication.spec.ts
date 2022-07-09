@@ -65,7 +65,7 @@ describe('DbAuthentication UseCase', () => {
     const { sut, encrypterStub } = makeSut()
     const generateSpy = jest.spyOn(encrypterStub, 'encryptRefresh')
     await sut.auth(makeFakeAuthentication())
-    expect(generateSpy).toHaveBeenCalledWith('valid_id', 'any_uuid')
+    expect(generateSpy).toHaveBeenCalledWith('valid_id', 'any_token_id')
   })
 
   test('Should throw if Encrypter throws', async () => {
@@ -105,7 +105,7 @@ describe('DbAuthentication UseCase', () => {
     const { sut, updateRefreshTokenRepositoryStub } = makeSut()
     const updateSpy = jest.spyOn(updateRefreshTokenRepositoryStub, 'updateRefreshToken')
     await sut.auth(makeFakeAuthentication())
-    expect(updateSpy).toHaveBeenCalledWith('valid_id', 'any_uuid')
+    expect(updateSpy).toHaveBeenCalledWith('valid_id', 'any_token_id')
   })
 
   test('Should throw if UpdateAccessTokenRepository throws', async () => {
@@ -161,7 +161,7 @@ const makeEncrypter = (): Encrypter => {
       return await Promise.resolve('any_token')
     }
 
-    async encryptRefresh (id: string, jti: string): Promise<string> {
+    async encryptRefresh (id: string, tokenId: string): Promise<string> {
       return await Promise.resolve('any_refresh_token')
     }
   }
@@ -180,7 +180,7 @@ const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
 const makeIdGenerator = (): IdGenerator => {
   class IdGeneratorStub implements IdGenerator {
     generate (): string {
-      return 'any_uuid'
+      return 'any_token_id'
     }
   }
   return new IdGeneratorStub()
@@ -188,7 +188,7 @@ const makeIdGenerator = (): IdGenerator => {
 
 const makeUpdateRefreshTokenRepository = (): UpdateRefreshTokenRepository => {
   class UpdateRefreshTokenRepositoryStub implements UpdateRefreshTokenRepository {
-    async updateRefreshToken (id: string, token: string): Promise<void> {
+    async updateRefreshToken (id: string, tokenId: string): Promise<void> {
       return await Promise.resolve()
     }
   }
