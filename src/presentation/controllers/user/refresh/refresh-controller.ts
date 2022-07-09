@@ -1,4 +1,4 @@
-import { badRequest } from '../../../helpers/http/http-helper'
+import { badRequest, serverError } from '../../../helpers/http/http-helper'
 import {
   Controller,
   HttpRequest,
@@ -13,11 +13,15 @@ export class RefreshController implements Controller {
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<any> {
-    const error = this.validation.validate(httpRequest.headers)
-    if (error) {
-      return badRequest(error)
+    try {
+      const error = this.validation.validate(httpRequest.headers)
+      if (error) {
+        return badRequest(error)
+      }
+      const refreshToken = httpRequest.headers?.['x-refresh-token']
+      await this.loadAccountByRefreshToken.load(refreshToken)
+    } catch (error) {
+      return serverError(error)
     }
-    const refreshToken = httpRequest.headers?.['x-refresh-token']
-    await this.loadAccountByRefreshToken.load(refreshToken)
   }
 }
