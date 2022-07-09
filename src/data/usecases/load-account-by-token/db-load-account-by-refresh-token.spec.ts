@@ -40,6 +40,13 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
     const promise = sut.load('any_token')
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should throw if LoadAccountByRefreshTokenRepo throws', async () => {
+    const { sut, loadAccountByRefreshTokenRepoStub } = makeSut()
+    jest.spyOn(loadAccountByRefreshTokenRepoStub, 'loadByRefreshToken').mockRejectedValueOnce(new Error())
+    const promise = sut.load('any_token')
+    await expect(promise).rejects.toThrow()
+  })
 })
 
 interface sutTypes {
