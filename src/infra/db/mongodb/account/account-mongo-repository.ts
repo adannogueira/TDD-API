@@ -57,6 +57,10 @@ export class AccountMongoRepository implements
   }
 
   async loadByRefreshToken (token: string): Promise<AccountModel> {
-    return null
+    const accountCollection = await MongoHelper.getCollection('accounts')
+    const account = await accountCollection.findOne({
+      refreshToken: token
+    })
+    return account && MongoHelper.map(account)
   }
 }
