@@ -3,6 +3,8 @@ import { Collection } from 'mongodb'
 import request from 'supertest'
 import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
 import app from '../config/app'
+import { sign } from 'jsonwebtoken'
+import env from '../config/env'
 
 let accountCollection: Collection
 describe('Account Routes', () => {
@@ -62,11 +64,49 @@ describe('Account Routes', () => {
   })
 
   describe('[POST] /refresh', () => {
-    test('Should return 401 on refresh token does not exist', async () => {
+    test('Should return 401 when refresh token does not exist', async () => {
       await request(app)
         .post('/api/refresh')
+        .set('x-access-token', 'accessToken')
+        .send()
+        .expect(401)
+    })
+
+    test('Should return 401 when access token does not exist', async () => {
+      await request(app)
+        .post('/api/refresh')
+        .set('x-refresh-token', 'refreshToken')
         .send()
         .expect(401)
     })
   })
 })
+
+const makeAuthenticatedUserTokens = async (accessTime: string, refreshTime: string): Promise<Record<string, string>> => {
+  const result = await accountCollection.insertOne({
+    name: 'John Doe',
+    email: 'john@mail.com',
+    password: 'any_password',
+    role: 'admin'
+  })
+  const id = result.insertedId.toString()
+  const accessToken = sign(
+    { id },
+    env.jwtSecret,
+    { expiresIn: accessTime }
+  )
+  const refreshToken = sign(
+    { id },
+    env.jwtSecret,
+    { jwtid: 'any_hash', expiresIn: refreshTime }
+  )
+  await accountCollection.updateOne({
+    _id: result.insertedId
+  }, {
+    $set: {
+      accessToken,
+      tokenId: 'any_hash'
+    }
+  })
+  return { accessToken, refreshToken }
+}
