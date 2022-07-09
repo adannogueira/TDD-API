@@ -6,7 +6,7 @@ import { UuidAdapter } from '../../../../../infra/criptography/uuid-adapter/uuid
 import { AccountMongoRepository } from '../../../../../infra/db/mongodb/account/account-mongo-repository'
 import env from '../../../../config/env'
 
-export const makeDbAuthentication = (): PasswordAuthentication => {
+export const makeDbPasswordAuthentication = (): PasswordAuthentication => {
   const salt = 12
   const bcryptAdapter = new BcryptAdapter(salt)
   const jwtAdapter = new JwtAdapter(
