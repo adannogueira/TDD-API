@@ -30,9 +30,7 @@ export class DbAuthentication implements PasswordAuthentication, TokenAuthentica
       if (isValid) {
         const accessToken = await this.getAccessToken(account.id)
         const refreshToken = await this.getRefreshToken(account.id)
-        if (accessToken && refreshToken) {
-          return { accessToken, refreshToken }
-        }
+        return { accessToken, refreshToken }
       }
     }
     return null
@@ -41,10 +39,7 @@ export class DbAuthentication implements PasswordAuthentication, TokenAuthentica
   async authByAccount (account: AccountModel): Promise<Tokens> {
     const accessToken = await this.getAccessToken(account.id)
     const refreshToken = await this.getRefreshToken(account.id)
-    if (accessToken && refreshToken) {
-      return { accessToken, refreshToken }
-    }
-    return null
+    return { accessToken, refreshToken }
   }
 
   private async getAccessToken (accountId: string): Promise<string> {
