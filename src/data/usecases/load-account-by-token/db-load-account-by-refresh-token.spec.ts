@@ -33,6 +33,13 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
     const account = await sut.load('any_token')
     expect(account).toBeNull()
   })
+
+  test('Should throw if RefreshDecrypter throws', async () => {
+    const { sut, decrypterStub } = makeSut()
+    jest.spyOn(decrypterStub, 'decryptRefresh').mockRejectedValueOnce(new Error())
+    const promise = sut.load('any_token')
+    await expect(promise).rejects.toThrow()
+  })
 })
 
 interface sutTypes {
