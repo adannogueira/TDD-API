@@ -79,10 +79,23 @@ describe('Account Routes', () => {
         .send()
         .expect(401)
     })
+
+    test('Should return 401 when refresh token is expired', async () => {
+      const tokens = await makeAuthenticatedUserTokens('0s', '0s')
+      await request(app)
+        .post('/api/refresh')
+        .set('x-access-token', tokens.accessToken)
+        .set('x-refresh-token', tokens.refreshToken)
+        .send()
+        .expect(401)
+    }, 20000)
   })
 })
 
-const makeAuthenticatedUserTokens = async (accessTime: string, refreshTime: string): Promise<Record<string, string>> => {
+const makeAuthenticatedUserTokens = async (
+  accessTime: string,
+  refreshTime: string
+): Promise<{ accessToken: string, refreshToken: string }> => {
   const result = await accountCollection.insertOne({
     name: 'John Doe',
     email: 'john@mail.com',
