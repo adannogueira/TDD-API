@@ -86,13 +86,13 @@ describe('Jwt Adapter', () => {
     test('Should call verify with correct values', async () => {
       const sut = makeSut()
       const verifySpy = jest.spyOn(jwt, 'verify')
-      await sut.decryptRefresh('any_token', 'any_jti')
-      expect(verifySpy).toHaveBeenCalledWith('any_token', 'secret', { jwtid: 'any_jti' })
+      await sut.decryptRefresh('any_token')
+      expect(verifySpy).toHaveBeenCalledWith('any_token', 'secret')
     })
 
     test('Should return a value on verify success', async () => {
       const sut = makeSut()
-      const token = await sut.decryptRefresh('any_token', 'any_jti')
+      const token = await sut.decryptRefresh('any_token')
       expect(token).toBe('any_id')
     })
 
@@ -100,7 +100,7 @@ describe('Jwt Adapter', () => {
       const sut = makeSut()
       jest.spyOn(jwt, 'verify')
         .mockImplementationOnce(() => { throw new Error() })
-      const promise = sut.decryptRefresh('any_token', 'any_jti')
+      const promise = sut.decryptRefresh('any_token')
       await expect(promise).rejects.toThrow()
     })
   })
