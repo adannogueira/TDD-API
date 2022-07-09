@@ -104,6 +104,16 @@ describe('Jwt Adapter', () => {
       const promise = sut.decryptRefresh('any_token')
       await expect(promise).rejects.toThrow()
     })
+
+    test('Should throw AuthExpiredError if verify throws ExpiredTokenError', async () => {
+      const sut = makeSut()
+      jest.spyOn(jwt, 'verify')
+        .mockImplementationOnce(() => {
+          throw makeTokenError()
+        })
+      const promise = sut.decryptRefresh('any_token')
+      await expect(promise).rejects.toThrow(new AuthExpiredError())
+    })
   })
 })
 
