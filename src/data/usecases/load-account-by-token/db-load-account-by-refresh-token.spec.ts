@@ -17,6 +17,13 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
     const account = await sut.load('any_token')
     expect(account).toBeNull()
   })
+
+  test('Should call LoadAccountByRefreshTokenRepo with correct values', async () => {
+    const { sut, loadAccountByRefreshTokenRepoStub } = makeSut()
+    const loadByTokenSpy = jest.spyOn(loadAccountByRefreshTokenRepoStub, 'loadByRefreshToken')
+    await sut.load('any_token')
+    expect(loadByTokenSpy).toHaveBeenCalledWith('any_token')
+  })
 })
 
 interface sutTypes {
@@ -28,7 +35,7 @@ interface sutTypes {
 const makeSut = (): sutTypes => {
   const decrypterStub = makeDecrypter()
   const loadAccountByRefreshTokenRepoStub = makeLoadAccountByRefreshTokenRepo()
-  const sut = new DbLoadAccountByRefreshToken(decrypterStub)
+  const sut = new DbLoadAccountByRefreshToken(decrypterStub, loadAccountByRefreshTokenRepoStub)
   return {
     sut,
     decrypterStub,
