@@ -161,7 +161,7 @@ describe('Account Mongodb Repository', () => {
   describe('loadByRefreshToken()', () => {
     test('Should return null if loadByRefreshToken fails', async () => {
       const sut = makeSut()
-      const account = await sut.loadByRefreshToken('any_email@mail.com')
+      const account = await sut.loadByRefreshTokenId('any_email@mail.com')
       expect(account).toBeFalsy()
     })
 
@@ -173,7 +173,7 @@ describe('Account Mongodb Repository', () => {
         password: 'any_password',
         refreshToken: 'any_token'
       })
-      const account = await sut.loadByRefreshToken('any_token')
+      const account = await sut.loadByRefreshTokenId('any_token')
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('any_name')
       expect(account.email).toBe('any_email@mail.com')
