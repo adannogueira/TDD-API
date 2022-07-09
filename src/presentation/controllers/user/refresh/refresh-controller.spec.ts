@@ -45,6 +45,14 @@ describe('Refresh Controller', () => {
     await sut.handle(makeFakeRequest())
     expect(authSpy).toHaveBeenCalledWith(makeFakeAccount())
   })
+
+  test('Should return 500 if TokenAuthentication throws', async () => {
+    const { sut, tokenAuthenticationStub } = makeSut()
+    jest.spyOn(tokenAuthenticationStub, 'authByAccount')
+      .mockReturnValueOnce(Promise.reject(new Error()))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
+  })
 })
 
 const makeValidation = (): Validation => {
