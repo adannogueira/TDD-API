@@ -1,4 +1,4 @@
-import { badRequest, ok, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import {
   Controller,
   HttpRequest,
@@ -22,6 +22,7 @@ export class RefreshController implements Controller {
       }
       const refreshToken = httpRequest.headers?.['x-refresh-token']
       const account = await this.loadAccountByRefreshToken.load(refreshToken)
+      if (!account) return unauthorized()
       const tokens = await this.tokenAuthentication.authByAccount(account)
       return ok(tokens)
     } catch (error) {
