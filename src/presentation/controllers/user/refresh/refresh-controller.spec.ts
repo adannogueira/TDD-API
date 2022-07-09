@@ -1,4 +1,10 @@
-import { HttpRequest, LoadAccountByRefreshToken, Validation } from './refresh-controller-protocols'
+import {
+  HttpRequest,
+  LoadAccountByRefreshToken,
+  Tokens,
+  TokenAuthentication,
+  Validation
+} from './refresh-controller-protocols'
 import { RefreshController } from './refresh-controller'
 import { badRequest, serverError } from '../../../helpers/http/http-helper'
 import { AccountModel } from '../../../../domain/models/account'
@@ -32,6 +38,13 @@ describe('Refresh Controller', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
+
+  test('Should call TokenAuthentication with correct values', async () => {
+    const { sut, tokenAuthenticationStub } = makeSut()
+    const authSpy = jest.spyOn(tokenAuthenticationStub, 'authByAccount')
+    await sut.handle(makeFakeRequest())
+    expect(authSpy).toHaveBeenCalledWith(makeFakeAccount())
+  })
 })
 
 const makeValidation = (): Validation => {
@@ -52,11 +65,22 @@ const makeLoadAccountByRefreshToken = (): LoadAccountByRefreshToken => {
   return new LoadAccountByRefreshTokenStub()
 }
 
+const makeAuthentication = (): TokenAuthentication => {
+  class AuthenticationStub implements TokenAuthentication {
+    async authByAccount (account: AccountModel): Promise<Tokens> {
+      return await Promise.resolve({
+        accessToken: 'any_access_token',
+        refreshToken: 'any_refresh_token'
+      })
+    }
+  }
+  return new AuthenticationStub()
+}
+
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
   name: 'valid_name',
-  email: 'valid@email.com',
-  password: 'valid_password'
+  email: 'valid@email.com'
 })
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -69,15 +93,22 @@ interface sutTypes {
   sut: RefreshController
   validationStub: Validation
   loadAccountByRefreshTokenStub: LoadAccountByRefreshToken
+  tokenAuthenticationStub: TokenAuthentication
 }
 
 const makeSut = (): sutTypes => {
   const validationStub = makeValidation()
   const loadAccountByRefreshTokenStub = makeLoadAccountByRefreshToken()
-  const sut = new RefreshController(validationStub, loadAccountByRefreshTokenStub)
+  const tokenAuthenticationStub = makeAuthentication()
+  const sut = new RefreshController(
+    validationStub,
+    loadAccountByRefreshTokenStub,
+    tokenAuthenticationStub
+  )
   return {
     sut,
     validationStub,
-    loadAccountByRefreshTokenStub
+    loadAccountByRefreshTokenStub,
+    tokenAuthenticationStub
   }
 }
