@@ -48,10 +48,14 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should return an account on success', async () => {
+  test('Should return an account without password field on success', async () => {
     const { sut } = makeSut()
     const account = await sut.load('any_token')
-    expect(account).toEqual(makeFakeAccount())
+    expect(account).toEqual({
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email@mail.com'
+    })
   })
 })
 
