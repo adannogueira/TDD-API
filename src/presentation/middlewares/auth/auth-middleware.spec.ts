@@ -1,5 +1,5 @@
-import { AccessDeniedError, AuthExpiredError } from '../errors'
-import { forbidden, ok, serverError } from '../helpers/http/http-helper'
+import { AccessDeniedError, AuthExpiredError } from '../../errors'
+import { forbidden, ok, serverError } from '../../helpers/http/http-helper'
 import { AuthMiddleware } from './auth-middleware'
 import { LoadAccountByAccessToken, AccountModel, HttpRequest } from './auth-middleware-protocols'
 

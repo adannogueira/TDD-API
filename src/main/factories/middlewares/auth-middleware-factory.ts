@@ -1,4 +1,4 @@
-import { AuthMiddleware } from '../../../presentation/middlewares/auth-middleware'
+import { AuthMiddleware } from '../../../presentation/middlewares/auth/auth-middleware'
 import { Middleware } from '../../../presentation/protocols'
 import { makeDbLoadAccountByAccessToken } from '../usecases/user/load-account-by-token/db-load-account-by-access-token-factory'
 
