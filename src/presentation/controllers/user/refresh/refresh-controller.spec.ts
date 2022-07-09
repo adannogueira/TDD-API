@@ -1,5 +1,6 @@
 import { HttpRequest, Validation } from './refresh-controller-protocols'
 import { RefreshController } from './refresh-controller'
+import { badRequest } from '../../../helpers/http/http-helper'
 
 describe('Refresh Controller', () => {
   test('Should call Validation with correct values', async () => {
@@ -8,6 +9,14 @@ describe('Refresh Controller', () => {
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.headers)
+  })
+
+  test('Should return 400 if Validation fails', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
+    const httpRequest = makeFakeRequest()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new Error()))
   })
 })
 
