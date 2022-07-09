@@ -7,6 +7,7 @@ import {
 import { RefreshController } from './refresh-controller'
 import { ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import { AccountModel } from '../../../../domain/models/account'
+import { AuthExpiredError } from '../../../errors'
 
 describe('Refresh Controller', () => {
   test('Should call LoadAccountByRefreshToken with correct values', async () => {
@@ -53,6 +54,16 @@ describe('Refresh Controller', () => {
       .mockReturnValueOnce(Promise.resolve(null as any))
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(unauthorized())
+  })
+
+  test('Should return 401 if loadAccountByRefreshToken throws AuthExpiredError', async () => {
+    const { sut, loadAccountByRefreshTokenStub } = makeSut()
+    jest.spyOn(loadAccountByRefreshTokenStub, 'load')
+      .mockImplementationOnce(() => {
+        throw new AuthExpiredError()
+      })
+    const httpResponse = await sut.handle(makeFakeRequest())
+    await expect(httpResponse).toEqual(unauthorized())
   })
 })
 
