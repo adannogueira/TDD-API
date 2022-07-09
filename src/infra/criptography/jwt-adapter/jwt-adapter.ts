@@ -46,7 +46,7 @@ export class JwtAdapter implements AccessEncrypter, AccessDecrypter, RefreshEncr
   }
 
   async decryptRefresh (token: string): Promise<string> {
-    const value = jwt.verify(token, this.secret)
-    return value as string
+    const value = jwt.verify(token, this.secret) as jwt.JwtPayload
+    return value.jti
   }
 }
