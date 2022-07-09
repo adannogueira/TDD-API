@@ -88,7 +88,17 @@ describe('Account Routes', () => {
         .set('x-refresh-token', tokens.refreshToken)
         .send()
         .expect(401)
-    }, 20000)
+    })
+
+    test('Should return 401 when access token is not expired', async () => {
+      const tokens = await makeAuthenticatedUserTokens('1m', '1m')
+      await request(app)
+        .post('/api/refresh')
+        .set('x-access-token', tokens.accessToken)
+        .set('x-refresh-token', tokens.refreshToken)
+        .send()
+        .expect(401)
+    })
   })
 })
 
