@@ -157,6 +157,14 @@ describe('Account Mongodb Repository', () => {
       expect(account?.refreshToken).toBe('any_uuid')
     })
   })
+
+  describe('loadByRefreshToken()', () => {
+    test('Should return null if loadByRefreshToken fails', async () => {
+      const sut = makeSut()
+      const account = await sut.loadByRefreshToken('any_email@mail.com')
+      expect(account).toBeFalsy()
+    })
+  })
 })
 
 let accountCollection: Collection
