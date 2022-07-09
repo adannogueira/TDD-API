@@ -60,4 +60,13 @@ describe('Account Routes', () => {
         .expect(401)
     })
   })
+
+  describe('[POST] /refresh', () => {
+    test('Should return 401 on refresh token does not exist', async () => {
+      await request(app)
+        .post('/api/refresh')
+        .send()
+        .expect(401)
+    })
+  })
 })
