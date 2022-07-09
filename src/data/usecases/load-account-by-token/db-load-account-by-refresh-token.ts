@@ -14,7 +14,8 @@ export class DbLoadAccountByRefreshToken implements LoadAccountByRefreshToken {
     if (tokenId) {
       const account = await this.loadAccountByRefreshTokenIdRepository.loadByRefreshTokenId(tokenId)
       if (account) {
-        return account
+        const { password, ...accountWithoutPassword } = account
+        return accountWithoutPassword
       }
     }
     return null
