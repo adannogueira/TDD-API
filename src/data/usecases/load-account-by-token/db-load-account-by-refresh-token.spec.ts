@@ -18,17 +18,17 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
     expect(account).toBeNull()
   })
 
-  test('Should call LoadAccountByRefreshTokenRepo with correct values', async () => {
-    const { sut, loadAccountByRefreshTokenRepoStub } = makeSut()
-    const loadByTokenSpy = jest.spyOn(loadAccountByRefreshTokenRepoStub, 'loadByRefreshTokenId')
+  test('Should call LoadAccountByRefreshTokenIdRepo with correct values', async () => {
+    const { sut, loadAccountByRefreshTokenIdRepoStub } = makeSut()
+    const loadByTokenSpy = jest.spyOn(loadAccountByRefreshTokenIdRepoStub, 'loadByRefreshTokenId')
     await sut.load('any_token')
-    expect(loadByTokenSpy).toHaveBeenCalledWith('any_token')
+    expect(loadByTokenSpy).toHaveBeenCalledWith('any_token_id')
   })
 
   test('Should return null if LoadAccountByRefreshTokenRepo returns null', async () => {
-    const { sut, loadAccountByRefreshTokenRepoStub } = makeSut()
+    const { sut, loadAccountByRefreshTokenIdRepoStub } = makeSut()
     jest
-      .spyOn(loadAccountByRefreshTokenRepoStub, 'loadByRefreshTokenId')
+      .spyOn(loadAccountByRefreshTokenIdRepoStub, 'loadByRefreshTokenId')
       .mockReturnValueOnce(Promise.resolve(null as any))
     const account = await sut.load('any_token')
     expect(account).toBeNull()
@@ -42,8 +42,8 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
   })
 
   test('Should throw if LoadAccountByRefreshTokenRepo throws', async () => {
-    const { sut, loadAccountByRefreshTokenRepoStub } = makeSut()
-    jest.spyOn(loadAccountByRefreshTokenRepoStub, 'loadByRefreshTokenId').mockRejectedValueOnce(new Error())
+    const { sut, loadAccountByRefreshTokenIdRepoStub } = makeSut()
+    jest.spyOn(loadAccountByRefreshTokenIdRepoStub, 'loadByRefreshTokenId').mockRejectedValueOnce(new Error())
     const promise = sut.load('any_token')
     await expect(promise).rejects.toThrow()
   })
@@ -58,24 +58,24 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
 interface sutTypes {
   sut: DbLoadAccountByRefreshToken
   decrypterStub: RefreshDecrypter
-  loadAccountByRefreshTokenRepoStub: LoadAccountByRefreshTokenIdRepository
+  loadAccountByRefreshTokenIdRepoStub: LoadAccountByRefreshTokenIdRepository
 }
 
 const makeSut = (): sutTypes => {
   const decrypterStub = makeDecrypter()
-  const loadAccountByRefreshTokenRepoStub = makeLoadAccountByRefreshTokenRepo()
-  const sut = new DbLoadAccountByRefreshToken(decrypterStub, loadAccountByRefreshTokenRepoStub)
+  const loadAccountByRefreshTokenIdRepoStub = makeLoadAccountByRefreshTokenRepo()
+  const sut = new DbLoadAccountByRefreshToken(decrypterStub, loadAccountByRefreshTokenIdRepoStub)
   return {
     sut,
     decrypterStub,
-    loadAccountByRefreshTokenRepoStub
+    loadAccountByRefreshTokenIdRepoStub
   }
 }
 
 const makeDecrypter = (): RefreshDecrypter => {
   class DecrypterStub implements RefreshDecrypter {
     async decryptRefresh (value: string): Promise<string> {
-      return await Promise.resolve('any_value')
+      return await Promise.resolve('any_token_id')
     }
   }
   return new DecrypterStub()
