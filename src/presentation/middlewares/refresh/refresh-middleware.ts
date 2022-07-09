@@ -1,5 +1,5 @@
 import { HttpRequest, HttpResponse, Middleware } from './refresh-middleware-protocols'
-import { serverError, unauthorized } from '../../helpers/http/http-helper'
+import { noContent, serverError, unauthorized } from '../../helpers/http/http-helper'
 import { AccessDecrypter } from '../../../data/protocols/criptography/access-decrypter'
 import { AuthExpiredError } from '../../errors'
 
@@ -15,7 +15,7 @@ export class RefreshMiddleware implements Middleware {
       if (token) return unauthorized()
     } catch (error) {
       return error instanceof AuthExpiredError
-        ? null
+        ? noContent()
         : serverError(error)
     }
   }
