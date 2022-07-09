@@ -1,3 +1,4 @@
+import { AuthExpiredError } from '../../../errors'
 import { ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import {
   Controller,
@@ -20,7 +21,9 @@ export class RefreshController implements Controller {
       const tokens = await this.tokenAuthentication.authByAccount(account)
       return ok(tokens)
     } catch (error) {
-      return serverError(error)
+      return error instanceof AuthExpiredError
+        ? unauthorized()
+        : serverError(error)
     }
   }
 }
