@@ -1,8 +1,22 @@
 import { HttpRequest, HttpResponse, Middleware } from './refresh-middleware-protocols'
-import { unauthorized } from '../../helpers/http/http-helper'
+import { serverError, unauthorized } from '../../helpers/http/http-helper'
+import { AccessDecrypter } from '../../../data/protocols/criptography/access-decrypter'
+import { AuthExpiredError } from '../../errors'
 
 export class RefreshMiddleware implements Middleware {
+  constructor (private readonly accessDecrypter: AccessDecrypter) {}
+
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    return unauthorized()
+    const refreshToken = httpRequest.headers?.['x-refresh-token']
+    const accessToken = httpRequest.headers?.['x-access-token']
+    if (!refreshToken || !accessToken) return unauthorized()
+    try {
+      const token = await this.accessDecrypter.decrypt(accessToken)
+      if (token) return unauthorized()
+    } catch (error) {
+      return error instanceof AuthExpiredError
+        ? null
+        : serverError(error)
+    }
   }
 }
