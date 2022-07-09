@@ -56,77 +56,79 @@ describe('DbAuthentication UseCase', () => {
     })
   })
 
-  describe('getAccessToken()', () => {
-    test('Should call Encrypter with correct id', async () => {
-      const { sut, encrypterStub } = makeSut()
-      const generateSpy = jest.spyOn(encrypterStub, 'encrypt')
-      await sut.authByPassword(makeFakeAuthentication())
-      expect(generateSpy).toHaveBeenCalledWith('valid_id')
+  describe('authByAccount()', () => {
+    describe('getAccessToken()', () => {
+      test('Should call Encrypter with correct id', async () => {
+        const { sut, encrypterStub } = makeSut()
+        const generateSpy = jest.spyOn(encrypterStub, 'encrypt')
+        await sut.authByAccount(makeFakeAccount())
+        expect(generateSpy).toHaveBeenCalledWith('valid_id')
+      })
+
+      test('Should call Encrypter refresh with correct id', async () => {
+        const { sut, encrypterStub } = makeSut()
+        const generateSpy = jest.spyOn(encrypterStub, 'encryptRefresh')
+        await sut.authByAccount(makeFakeAccount())
+        expect(generateSpy).toHaveBeenCalledWith('valid_id', 'any_token_id')
+      })
+
+      test('Should throw if Encrypter throws', async () => {
+        const { sut, encrypterStub } = makeSut()
+        jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()))
+        const promise = sut.authByAccount(makeFakeAccount())
+        await expect(promise).rejects.toThrow()
+      })
+
+      test('Should return an access token on auth success', async () => {
+        const { sut } = makeSut()
+        const tokens = await sut.authByAccount(makeFakeAccount())
+        expect(tokens.accessToken).toBe('any_token')
+      })
+
+      test('Should call UpdateAccessTokenRepository with correct values', async () => {
+        const { sut, updateAccessTokenRepositoryStub } = makeSut()
+        const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
+        await sut.authByAccount(makeFakeAccount())
+        expect(updateSpy).toHaveBeenCalledWith('valid_id', 'any_token')
+      })
+
+      test('Should throw if UpdateAccessTokenRepository throws', async () => {
+        const { sut, updateAccessTokenRepositoryStub } = makeSut()
+        jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
+          .mockReturnValueOnce(Promise.reject(new Error()))
+        const promise = sut.authByAccount(makeFakeAccount())
+        await expect(promise).rejects.toThrow()
+      })
     })
 
-    test('Should call Encrypter refresh with correct id', async () => {
-      const { sut, encrypterStub } = makeSut()
-      const generateSpy = jest.spyOn(encrypterStub, 'encryptRefresh')
-      await sut.authByPassword(makeFakeAuthentication())
-      expect(generateSpy).toHaveBeenCalledWith('valid_id', 'any_token_id')
-    })
+    describe('getRefreshToken()', () => {
+      test('Should throw if Encrypter refresh throws', async () => {
+        const { sut, encrypterStub } = makeSut()
+        jest.spyOn(encrypterStub, 'encryptRefresh').mockReturnValueOnce(Promise.reject(new Error()))
+        const promise = sut.authByAccount(makeFakeAccount())
+        await expect(promise).rejects.toThrow()
+      })
 
-    test('Should throw if Encrypter throws', async () => {
-      const { sut, encrypterStub } = makeSut()
-      jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()))
-      const promise = sut.authByPassword(makeFakeAuthentication())
-      await expect(promise).rejects.toThrow()
-    })
+      test('Should return a refresh token on auth success', async () => {
+        const { sut } = makeSut()
+        const tokens = await sut.authByAccount(makeFakeAccount())
+        expect(tokens.refreshToken).toBe('any_refresh_token')
+      })
 
-    test('Should return an access token on auth success', async () => {
-      const { sut } = makeSut()
-      const tokens = await sut.authByPassword(makeFakeAuthentication())
-      expect(tokens.accessToken).toBe('any_token')
-    })
+      test('Should call UpdateRefreshTokenRepository with correct values', async () => {
+        const { sut, updateRefreshTokenRepositoryStub } = makeSut()
+        const updateSpy = jest.spyOn(updateRefreshTokenRepositoryStub, 'updateRefreshToken')
+        await sut.authByAccount(makeFakeAccount())
+        expect(updateSpy).toHaveBeenCalledWith('valid_id', 'any_token_id')
+      })
 
-    test('Should call UpdateAccessTokenRepository with correct values', async () => {
-      const { sut, updateAccessTokenRepositoryStub } = makeSut()
-      const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
-      await sut.authByPassword(makeFakeAuthentication())
-      expect(updateSpy).toHaveBeenCalledWith('valid_id', 'any_token')
-    })
-
-    test('Should throw if UpdateAccessTokenRepository throws', async () => {
-      const { sut, updateAccessTokenRepositoryStub } = makeSut()
-      jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
-        .mockReturnValueOnce(Promise.reject(new Error()))
-      const promise = sut.authByPassword(makeFakeAuthentication())
-      await expect(promise).rejects.toThrow()
-    })
-  })
-
-  describe('getRefreshToken()', () => {
-    test('Should throw if Encrypter refresh throws', async () => {
-      const { sut, encrypterStub } = makeSut()
-      jest.spyOn(encrypterStub, 'encryptRefresh').mockReturnValueOnce(Promise.reject(new Error()))
-      const promise = sut.authByPassword(makeFakeAuthentication())
-      await expect(promise).rejects.toThrow()
-    })
-
-    test('Should return a refresh token on auth success', async () => {
-      const { sut } = makeSut()
-      const tokens = await sut.authByPassword(makeFakeAuthentication())
-      expect(tokens.refreshToken).toBe('any_refresh_token')
-    })
-
-    test('Should call UpdateRefreshTokenRepository with correct values', async () => {
-      const { sut, updateRefreshTokenRepositoryStub } = makeSut()
-      const updateSpy = jest.spyOn(updateRefreshTokenRepositoryStub, 'updateRefreshToken')
-      await sut.authByPassword(makeFakeAuthentication())
-      expect(updateSpy).toHaveBeenCalledWith('valid_id', 'any_token_id')
-    })
-
-    test('Should throw if UpdateRefreshTokenRepository throws', async () => {
-      const { sut, updateRefreshTokenRepositoryStub } = makeSut()
-      jest.spyOn(updateRefreshTokenRepositoryStub, 'updateRefreshToken')
-        .mockReturnValueOnce(Promise.reject(new Error()))
-      const promise = sut.authByPassword(makeFakeAuthentication())
-      await expect(promise).rejects.toThrow()
+      test('Should throw if UpdateRefreshTokenRepository throws', async () => {
+        const { sut, updateRefreshTokenRepositoryStub } = makeSut()
+        jest.spyOn(updateRefreshTokenRepositoryStub, 'updateRefreshToken')
+          .mockReturnValueOnce(Promise.reject(new Error()))
+        const promise = sut.authByAccount(makeFakeAccount())
+        await expect(promise).rejects.toThrow()
+      })
     })
   })
 })
