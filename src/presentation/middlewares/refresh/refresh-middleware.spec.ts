@@ -1,5 +1,5 @@
 import { AuthExpiredError } from '../../errors'
-import { ok, unauthorized } from '../../helpers/http/http-helper'
+import { ok, serverError, unauthorized } from '../../helpers/http/http-helper'
 import { RefreshMiddleware } from './refresh-middleware'
 import { HttpRequest, AccessDecrypter } from './refresh-middleware-protocols'
 
@@ -42,6 +42,14 @@ describe('Refresh Middleware', () => {
       .mockRejectedValueOnce(new AuthExpiredError())
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(ok({ refreshToken: 'any_refresh_token' }))
+  })
+
+  test('Should return 500 if Decrypter throws', async () => {
+    const { sut, accessDecrypterStub } = makeSut()
+    jest.spyOn(accessDecrypterStub, 'decrypt')
+      .mockRejectedValueOnce(new Error())
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
 
