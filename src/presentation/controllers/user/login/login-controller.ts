@@ -2,14 +2,14 @@ import {
   Controller,
   HttpRequest,
   HttpResponse,
-  Authentication,
+  PasswordAuthentication,
   Validation
 } from './login-controller-protocols'
 import { badRequest, ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
 
 export class LoginController implements Controller {
   constructor (
-    private readonly authentication: Authentication,
+    private readonly authentication: PasswordAuthentication,
     private readonly validation: Validation
   ) {}
 
@@ -20,11 +20,11 @@ export class LoginController implements Controller {
         return badRequest(error)
       }
       const { email, password } = httpRequest.body
-      const accessToken = await this.authentication.auth({ email, password })
-      if (!accessToken) {
+      const tokens = await this.authentication.authByPassword({ email, password })
+      if (!tokens) {
         return unauthorized()
       }
-      return ok({ accessToken })
+      return ok(tokens)
     } catch (err) {
       return serverError(err)
     }

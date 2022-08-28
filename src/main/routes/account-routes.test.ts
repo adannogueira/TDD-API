@@ -3,11 +3,13 @@ import { Collection } from 'mongodb'
 import request from 'supertest'
 import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
 import app from '../config/app'
+import { sign } from 'jsonwebtoken'
+import env from '../config/env'
 
 let accountCollection: Collection
 describe('Account Routes', () => {
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL)
+    await MongoHelper.connect(process.env.MONGO_URL!)
   })
 
   afterAll(async () => {
@@ -60,4 +62,88 @@ describe('Account Routes', () => {
         .expect(401)
     })
   })
+
+  describe('[POST] /refresh', () => {
+    test('Should return 401 when refresh token does not exist', async () => {
+      await request(app)
+        .post('/api/refresh')
+        .set('x-access-token', 'accessToken')
+        .send()
+        .expect(401)
+    })
+
+    test('Should return 401 when access token does not exist', async () => {
+      await request(app)
+        .post('/api/refresh')
+        .set('x-refresh-token', 'refreshToken')
+        .send()
+        .expect(401)
+    })
+
+    test('Should return 401 when refresh token is expired', async () => {
+      const tokens = await makeAuthenticatedUserTokens('0s', '0s')
+      await request(app)
+        .post('/api/refresh')
+        .set('x-access-token', tokens.accessToken)
+        .set('x-refresh-token', tokens.refreshToken)
+        .send()
+        .expect(401)
+    })
+
+    test('Should return 401 when access token is not expired', async () => {
+      const tokens = await makeAuthenticatedUserTokens('1m', '1m')
+      await request(app)
+        .post('/api/refresh')
+        .set('x-access-token', tokens.accessToken)
+        .set('x-refresh-token', tokens.refreshToken)
+        .send()
+        .expect(401)
+    })
+
+    test('Should return 200 on success', async () => {
+      const tokens = await makeAuthenticatedUserTokens('0s', '1m')
+      const result = await request(app)
+        .post('/api/refresh')
+        .set('x-access-token', tokens.accessToken)
+        .set('x-refresh-token', tokens.refreshToken)
+        .send()
+        .expect(200)
+      expect(result.body.accessToken).toBeTruthy()
+      expect(result.body.accessToken).not.toBe(tokens.accessToken)
+      expect(result.body.refreshToken).toBeTruthy()
+      expect(result.body.refreshToken).not.toBe(tokens.refreshToken)
+    })
+  })
 })
+
+const makeAuthenticatedUserTokens = async (
+  accessTime: string,
+  refreshTime: string
+): Promise<{ accessToken: string, refreshToken: string }> => {
+  const result = await accountCollection.insertOne({
+    name: 'John Doe',
+    email: 'john@mail.com',
+    password: 'any_password',
+    role: 'admin'
+  })
+  const id = result.insertedId.toString()
+  const accessToken = sign(
+    { id },
+    env.jwtSecret,
+    { expiresIn: accessTime }
+  )
+  const refreshToken = sign(
+    { id },
+    env.jwtSecret,
+    { jwtid: 'any_hash', expiresIn: refreshTime }
+  )
+  await accountCollection.updateOne({
+    _id: result.insertedId
+  }, {
+    $set: {
+      accessToken,
+      tokenId: 'any_hash'
+    }
+  })
+  return { accessToken, refreshToken }
+}
