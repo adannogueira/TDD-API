@@ -9,7 +9,7 @@ const makeSut = (): SurveyMongoRepository => {
 
 describe('Survey Mongodb Repository', () => {
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL)
+    await MongoHelper.connect(process.env.MONGO_URL!)
   })
 
   afterAll(async () => {
@@ -29,7 +29,8 @@ describe('Survey Mongodb Repository', () => {
         answer: 'any_answer'
       }, {
         answer: 'other_answer'
-      }]
+      }],
+      date: new Date()
     })
     const survey = await surveyCollection.findOne({ question: 'any_question' })
     expect(survey).toBeTruthy()
