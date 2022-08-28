@@ -6,7 +6,7 @@ import {
   Validation,
   PasswordAuthentication
 } from './signup-controller-protocols'
-import { badRequest, forbidden, ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
+import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
 import { EmailInUseError } from '../../../errors'
 
 export class SignUpController implements Controller {
@@ -35,7 +35,6 @@ export class SignUpController implements Controller {
         email,
         password
       })
-      if (!tokens) return unauthorized()
       return ok(tokens)
     } catch (error) {
       return serverError(error)
