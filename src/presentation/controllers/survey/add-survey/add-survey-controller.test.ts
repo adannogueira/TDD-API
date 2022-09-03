@@ -1,53 +1,11 @@
 import { badRequest, noContent, serverError } from '../../../helpers/http/http-helper'
 import { AddSurveyController } from './add-survey-controller'
 import { AddSurvey, AddSurveyModel, HttpRequest, Validation } from './add-survey-controller-protocols'
-
-const makeFakeRequest = (): HttpRequest => ({
-  body: {
-    question: 'any_question',
-    answers: [{
-      image: 'any_image',
-      answer: 'any_answer'
-    }]
-  }
-})
-
-const makeValidation = (): Validation => {
-  class ValidationStub implements Validation {
-    validate (input: any): Error {
-      return null as any
-    }
-  }
-  return new ValidationStub()
-}
-
-const makeAddSurvey = (): AddSurvey => {
-  class AddSurveyStub implements AddSurvey {
-    async add (data: AddSurveyModel): Promise<void> {
-      return await Promise.resolve()
-    }
-  }
-  return new AddSurveyStub()
-}
-
-interface sutTypes {
-  sut: AddSurveyController
-  validationStub: Validation
-  addSurveyStub: AddSurvey
-}
-
-const makeSut = (): sutTypes => {
-  const validationStub = makeValidation()
-  const addSurveyStub = makeAddSurvey()
-  const sut = new AddSurveyController(validationStub, addSurveyStub)
-  return {
-    sut,
-    validationStub,
-    addSurveyStub
-  }
-}
+import MockDate from 'mockdate'
 
 describe('AddSurvey Controller', () => {
+  beforeAll(() => MockDate.set(new Date()))
+  afterAll(() => MockDate.reset())
   test('Should call Validation with correct values', async () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')
@@ -87,3 +45,49 @@ describe('AddSurvey Controller', () => {
     expect(httpResponse).toEqual(noContent())
   })
 })
+
+const makeFakeRequest = (): HttpRequest => ({
+  body: {
+    question: 'any_question',
+    answers: [{
+      image: 'any_image',
+      answer: 'any_answer'
+    }],
+    date: new Date()
+  }
+})
+
+const makeValidation = (): Validation => {
+  class ValidationStub implements Validation {
+    validate (input: any): Error {
+      return null as any
+    }
+  }
+  return new ValidationStub()
+}
+
+const makeAddSurvey = (): AddSurvey => {
+  class AddSurveyStub implements AddSurvey {
+    async add (data: AddSurveyModel): Promise<void> {
+      return await Promise.resolve()
+    }
+  }
+  return new AddSurveyStub()
+}
+
+interface sutTypes {
+  sut: AddSurveyController
+  validationStub: Validation
+  addSurveyStub: AddSurvey
+}
+
+const makeSut = (): sutTypes => {
+  const validationStub = makeValidation()
+  const addSurveyStub = makeAddSurvey()
+  const sut = new AddSurveyController(validationStub, addSurveyStub)
+  return {
+    sut,
+    validationStub,
+    addSurveyStub
+  }
+}
