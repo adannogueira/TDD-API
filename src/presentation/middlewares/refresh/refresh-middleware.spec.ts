@@ -69,12 +69,12 @@ const makeAccessDecrypter = (): AccessDecrypter => {
   return new AccessDecrypterStub()
 }
 
-interface sutTypes {
+type SutTypes = {
   sut: RefreshMiddleware
   accessDecrypterStub: AccessDecrypter
 }
 
-const makeSut = (): sutTypes => {
+const makeSut = (): SutTypes => {
   const accessDecrypterStub = makeAccessDecrypter()
   const sut = new RefreshMiddleware(accessDecrypterStub)
   return {

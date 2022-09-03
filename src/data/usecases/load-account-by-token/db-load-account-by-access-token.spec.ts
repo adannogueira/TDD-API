@@ -55,13 +55,13 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
   })
 })
 
-interface sutTypes {
+type SutTypes = {
   sut: DbLoadAccountByAccessToken
   decrypterStub: AccessDecrypter
   loadAccountByAccessTokenRepoStub: LoadAccountByAccessTokenRepository
 }
 
-const makeSut = (): sutTypes => {
+const makeSut = (): SutTypes => {
   const decrypterStub = makeDecrypter()
   const loadAccountByAccessTokenRepoStub = makeLoadAccountByAccessTokenRepo()
   const sut = new DbLoadAccountByAccessToken(decrypterStub, loadAccountByAccessTokenRepoStub)

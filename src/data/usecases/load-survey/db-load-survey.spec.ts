@@ -33,7 +33,7 @@ const makeSut = (): SutTypes => {
   return { sut, loadSurveyRepositoryStub }
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: DbLoadSurvey
   loadSurveyRepositoryStub: LoadSurveyRepository
 }
