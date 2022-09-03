@@ -1,4 +1,4 @@
-import { AccessDecrypter } from '@data/protocols/criptography/access-decrypter'
+import { AccessDecrypter } from '$/data/protocols/criptography/access-decrypter'
 import { HttpRequest, HttpResponse, Middleware } from './refresh-middleware-protocols'
 import { ok, serverError, unauthorized } from '../../helpers/http/http-helper'
 import { AuthExpiredError } from '../../errors'

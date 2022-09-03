@@ -1,10 +1,10 @@
-import { DbAuthentication } from '@data/usecases/authentication/db-authentication'
-import { TokenAuthentication } from '@domain/usecases/token-authentication'
-import { BcryptAdapter } from '@infra/criptography/bcrypt-adapter/bcrypt-adapter'
-import { JwtAdapter } from '@infra/criptography/jwt-adapter/jwt-adapter'
-import { UuidAdapter } from '@infra/criptography/uuid-adapter/uuid-adapter'
-import { AccountMongoRepository } from '@infra/db/mongodb/account/account-mongo-repository'
-import env from '@main/config/env'
+import { DbAuthentication } from '$/data/usecases/authentication/db-authentication'
+import { TokenAuthentication } from '$/domain/usecases/token-authentication'
+import { BcryptAdapter } from '$/infra/criptography/bcrypt-adapter/bcrypt-adapter'
+import { JwtAdapter } from '$/infra/criptography/jwt-adapter/jwt-adapter'
+import { UuidAdapter } from '$/infra/criptography/uuid-adapter/uuid-adapter'
+import { AccountMongoRepository } from '$/infra/db/mongodb/account/account-mongo-repository'
+import env from '$/main/config/env'
 
 export const makeDbTokenAuthentication = (): TokenAuthentication => {
   const salt = 12

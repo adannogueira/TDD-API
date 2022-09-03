@@ -1,6 +1,6 @@
-import { RefreshDecrypter } from '@data/protocols/criptography/refresh-decrypter'
-import { LoadAccountByRefreshTokenIdRepository } from '@data/protocols/db/account/load-account-by-refresh-token-id-repository'
-import { AccountModel } from '@domain/models/account'
+import { RefreshDecrypter } from '$/data/protocols/criptography/refresh-decrypter'
+import { LoadAccountByRefreshTokenIdRepository } from '$/data/protocols/db/account/load-account-by-refresh-token-id-repository'
+import { AccountModel } from '$/domain/models/account'
 import { DbLoadAccountByRefreshToken } from './db-load-account-by-refresh-token'
 
 describe('DbLoadAccountByRefreshToken Usecase', () => {

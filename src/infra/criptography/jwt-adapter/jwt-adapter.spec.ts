@@ -1,4 +1,4 @@
-import { AuthExpiredError } from '@presentation/errors'
+import { AuthExpiredError } from '$/presentation/errors'
 import { JwtAdapter } from './jwt-adapter'
 import jwt from 'jsonwebtoken'
 
