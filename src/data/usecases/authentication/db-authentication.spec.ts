@@ -203,7 +203,7 @@ const makeUpdateRefreshTokenRepository = (): UpdateRefreshTokenRepository => {
   return new UpdateRefreshTokenRepositoryStub()
 }
 
-interface sutTypes {
+type SutTypes = {
   sut: DbAuthentication
   loadAccountByEmailRepository: LoadAccountByEmailRepository
   hashComparerStub: HashComparer
@@ -213,7 +213,7 @@ interface sutTypes {
   updateRefreshTokenRepositoryStub: UpdateRefreshTokenRepository
 }
 
-const makeSut = (): sutTypes => {
+const makeSut = (): SutTypes => {
   const loadAccountByEmailRepository = makeLoadAccountByEmailRepo()
   const hashComparerStub = makeHashComparer()
   const encrypterStub = makeEncrypter()

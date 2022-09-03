@@ -89,13 +89,13 @@ const makeFakeRequest = (): HttpRequest => ({
   }
 })
 
-interface sutTypes {
+type SutTypes = {
   sut: LoginController
   passwordAuthenticationStub: PasswordAuthentication
   validationStub: Validation
 }
 
-const makeSut = (): sutTypes => {
+const makeSut = (): SutTypes => {
   const validationStub = makeValidation()
   const passwordAuthenticationStub = makeAuthentication()
   const sut = new LoginController(

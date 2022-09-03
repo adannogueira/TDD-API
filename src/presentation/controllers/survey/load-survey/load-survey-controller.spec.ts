@@ -50,7 +50,7 @@ const makeSut = (): SutTypes => {
   return { sut, loadSurveyStub }
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: LoadSurveyController
   loadSurveyStub: LoadSurvey
 }

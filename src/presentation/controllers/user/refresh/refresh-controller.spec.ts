@@ -100,13 +100,13 @@ const makeFakeRequest = (): HttpRequest => ({
   }
 })
 
-interface sutTypes {
+type SutTypes = {
   sut: RefreshController
   loadAccountByRefreshTokenStub: LoadAccountByRefreshToken
   tokenAuthenticationStub: TokenAuthentication
 }
 
-const makeSut = (): sutTypes => {
+const makeSut = (): SutTypes => {
   const loadAccountByRefreshTokenStub = makeLoadAccountByRefreshToken()
   const tokenAuthenticationStub = makeAuthentication()
   const sut = new RefreshController(

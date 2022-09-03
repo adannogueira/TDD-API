@@ -59,13 +59,13 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
   })
 })
 
-interface sutTypes {
+type SutTypes = {
   sut: DbLoadAccountByRefreshToken
   decrypterStub: RefreshDecrypter
   loadAccountByRefreshTokenIdRepoStub: LoadAccountByRefreshTokenIdRepository
 }
 
-const makeSut = (): sutTypes => {
+const makeSut = (): SutTypes => {
   const decrypterStub = makeDecrypter()
   const loadAccountByRefreshTokenIdRepoStub = makeLoadAccountByRefreshTokenRepo()
   const sut = new DbLoadAccountByRefreshToken(decrypterStub, loadAccountByRefreshTokenIdRepoStub)

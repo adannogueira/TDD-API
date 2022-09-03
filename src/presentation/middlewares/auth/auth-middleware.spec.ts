@@ -48,7 +48,7 @@ describe('Auth Middleware', () => {
   })
 })
 
-interface sutTypes {
+type SutTypes = {
   sut: AuthMiddleware
   loadAccountByAccessTokenStub: LoadAccountByAccessToken
 }
@@ -75,7 +75,7 @@ const makeLoadAccountByAccessToken = (): LoadAccountByAccessToken => {
   return new LoadAccountByAccessTokenStub()
 }
 
-const makeSut = (role?: string): sutTypes => {
+const makeSut = (role?: string): SutTypes => {
   const loadAccountByAccessTokenStub = makeLoadAccountByAccessToken()
   const sut = new AuthMiddleware(loadAccountByAccessTokenStub, role)
   return {
