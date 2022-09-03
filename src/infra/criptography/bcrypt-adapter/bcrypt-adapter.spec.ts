@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt'
 import { BcryptAdapter } from './bcrypt-adapter'
+import bcrypt from 'bcrypt'
 
 describe('Bcrypt Adapter', () => {
   describe('hash()', () => {

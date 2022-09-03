@@ -1,3 +1,4 @@
+import { AccountModel } from '@domain/models/account'
 import {
   HttpRequest,
   LoadAccountByRefreshToken,
@@ -6,7 +7,6 @@ import {
 } from './refresh-controller-protocols'
 import { RefreshController } from './refresh-controller'
 import { ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
-import { AccountModel } from '../../../../domain/models/account'
 import { AuthExpiredError } from '../../../errors'
 
 describe('Refresh Controller', () => {

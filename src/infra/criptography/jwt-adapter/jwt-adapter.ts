@@ -1,9 +1,9 @@
+import { AccessDecrypter } from '@data/protocols/criptography/access-decrypter'
+import { AccessEncrypter } from '@data/protocols/criptography/access-encrypter'
+import { RefreshDecrypter } from '@data/protocols/criptography/refresh-decrypter'
+import { RefreshEncrypter } from '@data/protocols/criptography/refresh-encrypter'
+import { AuthExpiredError } from '@presentation/errors'
 import jwt from 'jsonwebtoken'
-import { AccessDecrypter } from '../../../data/protocols/criptography/access-decrypter'
-import { AccessEncrypter } from '../../../data/protocols/criptography/access-encrypter'
-import { RefreshDecrypter } from '../../../data/protocols/criptography/refresh-decrypter'
-import { RefreshEncrypter } from '../../../data/protocols/criptography/refresh-encrypter'
-import { AuthExpiredError } from '../../../presentation/errors'
 
 export class JwtAdapter implements AccessEncrypter, AccessDecrypter, RefreshEncrypter, RefreshDecrypter {
   constructor (
