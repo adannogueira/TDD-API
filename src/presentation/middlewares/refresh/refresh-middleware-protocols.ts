@@ -1,2 +1,2 @@
 export * from '../../protocols'
-export * from '@data/protocols/criptography/access-decrypter'
+export * from '$/data/protocols/criptography/access-decrypter'

@@ -1,6 +1,6 @@
-import { AccessDecrypter } from '@data/protocols/criptography/access-decrypter'
-import { LoadAccountByAccessTokenRepository } from '@data/protocols/db/account/load-account-by-access-token-repository'
-import { AccountModel } from '@domain/models/account'
+import { AccessDecrypter } from '$/data/protocols/criptography/access-decrypter'
+import { LoadAccountByAccessTokenRepository } from '$/data/protocols/db/account/load-account-by-access-token-repository'
+import { AccountModel } from '$/domain/models/account'
 import { DbLoadAccountByAccessToken } from './db-load-account-by-access-token'
 
 describe('DbLoadAccountByAccessToken Usecase', () => {

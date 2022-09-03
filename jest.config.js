@@ -1,3 +1,6 @@
+const { pathsToModuleNameMapper } = require('ts-jest')
+const { compilerOptions } = require('./tsconfig.json')
+/* eslint-disable no-useless-escape */
 module.exports = {
   roots: ['<rootDir>/src'],
   collectCoverageFrom: [
@@ -12,7 +15,5 @@ module.exports = {
     '.+\\.ts$': 'ts-jest'
   },
   globalTeardown: '<rootDir>/test-teardown-globals.js',
-  moduleNameMapper: {
-    '^@(?!jest|babel|mapbox)(.*)$': '<rootDir>/src/$1'
-  }
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/src/' })
 }
