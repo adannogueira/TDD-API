@@ -102,4 +102,12 @@ describe('Survey Routes', () => {
         .expect(403)
     })
   })
+
+  describe('GET /surveys', () => {
+    test('Should return 403 when user is not authorized', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .expect(403)
+    })
+  })
 })
