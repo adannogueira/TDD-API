@@ -1,4 +1,4 @@
-import { AccountModel } from '../models/account'
+import { AccountModel } from '@domain/models/account'
 
 export interface TokenAuthentication {
   authByAccount: (account: AccountModel) => Promise<Tokens>

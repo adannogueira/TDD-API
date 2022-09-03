@@ -4,7 +4,7 @@ import { BcryptAdapter } from '@infra/criptography/bcrypt-adapter/bcrypt-adapter
 import { JwtAdapter } from '@infra/criptography/jwt-adapter/jwt-adapter'
 import { UuidAdapter } from '@infra/criptography/uuid-adapter/uuid-adapter'
 import { AccountMongoRepository } from '@infra/db/mongodb/account/account-mongo-repository'
-import env from '../../../../config/env'
+import env from '@main/config/env'
 
 export const makeDbPasswordAuthentication = (): PasswordAuthentication => {
   const salt = 12

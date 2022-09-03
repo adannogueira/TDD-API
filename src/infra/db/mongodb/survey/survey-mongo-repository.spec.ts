@@ -1,6 +1,6 @@
-import { Collection } from 'mongodb'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 import { MongoHelper } from '../helpers/mongo-helper'
+import { Collection } from 'mongodb'
 
 describe('Survey Mongodb Repository', () => {
   beforeAll(async () => {

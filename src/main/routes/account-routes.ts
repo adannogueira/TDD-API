@@ -1,10 +1,10 @@
+import { adaptMiddleware } from '@main/adapters/express-middleware-adapter'
+import { adaptRoute } from '@main/adapters/express-route-adapter'
+import { makeLoginController } from '@main/factories/controllers/user/login/login-controller-factory'
+import { makeRefreshController } from '@main/factories/controllers/user/refresh/refresh-controller-factory'
+import { makeSignUpController } from '@main/factories/controllers/user/signup/signup-controller-factory'
+import { makeRefreshMiddleware } from '@main/factories/middlewares/refresh-middleware-factory'
 import { Router } from 'express'
-import { adaptMiddleware } from '../adapters/express-middleware-adapter'
-import { adaptRoute } from '../adapters/express-route-adapter'
-import { makeLoginController } from '../factories/controllers/user/login/login-controller-factory'
-import { makeRefreshController } from '../factories/controllers/user/refresh/refresh-controller-factory'
-import { makeSignUpController } from '../factories/controllers/user/signup/signup-controller-factory'
-import { makeRefreshMiddleware } from '../factories/middlewares/refresh-middleware-factory'
 
 export default (router: Router): void => {
   const refreshValidation = adaptMiddleware(makeRefreshMiddleware())
