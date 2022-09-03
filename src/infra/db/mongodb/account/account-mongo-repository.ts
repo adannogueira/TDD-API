@@ -1,13 +1,13 @@
-import { ObjectId } from 'mongodb'
-import { AddAccountRepository } from '../../../../data/protocols/db/account/add-account-repository'
-import { LoadAccountByEmailRepository } from '../../../../data/protocols/db/account/load-account-by-email-repository'
-import { LoadAccountByAccessTokenRepository } from '../../../../data/protocols/db/account/load-account-by-access-token-repository'
-import { LoadAccountByRefreshTokenIdRepository } from '../../../../data/protocols/db/account/load-account-by-refresh-token-id-repository'
-import { UpdateAccessTokenRepository } from '../../../../data/protocols/db/account/update-access-token-repository'
-import { UpdateRefreshTokenRepository } from '../../../../data/usecases/authentication/db-authentication-protocols'
+import { AddAccountRepository } from '@data/protocols/db/account/add-account-repository'
+import { LoadAccountByAccessTokenRepository } from '@data/protocols/db/account/load-account-by-access-token-repository'
+import { LoadAccountByEmailRepository } from '@data/protocols/db/account/load-account-by-email-repository'
+import { LoadAccountByRefreshTokenIdRepository } from '@data/protocols/db/account/load-account-by-refresh-token-id-repository'
+import { UpdateAccessTokenRepository } from '@data/protocols/db/account/update-access-token-repository'
+import { UpdateRefreshTokenRepository } from '@data/usecases/authentication/db-authentication-protocols'
 import { AccountModel } from '../../../../domain/models/account'
 import { AddAccountModel } from '../../../../domain/usecases/add-account'
 import { MongoHelper } from '../helpers/mongo-helper'
+import { ObjectId } from 'mongodb'
 
 export class AccountMongoRepository implements
   AddAccountRepository,

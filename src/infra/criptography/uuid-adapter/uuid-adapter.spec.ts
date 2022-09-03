@@ -1,4 +1,4 @@
-import { IdGenerator } from '../../../data/protocols/criptography/id-generator'
+import { IdGenerator } from '@data/protocols/criptography/id-generator'
 import { UuidAdapter } from './uuid-adapter'
 import { v4, validate } from 'uuid'
 
