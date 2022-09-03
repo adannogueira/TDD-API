@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
     "start": "node dist/main/server.js",
     "debug": "nodemon -L --watch ./dist --enable-source-maps --inspect=0.0.0.0:9222 --nolazy ./dist/main/server.js",
     "up": "yarn build && docker-compose up -d && tsc -w",
@@ -50,6 +50,7 @@
     "bcrypt": "^5.0.1",
     "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
     "mongodb": "^4.4.1",
     "nodemon": "^2.0.16",
     "uuid": "^8.3.2",
@@ -57,5 +58,8 @@
   },
   "engines": {
     "node": "16.x"
+  },
+  "_moduleAliases": {
+    "@": "dist/"
   }
 }

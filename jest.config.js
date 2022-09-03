@@ -11,5 +11,8 @@ module.exports = {
   transform: {
     '.+\\.ts$': 'ts-jest'
   },
-  globalTeardown: '<rootDir>/test-teardown-globals.js'
+  globalTeardown: '<rootDir>/test-teardown-globals.js',
+  moduleNameMapper: {
+    '@(.*)': '<rootDir>/src$1'
+  }
 }
