@@ -13,6 +13,6 @@ module.exports = {
   },
   globalTeardown: '<rootDir>/test-teardown-globals.js',
   moduleNameMapper: {
-    '@(.*)': '<rootDir>/src$1'
+    '^@(?!jest|babel|mapbox)(.*)$': '<rootDir>/src/$1'
   }
 }
