@@ -13,6 +13,6 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveyRep
   async loadAll (): Promise<SurveyModel[]> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
     const surveys = await surveyCollection.find().toArray()
-    return surveys?.map?.(survey => MongoHelper.map(survey))
+    return surveys?.map?.(survey => MongoHelper.map<SurveyModel>(survey))
   }
 }

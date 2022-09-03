@@ -20,13 +20,13 @@ export class AccountMongoRepository implements
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = await accountCollection.insertOne(accountData)
     const account = await accountCollection.findOne(result.insertedId)
-    return account && MongoHelper.map(account)
+    return account && MongoHelper.map<AccountModel>(account)
   }
 
   async loadByEmail (email: string): Promise<AccountModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne({ email })
-    return account && MongoHelper.map(account)
+    return account && MongoHelper.map<AccountModel>(account)
   }
 
   async updateAccessToken (id: string, token: string): Promise<any> {
@@ -44,7 +44,7 @@ export class AccountMongoRepository implements
       accessToken: token,
       $or: [{ role }, { role: 'admin' }]
     })
-    return account && MongoHelper.map(account)
+    return account && MongoHelper.map<AccountModel>(account)
   }
 
   async updateRefreshToken (id: string, tokenId: string): Promise<any> {
@@ -59,6 +59,6 @@ export class AccountMongoRepository implements
     const account = await accountCollection.findOne({
       tokenId
     })
-    return account && MongoHelper.map(account)
+    return account && MongoHelper.map<AccountModel>(account)
   }
 }
