@@ -89,6 +89,22 @@ describe('Survey Routes', () => {
         .set('x-access-token', accessToken)
         .expect(204)
     })
+
+    test('Should return 200 when user is authorized and surveys exists', async () => {
+      const accessToken = await makeUserToken()
+      await surveyCollection.insertMany([{
+        question: 'any_question',
+        answers: [{
+          image: 'any_image',
+          answer: 'any_answer'
+        }],
+        date: new Date()
+      }])
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
   })
 })
 
