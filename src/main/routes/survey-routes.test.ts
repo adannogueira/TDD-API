@@ -41,21 +41,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 204 when user is authorized', async () => {
-      const result = await accountCollection.insertOne({
-        name: 'John Doe',
-        email: 'john@mail.com',
-        password: 'any_password',
-        role: 'admin'
-      })
-      const id = result.insertedId.toString()
-      const accessToken = sign({ id }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: result.insertedId
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeUserToken({ admin: true })
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -72,21 +58,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 403 when token is expired', async () => {
-      const result = await accountCollection.insertOne({
-        name: 'John Doe',
-        email: 'john@mail.com',
-        password: 'any_password',
-        role: 'admin'
-      })
-      const id = result.insertedId.toString()
-      const accessToken = sign({ id }, env.jwtSecret, { expiresIn: '0s' })
-      await accountCollection.updateOne({
-        _id: result.insertedId
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeUserToken({ admin: true, expired: true })
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -111,20 +83,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 204 when user is authorized and no survey exists', async () => {
-      const result = await accountCollection.insertOne({
-        name: 'John Doe',
-        email: 'john@mail.com',
-        password: 'any_password'
-      })
-      const id = result.insertedId.toString()
-      const accessToken = sign({ id }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: result.insertedId
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeUserToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
@@ -132,3 +91,28 @@ describe('Survey Routes', () => {
     })
   })
 })
+
+const makeUserToken = async (
+  { admin, expired }: { admin?: boolean, expired?: boolean } = {}
+): Promise<string> => {
+  const user = await accountCollection.insertOne({
+    name: 'John Doe',
+    email: 'john@mail.com',
+    password: 'any_password',
+    role: admin ? 'admin' : undefined
+  })
+  const id = user.insertedId.toString()
+  const accessToken = sign(
+    { id },
+    env.jwtSecret,
+    { expiresIn: expired ? '0s' : '5m' }
+  )
+  await accountCollection.updateOne({
+    _id: user.insertedId
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+  return accessToken
+}
