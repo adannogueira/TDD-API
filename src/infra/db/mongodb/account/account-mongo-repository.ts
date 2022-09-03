@@ -4,8 +4,8 @@ import { LoadAccountByEmailRepository } from '@data/protocols/db/account/load-ac
 import { LoadAccountByRefreshTokenIdRepository } from '@data/protocols/db/account/load-account-by-refresh-token-id-repository'
 import { UpdateAccessTokenRepository } from '@data/protocols/db/account/update-access-token-repository'
 import { UpdateRefreshTokenRepository } from '@data/usecases/authentication/db-authentication-protocols'
-import { AccountModel } from '../../../../domain/models/account'
-import { AddAccountModel } from '../../../../domain/usecases/add-account'
+import { AccountModel } from '@domain/models/account'
+import { AddAccountModel } from '@domain/usecases/add-account'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { ObjectId } from 'mongodb'
 

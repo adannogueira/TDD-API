@@ -1,5 +1,5 @@
-export * from '../../../domain/models/account'
-export * from '../../../domain/usecases/password-authentication'
+export * from '@domain/models/account'
+export * from '@domain/usecases/password-authentication'
 export * from '../../protocols/db/account/load-account-by-email-repository'
 export * from '../../protocols/db/account/update-access-token-repository'
 export * from '../../protocols/db/account/update-refresh-token-repository'

@@ -1,4 +1,4 @@
-import { AccountModel } from '../../../domain/models/account'
+import { AccountModel } from '@domain/models/account'
 import { AccessDecrypter } from '../../protocols/criptography/access-decrypter'
 import { DbLoadAccountByAccessToken } from './db-load-account-by-access-token'
 import { LoadAccountByAccessTokenRepository } from '../../protocols/db/account/load-account-by-access-token-repository'

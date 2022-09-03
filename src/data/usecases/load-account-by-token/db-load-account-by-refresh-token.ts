@@ -1,4 +1,4 @@
-import { LoadAccountByRefreshToken } from '../../../domain/usecases/load-account-by-refresh-token'
+import { LoadAccountByRefreshToken } from '@domain/usecases/load-account-by-refresh-token'
 import { RefreshDecrypter } from '../../protocols/criptography/refresh-decrypter'
 import { LoadAccountByRefreshTokenIdRepository } from '../../protocols/db/account/load-account-by-refresh-token-id-repository'
 import { AccountModel } from '../add-account/db-add-account-protocols'
