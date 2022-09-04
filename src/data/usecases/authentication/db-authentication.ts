@@ -1,4 +1,4 @@
-import { TokenAuthentication } from '$/domain/usecases/token-authentication'
+import { TokenAuthentication } from '$/domain/usecases/account/token-authentication'
 import {
   PasswordAuthentication,
   Tokens,
