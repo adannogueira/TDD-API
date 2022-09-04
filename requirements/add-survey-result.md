@@ -2,7 +2,7 @@
 
 > ## Caso de Sucesso
 1. 🏁 Recebe uma requisição do tipo **PUT** na rota **/api/surveys/:surveyId/results**
-2. ⏳ Valida se a requisição foi feita por um **usuário logado**
+2. 🏁 Valida se a requisição foi feita por um **usuário logado**
 3. 🏁 Valida o parâmetro **survey_id**
 4. 🏁 Valida se o campo **answer** é uma resposta válida
 5. 🏁 **Cria** um resultado de enquete com os dados fornecidos

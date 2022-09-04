@@ -34,24 +34,27 @@ describe('Survey Result Routes', () => {
     })
 
     test('Should return 200 on save survey result when user is authorized', async () => {
-      const survey = await surveyCollection.insertOne({
-        question: 'Question',
-        answers: [{
-          answer: 'Answer 1',
-          image: 'http://image-name.com'
-        }, {
-          answer: 'Answer 2'
-        }],
-        date: new Date()
-      })
       const accessToken = await makeUserToken()
+      const surveyId = await makeSurveyId()
       await request(app)
-        .put(`/api/surveys/${survey.insertedId.toString()}/results`)
+        .put(`/api/surveys/${surveyId}/results`)
         .set('x-access-token', accessToken)
         .send({
           answer: 'Answer 1'
         })
         .expect(200)
+    })
+
+    test('Should return 403 when token is expired', async () => {
+      const accessToken = await makeUserToken({ admin: true, expired: true })
+      const surveyId = await makeSurveyId()
+      await request(app)
+        .put(`/api/surveys/${surveyId}/results`)
+        .set('x-access-token', accessToken)
+        .send({
+          answer: 'Answer 1'
+        })
+        .expect(403)
     })
   })
 })
@@ -79,4 +82,18 @@ const makeUserToken = async (
     }
   })
   return accessToken
+}
+
+const makeSurveyId = async (): Promise<string> => {
+  const survey = await surveyCollection.insertOne({
+    question: 'Question',
+    answers: [{
+      answer: 'Answer 1',
+      image: 'http://image-name.com'
+    }, {
+      answer: 'Answer 2'
+    }],
+    date: new Date()
+  })
+  return survey.insertedId.toString()
 }
