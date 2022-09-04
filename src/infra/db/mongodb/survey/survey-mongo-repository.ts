@@ -24,6 +24,6 @@ export class SurveyMongoRepository implements
   async loadById (id: string): Promise<SurveyModel> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
     const survey = await surveyCollection.findOne({ _id: new ObjectId(id) })
-    return MongoHelper.map<SurveyModel>(survey)
+    return survey && MongoHelper.map<SurveyModel>(survey)
   }
 }
