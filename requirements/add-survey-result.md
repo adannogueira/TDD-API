@@ -7,7 +7,7 @@
 4. 🏁 Valida se o campo **answer** é uma resposta válida
 5. 🏁 **Cria** um resultado de enquete com os dados fornecidos
 6. 🏁 **Atualiza** um resultado de enquete com os dados fornecidos
-7. ⏳ Retorna **200** com os dados do resultado da enquete
+7. 🏁 Retorna **200** com os dados do resultado da enquete
 
 > ## Caso de Erro
 1. ⏳ Retorna **404** se a API não existir
