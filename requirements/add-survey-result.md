@@ -14,6 +14,6 @@
 2. ⏳ Retorna **403** se o usuário não estiver logado
 3. 🏁 Retorna **403** se o survey_id for inválido
 4. 🏁 Retorna **403** se a respost enviada for inválida
-5. ⏳ Retorna **500** se houver um erro ao tentar criar o resultado
-6. ⏳ Retorna **500** se houver um erro ao tentar atualizar o resultado
+5. 🏁 Retorna **500** se houver um erro ao tentar criar o resultado
+6. 🏁 Retorna **500** se houver um erro ao tentar atualizar o resultado
 6. 🏁 Retorna **500** se houver um erro ao tentar carregar a enquete
