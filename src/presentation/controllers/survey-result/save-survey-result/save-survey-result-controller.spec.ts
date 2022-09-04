@@ -90,9 +90,9 @@ const makeFakeRequest = (): HttpRequest => ({
     surveyId: 'any_id'
   },
   body: {
-    answer: 'any_answer'
-  },
-  accountId: 'any_account_id'
+    answer: 'any_answer',
+    accountId: 'any_account_id'
+  }
 })
 
 const makeLoadSurveyById = (): LoadSurveyById => {
