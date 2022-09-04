@@ -54,7 +54,9 @@ describe('Survey Mongodb Repository', () => {
       const surveys = await sut.loadAll()
       expect(surveys).toBeInstanceOf(Array)
       expect(surveys[0].question).toBe('any_question')
+      expect(surveys[0].id).toBeTruthy()
       expect(surveys[1].question).toBe('other_question')
+      expect(surveys[1].id).toBeTruthy()
     })
 
     test('Should return an empty array when no data is found', async () => {
@@ -62,6 +64,25 @@ describe('Survey Mongodb Repository', () => {
       const surveys = await sut.loadAll()
       expect(surveys).toBeInstanceOf(Array)
       expect(surveys.length).toBe(0)
+    })
+  })
+
+  describe('loadById()', () => {
+    test('Should load survey by id on success', async () => {
+      const res = await surveyCollection.insertOne({
+        question: 'any_question',
+        answers: [{
+          image: 'any_image',
+          answer: 'any_answer'
+        }],
+        date: new Date()
+      })
+      const id = res.insertedId.toString()
+      const sut = makeSut()
+      const survey = await sut.loadById(id)
+      expect(survey).toBeTruthy()
+      expect(survey.id).toBeTruthy()
+      expect(survey.question).toBe('any_question')
     })
   })
 })

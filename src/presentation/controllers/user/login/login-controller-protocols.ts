@@ -1,2 +1,2 @@
-export * from '$/domain/usecases/password-authentication'
+export * from '$/domain/usecases/account/password-authentication'
 export * from '../../../protocols'

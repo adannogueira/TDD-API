@@ -1,7 +1,9 @@
-import { RefreshDecrypter } from '$/data/protocols/criptography/refresh-decrypter'
-import { LoadAccountByRefreshTokenIdRepository } from '$/data/protocols/db/account/load-account-by-refresh-token-id-repository'
-import { AccountModel } from '$/data/usecases/add-account/db-add-account-protocols'
-import { LoadAccountByRefreshToken } from '$/domain/usecases/load-account-by-refresh-token'
+import {
+  AccountModel,
+  LoadAccountByRefreshToken,
+  LoadAccountByRefreshTokenIdRepository,
+  RefreshDecrypter
+} from './load-account-by-refresh-token-protocols'
 
 export class DbLoadAccountByRefreshToken implements LoadAccountByRefreshToken {
   constructor (

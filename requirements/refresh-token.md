@@ -10,7 +10,7 @@
 7. 🏁 Envia os tokens atualizados para o usuário
 
 > ## Caso de Erro
-1. ⏳ Retorna **404** se a API não existir
+1. 🏁 Retorna **404** se a API não existir
 2. 🏁 Retorna **401** se o refreshToken não existir
 3. 🏁 Retorna **401** se o accessToken não for fornecido pelo cliente
 4. 🏁 Retorna **401** se o accessToken não estiver expirado
