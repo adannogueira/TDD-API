@@ -10,7 +10,7 @@
 7. 🏁 Retorna **200** com os dados do resultado da enquete
 
 > ## Caso de Erro
-1. ⏳ Retorna **404** se a API não existir
+1. 🏁 Retorna **404** se a API não existir
 2. ⏳ Retorna **403** se o usuário não estiver logado
 3. 🏁 Retorna **403** se o survey_id for inválido
 4. 🏁 Retorna **403** se a respost enviada for inválida
