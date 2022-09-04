@@ -16,4 +16,4 @@
 4. ⏳ Retorna **403** se a respost enviada for inválida
 5. ⏳ Retorna **500** se houver um erro ao tentar criar o resultado
 6. ⏳ Retorna **500** se houver um erro ao tentar atualizar o resultado
-6. ⏳ Retorna **500** se houver um erro ao tentar carregar a enquete
+6. 🏁 Retorna **500** se houver um erro ao tentar carregar a enquete
