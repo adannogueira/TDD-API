@@ -11,7 +11,7 @@
 
 > ## Caso de Erro
 1. 🏁 Retorna **404** se a API não existir
-2. ⏳ Retorna **403** se o usuário não estiver logado
+2. 🏁 Retorna **403** se o usuário não estiver logado
 3. 🏁 Retorna **403** se o survey_id for inválido
 4. 🏁 Retorna **403** se a respost enviada for inválida
 5. 🏁 Retorna **500** se houver um erro ao tentar criar o resultado
