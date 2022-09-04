@@ -1,6 +1,5 @@
-import { LoadSurveyRepository } from '$/data/protocols/db/survey/load-survey-repository'
-import { SurveyModel } from '$/domain/models/survey'
 import { DbLoadSurvey } from './db-load-survey'
+import { LoadSurveyRepository, SurveyModel } from './load-survey-protocols'
 import MockDate from 'mockdate'
 
 describe('DbLoadSurvey', () => {
