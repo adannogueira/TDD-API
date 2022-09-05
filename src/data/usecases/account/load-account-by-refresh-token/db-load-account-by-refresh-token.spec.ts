@@ -1,3 +1,4 @@
+import { makeDecrypter } from '$/data/test'
 import { mockAccount } from '$/domain/test'
 import { DbLoadAccountByRefreshToken } from './db-load-account-by-refresh-token'
 import {
@@ -78,15 +79,6 @@ const makeSut = (): SutTypes => {
     decrypterStub,
     loadAccountByRefreshTokenIdRepoStub
   }
-}
-
-const makeDecrypter = (): RefreshDecrypter => {
-  class DecrypterStub implements RefreshDecrypter {
-    async decryptRefresh (value: string): Promise<string> {
-      return await Promise.resolve('any_token_id')
-    }
-  }
-  return new DecrypterStub()
 }
 
 const makeLoadAccountByRefreshTokenRepo = (): LoadAccountByRefreshTokenIdRepository => {

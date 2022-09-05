@@ -1,10 +1,9 @@
+import { Encrypter, makeEncrypter, makeHashComparer, makeIdGenerator } from '$/data/test'
 import { mockAccount, mockAuthentication } from '$/domain/test'
 import { DbAuthentication } from './db-authentication'
 import {
   AccountModel,
   HashComparer,
-  AccessEncrypter,
-  RefreshEncrypter,
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository,
   IdGenerator,
@@ -148,28 +147,6 @@ const makeLoadAccountByEmailRepo = (): LoadAccountByEmailRepository => {
   return new LoadAccountByEmailRepoStub()
 }
 
-const makeHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return await Promise.resolve(true)
-    }
-  }
-  return new HashComparerStub()
-}
-
-const makeEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    async encrypt (id: string): Promise<string> {
-      return await Promise.resolve('any_token')
-    }
-
-    async encryptRefresh (id: string, tokenId: string): Promise<string> {
-      return await Promise.resolve('any_refresh_token')
-    }
-  }
-  return new EncrypterStub()
-}
-
 const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
   class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
     async updateAccessToken (id: string, token: string): Promise<void> {
@@ -177,15 +154,6 @@ const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
     }
   }
   return new UpdateAccessTokenRepositoryStub()
-}
-
-const makeIdGenerator = (): IdGenerator => {
-  class IdGeneratorStub implements IdGenerator {
-    generate (): string {
-      return 'any_token_id'
-    }
-  }
-  return new IdGeneratorStub()
 }
 
 const makeUpdateRefreshTokenRepository = (): UpdateRefreshTokenRepository => {
@@ -232,5 +200,3 @@ const makeSut = (): SutTypes => {
     updateRefreshTokenRepositoryStub
   }
 }
-
-interface Encrypter extends AccessEncrypter, RefreshEncrypter {}

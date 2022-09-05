@@ -1,5 +1,6 @@
-import { AuthExpiredError } from '../../errors'
-import { ok, serverError, unauthorized } from '../../helpers/http/http-helper'
+import { makeAccessDecrypter } from '$/data/test'
+import { AuthExpiredError } from '$/presentation/errors'
+import { ok, serverError, unauthorized } from '$/presentation/helpers/http/http-helper'
 import { RefreshMiddleware } from './refresh-middleware'
 import { HttpRequest, AccessDecrypter } from './refresh-middleware-protocols'
 
@@ -59,15 +60,6 @@ const makeFakeRequest = (): HttpRequest => ({
     'x-refresh-token': 'any_refresh_token'
   }
 })
-
-const makeAccessDecrypter = (): AccessDecrypter => {
-  class AccessDecrypterStub implements AccessDecrypter {
-    async decrypt (value: string): Promise<string> {
-      return await Promise.resolve('any_value')
-    }
-  }
-  return new AccessDecrypterStub()
-}
 
 type SutTypes = {
   sut: RefreshMiddleware

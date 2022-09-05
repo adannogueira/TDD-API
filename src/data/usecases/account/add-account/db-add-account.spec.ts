@@ -1,3 +1,4 @@
+import { makeHasher } from '$/data/test'
 import { mockAccount, mockAccountData } from '$/domain/test'
 import {
   AccountModel,
@@ -7,15 +8,6 @@ import {
   LoadAccountByEmailRepository
 } from './db-add-account-protocols'
 import { DbAddAccount } from './db-add-account'
-
-const makeHasher = (): Hasher => {
-  class HasherStub implements Hasher {
-    async hash (value: string): Promise<string> {
-      return await new Promise(resolve => resolve('hashed_password'))
-    }
-  }
-  return new HasherStub()
-}
 
 const makeAddAccountRepository = (): AddAccountRepository => {
   class AddAccountRepositoryStub implements AddAccountRepository {
