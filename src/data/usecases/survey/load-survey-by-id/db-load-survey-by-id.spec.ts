@@ -28,13 +28,13 @@ describe('DbLoadSurveyById', () => {
   })
 })
 
+type SutTypes = {
+  sut: DbLoadSurveyById
+  loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository
+}
+
 const makeSut = (): SutTypes => {
   const loadSurveyByIdRepositoryStub = mockLoadSurveyByIdRepositoryStub()
   const sut = new DbLoadSurveyById(loadSurveyByIdRepositoryStub)
   return { sut, loadSurveyByIdRepositoryStub }
-}
-
-type SutTypes = {
-  sut: DbLoadSurveyById
-  loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository
 }

@@ -1,4 +1,4 @@
-import { mockLoadAccountByAccessTokenRepositoryStub } from '$/data/test'
+import { mockAccessDecrypter, mockLoadAccountByAccessTokenRepositoryStub } from '$/data/test'
 import { mockAccount } from '$/domain/test'
 import { DbLoadAccountByAccessToken } from './db-load-account-by-access-token'
 import {
@@ -66,7 +66,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const decrypterStub = makeDecrypter()
+  const decrypterStub = mockAccessDecrypter()
   const loadAccountByAccessTokenRepoStub = mockLoadAccountByAccessTokenRepositoryStub()
   const sut = new DbLoadAccountByAccessToken(decrypterStub, loadAccountByAccessTokenRepoStub)
   return {
@@ -74,13 +74,4 @@ const makeSut = (): SutTypes => {
     decrypterStub,
     loadAccountByAccessTokenRepoStub
   }
-}
-
-const makeDecrypter = (): AccessDecrypter => {
-  class DecrypterStub implements AccessDecrypter {
-    async decrypt (value: string): Promise<string> {
-      return await Promise.resolve('any_value')
-    }
-  }
-  return new DecrypterStub()
 }

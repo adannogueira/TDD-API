@@ -8,39 +8,6 @@ import {
 } from './db-add-account-protocols'
 import { DbAddAccount } from './db-add-account'
 
-const makeLoadAccountByEmailRepo = (): LoadAccountByEmailRepository => {
-  class LoadAccountByEmailRepoStub implements LoadAccountByEmailRepository {
-    async loadByEmail (email: string): Promise<AccountModel> {
-      return await Promise.resolve(null as any)
-    }
-  }
-  return new LoadAccountByEmailRepoStub()
-}
-
-type SutTypes = {
-  sut: DbAddAccount
-  hasherStub: Hasher
-  addAccountRepositoryStub: AddAccountRepository
-  loadAccountByEmailRepository: LoadAccountByEmailRepository
-}
-
-const makeSut = (): SutTypes => {
-  const addAccountRepositoryStub = mockAddAccountRepositoryStub()
-  const hasherStub = mockHasher()
-  const loadAccountByEmailRepository = makeLoadAccountByEmailRepo()
-  const sut = new DbAddAccount(
-    hasherStub,
-    addAccountRepositoryStub,
-    loadAccountByEmailRepository
-  )
-  return {
-    sut,
-    hasherStub,
-    addAccountRepositoryStub,
-    loadAccountByEmailRepository
-  }
-}
-
 describe('DbAccount Usecase', () => {
   test('Should call Hasher with correct password', async () => {
     const { sut, hasherStub } = makeSut()
@@ -97,3 +64,36 @@ describe('DbAccount Usecase', () => {
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 })
+
+const makeLoadAccountByEmailRepo = (): LoadAccountByEmailRepository => {
+  class LoadAccountByEmailRepoStub implements LoadAccountByEmailRepository {
+    async loadByEmail (email: string): Promise<AccountModel> {
+      return await Promise.resolve(null as any)
+    }
+  }
+  return new LoadAccountByEmailRepoStub()
+}
+
+type SutTypes = {
+  sut: DbAddAccount
+  hasherStub: Hasher
+  addAccountRepositoryStub: AddAccountRepository
+  loadAccountByEmailRepository: LoadAccountByEmailRepository
+}
+
+const makeSut = (): SutTypes => {
+  const addAccountRepositoryStub = mockAddAccountRepositoryStub()
+  const hasherStub = mockHasher()
+  const loadAccountByEmailRepository = makeLoadAccountByEmailRepo()
+  const sut = new DbAddAccount(
+    hasherStub,
+    addAccountRepositoryStub,
+    loadAccountByEmailRepository
+  )
+  return {
+    sut,
+    hasherStub,
+    addAccountRepositoryStub,
+    loadAccountByEmailRepository
+  }
+}

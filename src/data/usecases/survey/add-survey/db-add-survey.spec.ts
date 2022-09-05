@@ -1,22 +1,8 @@
+import { mockAddSurveyRepositoryStub } from '$/data/test'
 import { mockSurveyData } from '$/domain/test'
 import { AddSurveyRepository } from './add-survey-protocols'
 import { DbAddSurvey } from './db-add-survey'
 import MockDate from 'mockdate'
-import { mockAddSurveyRepositoryStub } from '../../../test'
-
-type SutTypes = {
-  sut: DbAddSurvey
-  addSurveyRepoStub: AddSurveyRepository
-}
-
-const makeSut = (): SutTypes => {
-  const addSurveyRepoStub = mockAddSurveyRepositoryStub()
-  const sut = new DbAddSurvey(addSurveyRepoStub)
-  return {
-    sut,
-    addSurveyRepoStub
-  }
-}
 
 describe('DbAddSurvey Usecase', () => {
   beforeAll(() => MockDate.set(new Date()))
@@ -35,3 +21,17 @@ describe('DbAddSurvey Usecase', () => {
     await expect(promise).rejects.toThrow()
   })
 })
+
+type SutTypes = {
+  sut: DbAddSurvey
+  addSurveyRepoStub: AddSurveyRepository
+}
+
+const makeSut = (): SutTypes => {
+  const addSurveyRepoStub = mockAddSurveyRepositoryStub()
+  const sut = new DbAddSurvey(addSurveyRepoStub)
+  return {
+    sut,
+    addSurveyRepoStub
+  }
+}

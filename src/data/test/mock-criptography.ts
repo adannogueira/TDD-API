@@ -55,7 +55,7 @@ export const mockIdGenerator = (): IdGenerator => {
   return new IdGeneratorStub()
 }
 
-export const mockDecrypter = (): RefreshDecrypter => {
+export const mockRefreshDecrypter = (): RefreshDecrypter => {
   class DecrypterStub implements RefreshDecrypter {
     async decryptRefresh (value: string): Promise<string> {
       return await Promise.resolve('any_token_id')
