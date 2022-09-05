@@ -6,7 +6,7 @@ import { IdGenerator } from '$/data/protocols/criptography/id-generator'
 import { RefreshDecrypter } from '$/data/protocols/criptography/refresh-decrypter'
 import { RefreshEncrypter } from '$/data/protocols/criptography/refresh-encrypter'
 
-export const makeAccessDecrypter = (): AccessDecrypter => {
+export const mockAccessDecrypter = (): AccessDecrypter => {
   class AccessDecrypterStub implements AccessDecrypter {
     async decrypt (value: string): Promise<string> {
       return await Promise.resolve('any_value')
@@ -15,7 +15,7 @@ export const makeAccessDecrypter = (): AccessDecrypter => {
   return new AccessDecrypterStub()
 }
 
-export const makeEncrypter = (): Encrypter => {
+export const mockEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
     async encrypt (id: string): Promise<string> {
       return await Promise.resolve('any_token')
@@ -28,7 +28,7 @@ export const makeEncrypter = (): Encrypter => {
   return new EncrypterStub()
 }
 
-export const makeHashComparer = (): HashComparer => {
+export const mockHashComparer = (): HashComparer => {
   class HashComparerStub implements HashComparer {
     async compare (value: string, hash: string): Promise<boolean> {
       return await Promise.resolve(true)
@@ -37,7 +37,7 @@ export const makeHashComparer = (): HashComparer => {
   return new HashComparerStub()
 }
 
-export const makeHasher = (): Hasher => {
+export const mockHasher = (): Hasher => {
   class HasherStub implements Hasher {
     async hash (value: string): Promise<string> {
       return await new Promise(resolve => resolve('hashed_password'))
@@ -46,7 +46,7 @@ export const makeHasher = (): Hasher => {
   return new HasherStub()
 }
 
-export const makeIdGenerator = (): IdGenerator => {
+export const mockIdGenerator = (): IdGenerator => {
   class IdGeneratorStub implements IdGenerator {
     generate (): string {
       return 'any_token_id'
@@ -55,7 +55,7 @@ export const makeIdGenerator = (): IdGenerator => {
   return new IdGeneratorStub()
 }
 
-export const makeDecrypter = (): RefreshDecrypter => {
+export const mockDecrypter = (): RefreshDecrypter => {
   class DecrypterStub implements RefreshDecrypter {
     async decryptRefresh (value: string): Promise<string> {
       return await Promise.resolve('any_token_id')

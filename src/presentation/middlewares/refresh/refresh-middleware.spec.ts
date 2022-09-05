@@ -1,4 +1,4 @@
-import { makeAccessDecrypter } from '$/data/test'
+import { mockAccessDecrypter } from '$/data/test'
 import { AuthExpiredError } from '$/presentation/errors'
 import { ok, serverError, unauthorized } from '$/presentation/helpers/http/http-helper'
 import { RefreshMiddleware } from './refresh-middleware'
@@ -67,7 +67,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const accessDecrypterStub = makeAccessDecrypter()
+  const accessDecrypterStub = mockAccessDecrypter()
   const sut = new RefreshMiddleware(accessDecrypterStub)
   return {
     sut,
