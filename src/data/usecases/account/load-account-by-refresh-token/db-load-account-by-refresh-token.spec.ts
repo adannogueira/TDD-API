@@ -1,3 +1,4 @@
+import { mockAccount } from '$/domain/test'
 import { DbLoadAccountByRefreshToken } from './db-load-account-by-refresh-token'
 import {
   AccountModel,
@@ -54,9 +55,9 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
     const { sut } = makeSut()
     const account = await sut.load('any_token')
     expect(account).toEqual({
-      id: 'valid_id',
-      name: 'valid_name',
-      email: 'valid_email@mail.com'
+      id: 'any_id',
+      name: 'any_name',
+      email: 'any_email@mail.com'
     })
   })
 })
@@ -90,15 +91,8 @@ const makeDecrypter = (): RefreshDecrypter => {
 const makeLoadAccountByRefreshTokenRepo = (): LoadAccountByRefreshTokenIdRepository => {
   class LoadAccountByRefreshTokenIdRepoStub implements LoadAccountByRefreshTokenIdRepository {
     async loadByRefreshTokenId (tokenId: string): Promise<AccountModel> {
-      return await Promise.resolve(makeFakeAccount())
+      return await Promise.resolve(mockAccount())
     }
   }
   return new LoadAccountByRefreshTokenIdRepoStub()
 }
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'valid_password'
-})

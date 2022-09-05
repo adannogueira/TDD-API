@@ -1,3 +1,4 @@
+import { mockAccount } from '$/domain/test'
 import {
   AccountModel,
   AddAccount,
@@ -82,7 +83,7 @@ describe('SignUp Controller', () => {
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     async add (account: AddAccountDTO): Promise<AccountModel> {
-      return await new Promise(resolve => resolve(makeFakeAccount()))
+      return await new Promise(resolve => resolve(mockAccount()))
     }
   }
   return new AddAccountStub()
@@ -108,13 +109,6 @@ const makeAuthentication = (): PasswordAuthentication => {
   }
   return new AuthenticationStub()
 }
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid@email.com',
-  password: 'valid_password'
-})
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {

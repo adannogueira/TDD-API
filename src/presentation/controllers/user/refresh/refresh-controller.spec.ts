@@ -1,4 +1,5 @@
 import { AccountModel } from '$/domain/models/account'
+import { mockAccount } from '$/domain/test'
 import {
   HttpRequest,
   LoadAccountByRefreshToken,
@@ -28,7 +29,7 @@ describe('Refresh Controller', () => {
     const { sut, tokenAuthenticationStub } = makeSut()
     const authSpy = jest.spyOn(tokenAuthenticationStub, 'authByAccount')
     await sut.handle(makeFakeRequest())
-    expect(authSpy).toHaveBeenCalledWith(makeFakeAccount())
+    expect(authSpy).toHaveBeenCalledWith(mockAccount())
   })
 
   test('Should return 500 if TokenAuthentication throws', async () => {
@@ -70,7 +71,7 @@ describe('Refresh Controller', () => {
 const makeLoadAccountByRefreshToken = (): LoadAccountByRefreshToken => {
   class LoadAccountByRefreshTokenStub implements LoadAccountByRefreshToken {
     async load (refreshToken: string): Promise<AccountModel> {
-      return await Promise.resolve(makeFakeAccount())
+      return await Promise.resolve(mockAccount())
     }
   }
   return new LoadAccountByRefreshTokenStub()
@@ -87,12 +88,6 @@ const makeAuthentication = (): TokenAuthentication => {
   }
   return new AuthenticationStub()
 }
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid@email.com'
-})
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {

@@ -1,3 +1,4 @@
+import { mockAccount } from '$/domain/test'
 import { DbLoadAccountByAccessToken } from './db-load-account-by-access-token'
 import {
   AccessDecrypter,
@@ -53,7 +54,7 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
   test('Should return an account on success', async () => {
     const { sut } = makeSut()
     const account = await sut.load('any_token', 'any_role')
-    expect(account).toEqual(makeFakeAccount())
+    expect(account).toEqual(mockAccount())
   })
 })
 
@@ -86,15 +87,8 @@ const makeDecrypter = (): AccessDecrypter => {
 const makeLoadAccountByAccessTokenRepo = (): LoadAccountByAccessTokenRepository => {
   class LoadAccountByAccessTokenRepoStub implements LoadAccountByAccessTokenRepository {
     async loadByAccessToken (accessToken: string, role?: string): Promise<AccountModel> {
-      return await Promise.resolve(makeFakeAccount())
+      return await Promise.resolve(mockAccount())
     }
   }
   return new LoadAccountByAccessTokenRepoStub()
 }
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'valid_password'
-})

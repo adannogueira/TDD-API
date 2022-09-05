@@ -1,5 +1,6 @@
-import { AccessDeniedError, AuthExpiredError } from '../../errors'
-import { forbidden, ok, serverError } from '../../helpers/http/http-helper'
+import { mockAccount } from '$/domain/test'
+import { AccessDeniedError, AuthExpiredError } from '$/presentation/errors'
+import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-helper'
 import { AuthMiddleware } from './auth-middleware'
 import { LoadAccountByAccessToken, AccountModel, HttpRequest } from './auth-middleware-protocols'
 
@@ -44,7 +45,7 @@ describe('Auth Middleware', () => {
   test('Should return 200 if LoadAccountByAccessToken returns an account', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(makeFakeRequest())
-    expect(httpResponse).toEqual(ok({ accountId: 'valid_id' }))
+    expect(httpResponse).toEqual(ok({ accountId: 'any_id' }))
   })
 })
 
@@ -52,13 +53,6 @@ type SutTypes = {
   sut: AuthMiddleware
   loadAccountByAccessTokenStub: LoadAccountByAccessToken
 }
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'hashed_password'
-})
 
 const makeFakeRequest = (): HttpRequest => ({
   headers: {
@@ -69,7 +63,7 @@ const makeFakeRequest = (): HttpRequest => ({
 const makeLoadAccountByAccessToken = (): LoadAccountByAccessToken => {
   class LoadAccountByAccessTokenStub implements LoadAccountByAccessToken {
     async load (accessToken: string, role?: string): Promise<AccountModel> {
-      return await Promise.resolve(makeFakeAccount())
+      return await Promise.resolve(mockAccount())
     }
   }
   return new LoadAccountByAccessTokenStub()
