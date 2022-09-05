@@ -35,7 +35,7 @@ describe('Refresh Controller', () => {
   test('Should return 500 if TokenAuthentication throws', async () => {
     const { sut, tokenAuthenticationStub } = makeSut()
     jest.spyOn(tokenAuthenticationStub, 'authByAccount')
-      .mockReturnValueOnce(Promise.reject(new Error()))
+      .mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
@@ -52,7 +52,7 @@ describe('Refresh Controller', () => {
   test('Should return 401 if an invalid token is provided', async () => {
     const { sut, loadAccountByRefreshTokenStub } = makeSut()
     jest.spyOn(loadAccountByRefreshTokenStub, 'load')
-      .mockReturnValueOnce(Promise.resolve(null as any))
+      .mockResolvedValueOnce(null)
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(unauthorized())
   })

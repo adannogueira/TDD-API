@@ -16,7 +16,8 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
 
   test('Should return null if RefreshDecrypter returns null', async () => {
     const { sut, decrypterStub } = makeSut()
-    jest.spyOn(decrypterStub, 'decryptRefresh').mockReturnValueOnce(Promise.resolve(null as any))
+    jest.spyOn(decrypterStub, 'decryptRefresh')
+      .mockResolvedValueOnce(null)
     const account = await sut.load('any_token')
     expect(account).toBeNull()
   })
@@ -32,7 +33,7 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
     const { sut, loadAccountByRefreshTokenIdRepoStub } = makeSut()
     jest
       .spyOn(loadAccountByRefreshTokenIdRepoStub, 'loadByRefreshTokenId')
-      .mockReturnValueOnce(Promise.resolve(null as any))
+      .mockResolvedValueOnce(null)
     const account = await sut.load('any_token')
     expect(account).toBeNull()
   })
