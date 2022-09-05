@@ -1,4 +1,4 @@
-import { mockAddAccountRepository, mockHasher } from '$/data/test'
+import { mockAddAccountRepositoryStub, mockHasher } from '$/data/test'
 import { mockAccount, mockAccountData } from '$/domain/test'
 import {
   AccountModel,
@@ -25,7 +25,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const addAccountRepositoryStub = mockAddAccountRepository()
+  const addAccountRepositoryStub = mockAddAccountRepositoryStub()
   const hasherStub = mockHasher()
   const loadAccountByEmailRepository = makeLoadAccountByEmailRepo()
   const sut = new DbAddAccount(

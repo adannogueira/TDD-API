@@ -1,16 +1,8 @@
 import { mockSurveyData } from '$/domain/test'
-import { AddSurveyDTO, AddSurveyRepository } from './add-survey-protocols'
+import { AddSurveyRepository } from './add-survey-protocols'
 import { DbAddSurvey } from './db-add-survey'
 import MockDate from 'mockdate'
-
-const makeAddSurveyRepoStub = (): AddSurveyRepository => {
-  class AddSurveyRepoStub implements AddSurveyRepository {
-    async add (data: AddSurveyDTO): Promise<void> {
-      return await Promise.resolve()
-    }
-  }
-  return new AddSurveyRepoStub()
-}
+import { mockAddSurveyRepositoryStub } from '../../../test'
 
 type SutTypes = {
   sut: DbAddSurvey
@@ -18,7 +10,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const addSurveyRepoStub = makeAddSurveyRepoStub()
+  const addSurveyRepoStub = mockAddSurveyRepositoryStub()
   const sut = new DbAddSurvey(addSurveyRepoStub)
   return {
     sut,

@@ -1,4 +1,4 @@
-import { mockLoadAccountByRefreshTokenRepository, mockDecrypter } from '$/data/test'
+import { mockLoadAccountByRefreshTokenRepositoryStub, mockDecrypter } from '$/data/test'
 import { DbLoadAccountByRefreshToken } from './db-load-account-by-refresh-token'
 import {
   LoadAccountByRefreshTokenIdRepository,
@@ -70,7 +70,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const decrypterStub = mockDecrypter()
-  const loadAccountByRefreshTokenIdRepoStub = mockLoadAccountByRefreshTokenRepository()
+  const loadAccountByRefreshTokenIdRepoStub = mockLoadAccountByRefreshTokenRepositoryStub()
   const sut = new DbLoadAccountByRefreshToken(decrypterStub, loadAccountByRefreshTokenIdRepoStub)
   return {
     sut,

@@ -1,5 +1,5 @@
 import { LogErrorRepository } from '$/data/protocols/db/log/log-error-repository'
-import { mockLogErrorRepository } from '$/data/test'
+import { mockLogErrorRepositoryStub } from '$/data/test'
 import { mockAccount } from '$/domain/test'
 import { serverError, ok } from '$/presentation/helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '$/presentation/protocols'
@@ -37,7 +37,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const controllerStub = makeController()
-  const logErrorRepositoryStub = mockLogErrorRepository()
+  const logErrorRepositoryStub = mockLogErrorRepositoryStub()
   const sut = new LogControllerDecorator(controllerStub, logErrorRepositoryStub)
   return {
     sut,

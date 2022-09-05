@@ -1,4 +1,4 @@
-import { Encrypter, mockLoadAccountByEmailRepository, mockUpdateAccessTokenRepository, mockUpdateRefreshTokenRepository, mockEncrypter, mockHashComparer, mockIdGenerator } from '$/data/test'
+import { Encrypter, mockLoadAccountByEmailRepositoryStub, mockUpdateAccessTokenRepositoryStub, mockUpdateRefreshTokenRepositoryStub, mockEncrypter, mockHashComparer, mockIdGenerator } from '$/data/test'
 import { mockAccount, mockAuthentication } from '$/domain/test'
 import { DbAuthentication } from './db-authentication'
 import {
@@ -148,12 +148,12 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const loadAccountByEmailRepository = mockLoadAccountByEmailRepository()
+  const loadAccountByEmailRepository = mockLoadAccountByEmailRepositoryStub()
   const hashComparerStub = mockHashComparer()
   const encrypterStub = mockEncrypter()
-  const updateAccessTokenRepositoryStub = mockUpdateAccessTokenRepository()
+  const updateAccessTokenRepositoryStub = mockUpdateAccessTokenRepositoryStub()
   const idGeneratorStub = mockIdGenerator()
-  const updateRefreshTokenRepositoryStub = mockUpdateRefreshTokenRepository()
+  const updateRefreshTokenRepositoryStub = mockUpdateRefreshTokenRepositoryStub()
   const sut = new DbAuthentication(
     loadAccountByEmailRepository,
     hashComparerStub,
