@@ -1,15 +1,7 @@
+import { mockSurveyData } from '$/domain/test'
 import { AddSurveyDTO, AddSurveyRepository } from './add-survey-protocols'
 import { DbAddSurvey } from './db-add-survey'
 import MockDate from 'mockdate'
-
-const makeFakeSurveyData = (): AddSurveyDTO => ({
-  question: 'any_question',
-  answers: [{
-    image: 'any_image',
-    answer: 'any_answer'
-  }],
-  date: new Date()
-})
 
 const makeAddSurveyRepoStub = (): AddSurveyRepository => {
   class AddSurveyRepoStub implements AddSurveyRepository {
@@ -40,14 +32,14 @@ describe('DbAddSurvey Usecase', () => {
   test('Should call AddSurveyRepo with correct values', async () => {
     const { sut, addSurveyRepoStub } = makeSut()
     const addSpy = jest.spyOn(addSurveyRepoStub, 'add')
-    await sut.add(makeFakeSurveyData())
-    expect(addSpy).toHaveBeenCalledWith(makeFakeSurveyData())
+    await sut.add(mockSurveyData())
+    expect(addSpy).toHaveBeenCalledWith(mockSurveyData())
   })
 
   test('Should throw if AddSurveyRepo throws', async () => {
     const { sut, addSurveyRepoStub } = makeSut()
     jest.spyOn(addSurveyRepoStub, 'add').mockRejectedValueOnce(new Error())
-    const promise = sut.add(makeFakeSurveyData())
+    const promise = sut.add(mockSurveyData())
     await expect(promise).rejects.toThrow()
   })
 })
