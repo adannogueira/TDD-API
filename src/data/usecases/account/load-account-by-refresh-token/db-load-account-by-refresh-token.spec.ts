@@ -1,8 +1,6 @@
-import { mockDecrypter } from '$/data/test'
-import { mockAccount } from '$/domain/test'
+import { mockLoadAccountByRefreshTokenRepository, mockDecrypter } from '$/data/test'
 import { DbLoadAccountByRefreshToken } from './db-load-account-by-refresh-token'
 import {
-  AccountModel,
   LoadAccountByRefreshTokenIdRepository,
   RefreshDecrypter
 } from './load-account-by-refresh-token-protocols'
@@ -72,20 +70,11 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const decrypterStub = mockDecrypter()
-  const loadAccountByRefreshTokenIdRepoStub = makeLoadAccountByRefreshTokenRepo()
+  const loadAccountByRefreshTokenIdRepoStub = mockLoadAccountByRefreshTokenRepository()
   const sut = new DbLoadAccountByRefreshToken(decrypterStub, loadAccountByRefreshTokenIdRepoStub)
   return {
     sut,
     decrypterStub,
     loadAccountByRefreshTokenIdRepoStub
   }
-}
-
-const makeLoadAccountByRefreshTokenRepo = (): LoadAccountByRefreshTokenIdRepository => {
-  class LoadAccountByRefreshTokenIdRepoStub implements LoadAccountByRefreshTokenIdRepository {
-    async loadByRefreshTokenId (tokenId: string): Promise<AccountModel> {
-      return await Promise.resolve(mockAccount())
-    }
-  }
-  return new LoadAccountByRefreshTokenIdRepoStub()
 }

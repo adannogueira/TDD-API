@@ -1,8 +1,8 @@
+import { mockLoadAccountByAccessTokenRepository } from '$/data/test'
 import { mockAccount } from '$/domain/test'
 import { DbLoadAccountByAccessToken } from './db-load-account-by-access-token'
 import {
   AccessDecrypter,
-  AccountModel,
   LoadAccountByAccessTokenRepository
 } from './load-account-by-access-token-protocols'
 
@@ -67,7 +67,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const decrypterStub = makeDecrypter()
-  const loadAccountByAccessTokenRepoStub = makeLoadAccountByAccessTokenRepo()
+  const loadAccountByAccessTokenRepoStub = mockLoadAccountByAccessTokenRepository()
   const sut = new DbLoadAccountByAccessToken(decrypterStub, loadAccountByAccessTokenRepoStub)
   return {
     sut,
@@ -83,13 +83,4 @@ const makeDecrypter = (): AccessDecrypter => {
     }
   }
   return new DecrypterStub()
-}
-
-const makeLoadAccountByAccessTokenRepo = (): LoadAccountByAccessTokenRepository => {
-  class LoadAccountByAccessTokenRepoStub implements LoadAccountByAccessTokenRepository {
-    async loadByAccessToken (accessToken: string, role?: string): Promise<AccountModel> {
-      return await Promise.resolve(mockAccount())
-    }
-  }
-  return new LoadAccountByAccessTokenRepoStub()
 }
