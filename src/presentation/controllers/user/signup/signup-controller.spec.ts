@@ -1,11 +1,11 @@
 import {
   AccountModel,
   AddAccount,
-  AddAccountModel,
+  AddAccountDTO,
   HttpRequest,
   Validation,
   PasswordAuthentication,
-  AuthenticationModel,
+  AuthenticationDTO,
   Tokens
 } from './signup-controller-protocols'
 import { EmailInUseError, MissingParamError, ServerError } from '../../../errors'
@@ -81,7 +81,7 @@ describe('SignUp Controller', () => {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountDTO): Promise<AccountModel> {
       return await new Promise(resolve => resolve(makeFakeAccount()))
     }
   }
@@ -99,7 +99,7 @@ const makeValidation = (): Validation => {
 
 const makeAuthentication = (): PasswordAuthentication => {
   class AuthenticationStub implements PasswordAuthentication {
-    async authByPassword (authentication: AuthenticationModel): Promise<Tokens> {
+    async authByPassword (authentication: AuthenticationDTO): Promise<Tokens> {
       return await Promise.resolve({
         accessToken: 'any_token',
         refreshToken: 'any_refresh_token'

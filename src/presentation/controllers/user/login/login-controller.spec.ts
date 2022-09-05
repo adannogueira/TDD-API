@@ -1,7 +1,7 @@
 import { MissingParamError } from '../../../errors'
 import { badRequest, ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import {
-  AuthenticationModel,
+  AuthenticationDTO,
   HttpRequest,
   PasswordAuthentication,
   Validation,
@@ -63,7 +63,7 @@ describe('Login Controller', () => {
 
 const makeAuthentication = (): PasswordAuthentication => {
   class PasswordAuthenticationStub implements PasswordAuthentication {
-    async authByPassword (authentication: AuthenticationModel): Promise<Tokens> {
+    async authByPassword (authentication: AuthenticationDTO): Promise<Tokens> {
       return await Promise.resolve({
         accessToken: 'any_token',
         refreshToken: 'any_refresh_token'
