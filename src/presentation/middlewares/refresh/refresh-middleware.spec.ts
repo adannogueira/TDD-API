@@ -33,7 +33,7 @@ describe('Refresh Middleware', () => {
 
   test('Should return 401 if accessToken is not expired', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle(makeFakeRequest())
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(unauthorized())
   })
 
@@ -41,7 +41,7 @@ describe('Refresh Middleware', () => {
     const { sut, accessDecrypterStub } = makeSut()
     jest.spyOn(accessDecrypterStub, 'decrypt')
       .mockRejectedValueOnce(new AuthExpiredError())
-    const httpResponse = await sut.handle(makeFakeRequest())
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok({ refreshToken: 'any_refresh_token' }))
   })
 
@@ -49,12 +49,12 @@ describe('Refresh Middleware', () => {
     const { sut, accessDecrypterStub } = makeSut()
     jest.spyOn(accessDecrypterStub, 'decrypt')
       .mockRejectedValueOnce(new Error())
-    const httpResponse = await sut.handle(makeFakeRequest())
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
 
-const makeFakeRequest = (): HttpRequest => ({
+const mockRequest = (): HttpRequest => ({
   headers: {
     'x-access-token': 'any_access_token',
     'x-refresh-token': 'any_refresh_token'
