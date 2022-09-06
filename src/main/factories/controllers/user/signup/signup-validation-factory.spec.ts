@@ -10,7 +10,7 @@ import { makeSignUpValidation } from './signup-validation-factory'
 
 jest.mock('$/validation/validators/validation-composite')
 
-const makeEmailValidator = (): EmailValidator => {
+const mockEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
     isValid (email: string): boolean {
       return true
@@ -27,7 +27,7 @@ describe('SignUp Validation Factory', () => {
       validations.push(new RequiredFieldValidation(field))
     }
     validations.push(new CompareFieldsValidation('password', 'passwordConfirmation'))
-    validations.push(new EmailValidation('email', makeEmailValidator()))
+    validations.push(new EmailValidation('email', mockEmailValidator()))
     expect(ValidationComposite).toHaveBeenCalledWith(validations)
   })
 })
