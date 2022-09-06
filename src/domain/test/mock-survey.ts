@@ -31,3 +31,15 @@ export const mockSurveyData = (): AddSurveyDTO => ({
   }],
   date: new Date()
 })
+
+export const mockSurveysData = (): AddSurveyDTO[] => ([
+  mockSurveyData(),
+  {
+    question: 'other_question',
+    answers: [{
+      image: 'other_image',
+      answer: 'other_answer'
+    }],
+    date: new Date()
+  }
+])

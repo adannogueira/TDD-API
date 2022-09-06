@@ -1,10 +1,6 @@
 import { MissingParamError } from '$/presentation/errors'
 import { RequiredFieldValidation } from './required-field-validation'
 
-const makeSut = (): RequiredFieldValidation => {
-  return new RequiredFieldValidation('field')
-}
-
 describe('RequiredFieldValidation', () => {
   test('Should return a MissignParamError if validation fails', () => {
     const sut = makeSut()
@@ -18,3 +14,7 @@ describe('RequiredFieldValidation', () => {
     expect(error).toBeFalsy()
   })
 })
+
+const makeSut = (): RequiredFieldValidation => {
+  return new RequiredFieldValidation('field')
+}
