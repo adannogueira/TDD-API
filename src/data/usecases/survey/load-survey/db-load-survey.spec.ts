@@ -1,5 +1,7 @@
+import { mockLoadSurveyRepositoryStub } from '$/data/test'
+import { mockSurveys } from '$/domain/test'
 import { DbLoadSurvey } from './db-load-survey'
-import { LoadSurveyRepository, SurveyModel } from './load-survey-protocols'
+import { LoadSurveyRepository } from './load-survey-protocols'
 import MockDate from 'mockdate'
 
 describe('DbLoadSurvey', () => {
@@ -15,49 +17,25 @@ describe('DbLoadSurvey', () => {
   test('Should return an array of surveys on success', async () => {
     const { sut } = makeSut()
     const surveys = await sut.load()
-    expect(surveys).toStrictEqual(makeFakeSurveys())
+    expect(surveys).toStrictEqual(mockSurveys())
   })
 
   test('Should throw if LoadSurveyRepository throws', async () => {
     const { sut, loadSurveyRepositoryStub } = makeSut()
-    jest.spyOn(loadSurveyRepositoryStub, 'loadAll').mockRejectedValueOnce(new Error())
+    jest.spyOn(loadSurveyRepositoryStub, 'loadAll')
+      .mockRejectedValueOnce(new Error())
     const promise = sut.load()
     await expect(promise).rejects.toThrow()
   })
 })
 
-const makeSut = (): SutTypes => {
-  const loadSurveyRepositoryStub = makeLoadSurveyRepositoryStub()
-  const sut = new DbLoadSurvey(loadSurveyRepositoryStub)
-  return { sut, loadSurveyRepositoryStub }
-}
-
 type SutTypes = {
   sut: DbLoadSurvey
   loadSurveyRepositoryStub: LoadSurveyRepository
 }
-const makeLoadSurveyRepositoryStub = (): LoadSurveyRepository => {
-  class LoadSurveyRepositoryStub implements LoadSurveyRepository {
-    async loadAll (): Promise<SurveyModel[]> {
-      return await Promise.resolve(makeFakeSurveys())
-    }
-  }
-  return new LoadSurveyRepositoryStub()
+
+const makeSut = (): SutTypes => {
+  const loadSurveyRepositoryStub = mockLoadSurveyRepositoryStub()
+  const sut = new DbLoadSurvey(loadSurveyRepositoryStub)
+  return { sut, loadSurveyRepositoryStub }
 }
-const makeFakeSurveys = (): SurveyModel[] => ([{
-  id: 'any_id',
-  question: 'any_question',
-  answers: [{
-    image: 'any_image',
-    answer: 'any_answer'
-  }],
-  date: new Date()
-}, {
-  id: 'other_id',
-  question: 'any_other_question',
-  answers: [{
-    image: 'any_other_image',
-    answer: 'any_other_answer'
-  }],
-  date: new Date()
-}])

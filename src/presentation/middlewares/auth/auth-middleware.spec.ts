@@ -1,7 +1,8 @@
-import { AccessDeniedError, AuthExpiredError } from '../../errors'
-import { forbidden, ok, serverError } from '../../helpers/http/http-helper'
+import { AccessDeniedError, AuthExpiredError } from '$/presentation/errors'
+import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-helper'
+import { mockLoadAccountByAccessToken } from '$/presentation/test'
 import { AuthMiddleware } from './auth-middleware'
-import { LoadAccountByAccessToken, AccountModel, HttpRequest } from './auth-middleware-protocols'
+import { LoadAccountByAccessToken, HttpRequest } from './auth-middleware-protocols'
 
 describe('Auth Middleware', () => {
   test('Should return 403 if no x-access-token exists in headers', async () => {
@@ -14,14 +15,15 @@ describe('Auth Middleware', () => {
     const role = 'any_role'
     const { sut, loadAccountByAccessTokenStub } = makeSut(role)
     const loadSpy = jest.spyOn(loadAccountByAccessTokenStub, 'load')
-    await sut.handle(makeFakeRequest())
+    await sut.handle(mockRequest())
     expect(loadSpy).toHaveBeenCalledWith('any_token', role)
   })
 
   test('Should return 403 if LoadAccountByAccessToken returns null', async () => {
     const { sut, loadAccountByAccessTokenStub } = makeSut()
-    jest.spyOn(loadAccountByAccessTokenStub, 'load').mockReturnValueOnce(Promise.resolve(null) as any)
-    const httpResponse = await sut.handle(makeFakeRequest())
+    jest.spyOn(loadAccountByAccessTokenStub, 'load')
+      .mockResolvedValueOnce(null)
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })
 
@@ -29,22 +31,23 @@ describe('Auth Middleware', () => {
     const { sut, loadAccountByAccessTokenStub } = makeSut()
     jest
       .spyOn(loadAccountByAccessTokenStub, 'load')
-      .mockReturnValueOnce(Promise.reject(new AuthExpiredError()))
-    const httpResponse = await sut.handle(makeFakeRequest())
+      .mockRejectedValueOnce(new AuthExpiredError())
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })
 
   test('Should return 500 if LoadAccountByAccessToken throws', async () => {
     const { sut, loadAccountByAccessTokenStub } = makeSut()
-    jest.spyOn(loadAccountByAccessTokenStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
-    const httpResponse = await sut.handle(makeFakeRequest())
+    jest.spyOn(loadAccountByAccessTokenStub, 'load')
+      .mockRejectedValueOnce(new Error())
+    const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   test('Should return 200 if LoadAccountByAccessToken returns an account', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle(makeFakeRequest())
-    expect(httpResponse).toEqual(ok({ accountId: 'valid_id' }))
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok({ accountId: 'any_id' }))
   })
 })
 
@@ -53,30 +56,14 @@ type SutTypes = {
   loadAccountByAccessTokenStub: LoadAccountByAccessToken
 }
 
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'hashed_password'
-})
-
-const makeFakeRequest = (): HttpRequest => ({
+const mockRequest = (): HttpRequest => ({
   headers: {
     'x-access-token': 'any_token'
   }
 })
 
-const makeLoadAccountByAccessToken = (): LoadAccountByAccessToken => {
-  class LoadAccountByAccessTokenStub implements LoadAccountByAccessToken {
-    async load (accessToken: string, role?: string): Promise<AccountModel> {
-      return await Promise.resolve(makeFakeAccount())
-    }
-  }
-  return new LoadAccountByAccessTokenStub()
-}
-
 const makeSut = (role?: string): SutTypes => {
-  const loadAccountByAccessTokenStub = makeLoadAccountByAccessToken()
+  const loadAccountByAccessTokenStub = mockLoadAccountByAccessToken()
   const sut = new AuthMiddleware(loadAccountByAccessTokenStub, role)
   return {
     sut,

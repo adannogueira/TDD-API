@@ -1,6 +1,6 @@
+import { mockLoadAccountByRefreshTokenRepositoryStub, mockRefreshDecrypter } from '$/data/test'
 import { DbLoadAccountByRefreshToken } from './db-load-account-by-refresh-token'
 import {
-  AccountModel,
   LoadAccountByRefreshTokenIdRepository,
   RefreshDecrypter
 } from './load-account-by-refresh-token-protocols'
@@ -15,7 +15,8 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
 
   test('Should return null if RefreshDecrypter returns null', async () => {
     const { sut, decrypterStub } = makeSut()
-    jest.spyOn(decrypterStub, 'decryptRefresh').mockReturnValueOnce(Promise.resolve(null as any))
+    jest.spyOn(decrypterStub, 'decryptRefresh')
+      .mockResolvedValueOnce(null)
     const account = await sut.load('any_token')
     expect(account).toBeNull()
   })
@@ -31,21 +32,23 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
     const { sut, loadAccountByRefreshTokenIdRepoStub } = makeSut()
     jest
       .spyOn(loadAccountByRefreshTokenIdRepoStub, 'loadByRefreshTokenId')
-      .mockReturnValueOnce(Promise.resolve(null as any))
+      .mockResolvedValueOnce(null)
     const account = await sut.load('any_token')
     expect(account).toBeNull()
   })
 
   test('Should throw if RefreshDecrypter throws', async () => {
     const { sut, decrypterStub } = makeSut()
-    jest.spyOn(decrypterStub, 'decryptRefresh').mockRejectedValueOnce(new Error())
+    jest.spyOn(decrypterStub, 'decryptRefresh')
+      .mockRejectedValueOnce(new Error())
     const promise = sut.load('any_token')
     await expect(promise).rejects.toThrow()
   })
 
   test('Should throw if LoadAccountByRefreshTokenRepo throws', async () => {
     const { sut, loadAccountByRefreshTokenIdRepoStub } = makeSut()
-    jest.spyOn(loadAccountByRefreshTokenIdRepoStub, 'loadByRefreshTokenId').mockRejectedValueOnce(new Error())
+    jest.spyOn(loadAccountByRefreshTokenIdRepoStub, 'loadByRefreshTokenId')
+      .mockRejectedValueOnce(new Error())
     const promise = sut.load('any_token')
     await expect(promise).rejects.toThrow()
   })
@@ -54,9 +57,9 @@ describe('DbLoadAccountByRefreshToken Usecase', () => {
     const { sut } = makeSut()
     const account = await sut.load('any_token')
     expect(account).toEqual({
-      id: 'valid_id',
-      name: 'valid_name',
-      email: 'valid_email@mail.com'
+      id: 'any_id',
+      name: 'any_name',
+      email: 'any_email@mail.com'
     })
   })
 })
@@ -68,8 +71,8 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const decrypterStub = makeDecrypter()
-  const loadAccountByRefreshTokenIdRepoStub = makeLoadAccountByRefreshTokenRepo()
+  const decrypterStub = mockRefreshDecrypter()
+  const loadAccountByRefreshTokenIdRepoStub = mockLoadAccountByRefreshTokenRepositoryStub()
   const sut = new DbLoadAccountByRefreshToken(decrypterStub, loadAccountByRefreshTokenIdRepoStub)
   return {
     sut,
@@ -77,28 +80,3 @@ const makeSut = (): SutTypes => {
     loadAccountByRefreshTokenIdRepoStub
   }
 }
-
-const makeDecrypter = (): RefreshDecrypter => {
-  class DecrypterStub implements RefreshDecrypter {
-    async decryptRefresh (value: string): Promise<string> {
-      return await Promise.resolve('any_token_id')
-    }
-  }
-  return new DecrypterStub()
-}
-
-const makeLoadAccountByRefreshTokenRepo = (): LoadAccountByRefreshTokenIdRepository => {
-  class LoadAccountByRefreshTokenIdRepoStub implements LoadAccountByRefreshTokenIdRepository {
-    async loadByRefreshTokenId (tokenId: string): Promise<AccountModel> {
-      return await Promise.resolve(makeFakeAccount())
-    }
-  }
-  return new LoadAccountByRefreshTokenIdRepoStub()
-}
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'valid_password'
-})

@@ -5,7 +5,7 @@ import { LoadAccountByRefreshTokenIdRepository } from '$/data/protocols/db/accou
 import { UpdateAccessTokenRepository } from '$/data/protocols/db/account/update-access-token-repository'
 import { UpdateRefreshTokenRepository } from '$/data/usecases/authentication/db-authentication-protocols'
 import { AccountModel } from '$/domain/models/account'
-import { AddAccountModel } from '$/domain/usecases/account/add-account'
+import { AddAccountDTO } from '$/domain/usecases/account/add-account'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { ObjectId } from 'mongodb'
 
@@ -16,7 +16,7 @@ export class AccountMongoRepository implements
   LoadAccountByAccessTokenRepository,
   UpdateRefreshTokenRepository,
   LoadAccountByRefreshTokenIdRepository {
-  async add (accountData: AddAccountModel): Promise<AccountModel> {
+  async add (accountData: AddAccountDTO): Promise<AccountModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = await accountCollection.insertOne(accountData)
     const account = await accountCollection.findOne(result.insertedId)

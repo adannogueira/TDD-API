@@ -2,10 +2,6 @@ import { LogMongoRepository } from './log-mongo-repository'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { Collection } from 'mongodb'
 
-const makeSut = (): LogMongoRepository => {
-  return new LogMongoRepository()
-}
-
 describe('LogMongoRepository', () => {
   let errorCollection: Collection
 
@@ -29,3 +25,7 @@ describe('LogMongoRepository', () => {
     expect(count).toBe(1)
   })
 })
+
+const makeSut = (): LogMongoRepository => {
+  return new LogMongoRepository()
+}

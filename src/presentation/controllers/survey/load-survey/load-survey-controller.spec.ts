@@ -1,7 +1,9 @@
 
+import { mockSurveys } from '$/domain/test'
+import { noContent, ok, serverError } from '$/presentation/helpers/http/http-helper'
+import { mockLoadSurvey } from '$/presentation/test'
 import { LoadSurveyController } from './load-survey-controller'
-import { LoadSurvey, SurveyModel } from './load-survey-controller-protocols'
-import { noContent, ok, serverError } from '../../../helpers/http/http-helper'
+import { LoadSurvey } from './load-survey-controller-protocols'
 import MockDate from 'mockdate'
 
 describe('LoadSurveyController', () => {
@@ -17,58 +19,33 @@ describe('LoadSurveyController', () => {
   test('Should return 200 on success', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
-    expect(httpResponse).toEqual(ok(makeFakeSurveys()))
+    expect(httpResponse).toEqual(ok(mockSurveys()))
   })
 
   test('Should return 204 if LoadSurvey return empty', async () => {
     const { sut, loadSurveyStub } = makeSut()
-    jest.spyOn(loadSurveyStub, 'load').mockReturnValueOnce(Promise.resolve([]))
+    jest.spyOn(loadSurveyStub, 'load')
+      .mockResolvedValueOnce([])
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(noContent())
   })
 
   test('Should return 500 if LoadSurvey throws', async () => {
     const { sut, loadSurveyStub } = makeSut()
-    jest.spyOn(loadSurveyStub, 'load').mockRejectedValueOnce(new Error())
+    jest.spyOn(loadSurveyStub, 'load')
+      .mockRejectedValueOnce(new Error())
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
-
-const makeLoadSurvey = (): LoadSurvey => {
-  class LoadSurveyStub implements LoadSurvey {
-    async load (): Promise<SurveyModel[]> {
-      return await Promise.resolve(makeFakeSurveys())
-    }
-  }
-  return new LoadSurveyStub()
-}
-
-const makeSut = (): SutTypes => {
-  const loadSurveyStub = makeLoadSurvey()
-  const sut = new LoadSurveyController(loadSurveyStub)
-  return { sut, loadSurveyStub }
-}
 
 type SutTypes = {
   sut: LoadSurveyController
   loadSurveyStub: LoadSurvey
 }
 
-const makeFakeSurveys = (): SurveyModel[] => ([{
-  id: 'any_id',
-  question: 'any_question',
-  answers: [{
-    image: 'any_image',
-    answer: 'any_answer'
-  }],
-  date: new Date()
-}, {
-  id: 'other_id',
-  question: 'any_other_question',
-  answers: [{
-    image: 'any_other_image',
-    answer: 'any_other_answer'
-  }],
-  date: new Date()
-}])
+const makeSut = (): SutTypes => {
+  const loadSurveyStub = mockLoadSurvey()
+  const sut = new LoadSurveyController(loadSurveyStub)
+  return { sut, loadSurveyStub }
+}

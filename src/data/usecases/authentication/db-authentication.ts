@@ -2,7 +2,7 @@ import { TokenAuthentication } from '$/domain/usecases/account/token-authenticat
 import {
   PasswordAuthentication,
   Tokens,
-  AuthenticationModel,
+  AuthenticationDTO,
   HashComparer,
   AccessEncrypter,
   LoadAccountByEmailRepository,
@@ -23,7 +23,7 @@ export class DbAuthentication implements PasswordAuthentication, TokenAuthentica
     private readonly idGenerator: IdGenerator
   ) {}
 
-  async authByPassword (authentication: AuthenticationModel): Promise<Tokens> {
+  async authByPassword (authentication: AuthenticationDTO): Promise<Tokens> {
     const account = await this.loadAccountByEmailRepository.loadByEmail(authentication.email)
     if (account) {
       const isValid = await this.hashComparer.compare(authentication.password, account.password)

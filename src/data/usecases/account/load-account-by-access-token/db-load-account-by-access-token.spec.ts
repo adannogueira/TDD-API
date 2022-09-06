@@ -1,7 +1,8 @@
+import { mockAccessDecrypter, mockLoadAccountByAccessTokenRepositoryStub } from '$/data/test'
+import { mockAccount } from '$/domain/test'
 import { DbLoadAccountByAccessToken } from './db-load-account-by-access-token'
 import {
   AccessDecrypter,
-  AccountModel,
   LoadAccountByAccessTokenRepository
 } from './load-account-by-access-token-protocols'
 
@@ -15,7 +16,8 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
 
   test('Should return null if Decrypter returns null', async () => {
     const { sut, decrypterStub } = makeSut()
-    jest.spyOn(decrypterStub, 'decrypt').mockReturnValueOnce(Promise.resolve(null as any))
+    jest.spyOn(decrypterStub, 'decrypt')
+      .mockResolvedValueOnce(null)
     const account = await sut.load('any_token', 'any_role')
     expect(account).toBeNull()
   })
@@ -31,7 +33,7 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
     const { sut, loadAccountByAccessTokenRepoStub } = makeSut()
     jest
       .spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken')
-      .mockReturnValueOnce(Promise.resolve(null as any))
+      .mockResolvedValueOnce(null)
     const account = await sut.load('any_token', 'any_role')
     expect(account).toBeNull()
   })
@@ -45,7 +47,8 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
 
   test('Should throw if LoadAccountByAccessTokenRepo throws', async () => {
     const { sut, loadAccountByAccessTokenRepoStub } = makeSut()
-    jest.spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken').mockRejectedValueOnce(new Error())
+    jest.spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken')
+      .mockRejectedValueOnce(new Error())
     const promise = sut.load('any_token', 'any_role')
     await expect(promise).rejects.toThrow()
   })
@@ -53,7 +56,7 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
   test('Should return an account on success', async () => {
     const { sut } = makeSut()
     const account = await sut.load('any_token', 'any_role')
-    expect(account).toEqual(makeFakeAccount())
+    expect(account).toEqual(mockAccount())
   })
 })
 
@@ -64,37 +67,15 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const decrypterStub = makeDecrypter()
-  const loadAccountByAccessTokenRepoStub = makeLoadAccountByAccessTokenRepo()
-  const sut = new DbLoadAccountByAccessToken(decrypterStub, loadAccountByAccessTokenRepoStub)
+  const decrypterStub = mockAccessDecrypter()
+  const loadAccountByAccessTokenRepoStub = mockLoadAccountByAccessTokenRepositoryStub()
+  const sut = new DbLoadAccountByAccessToken(
+    decrypterStub,
+    loadAccountByAccessTokenRepoStub
+  )
   return {
     sut,
     decrypterStub,
     loadAccountByAccessTokenRepoStub
   }
 }
-
-const makeDecrypter = (): AccessDecrypter => {
-  class DecrypterStub implements AccessDecrypter {
-    async decrypt (value: string): Promise<string> {
-      return await Promise.resolve('any_value')
-    }
-  }
-  return new DecrypterStub()
-}
-
-const makeLoadAccountByAccessTokenRepo = (): LoadAccountByAccessTokenRepository => {
-  class LoadAccountByAccessTokenRepoStub implements LoadAccountByAccessTokenRepository {
-    async loadByAccessToken (accessToken: string, role?: string): Promise<AccountModel> {
-      return await Promise.resolve(makeFakeAccount())
-    }
-  }
-  return new LoadAccountByAccessTokenRepoStub()
-}
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'valid_password'
-})
