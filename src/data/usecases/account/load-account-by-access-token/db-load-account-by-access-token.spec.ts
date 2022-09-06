@@ -47,7 +47,8 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
 
   test('Should throw if LoadAccountByAccessTokenRepo throws', async () => {
     const { sut, loadAccountByAccessTokenRepoStub } = makeSut()
-    jest.spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken').mockRejectedValueOnce(new Error())
+    jest.spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken')
+      .mockRejectedValueOnce(new Error())
     const promise = sut.load('any_token', 'any_role')
     await expect(promise).rejects.toThrow()
   })
@@ -68,7 +69,10 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const decrypterStub = mockAccessDecrypter()
   const loadAccountByAccessTokenRepoStub = mockLoadAccountByAccessTokenRepositoryStub()
-  const sut = new DbLoadAccountByAccessToken(decrypterStub, loadAccountByAccessTokenRepoStub)
+  const sut = new DbLoadAccountByAccessToken(
+    decrypterStub,
+    loadAccountByAccessTokenRepoStub
+  )
   return {
     sut,
     decrypterStub,

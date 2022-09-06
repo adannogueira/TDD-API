@@ -52,7 +52,7 @@ describe('Jwt Adapter', () => {
       const sut = makeSut()
       jest.spyOn(jwt, 'verify')
         .mockImplementationOnce(() => {
-          throw makeTokenError()
+          throw mockTokenError()
         })
       const promise = sut.decrypt('any_token')
       await expect(promise).rejects.toThrow(new AuthExpiredError())
@@ -109,7 +109,7 @@ describe('Jwt Adapter', () => {
       const sut = makeSut()
       jest.spyOn(jwt, 'verify')
         .mockImplementationOnce(() => {
-          throw makeTokenError()
+          throw mockTokenError()
         })
       const promise = sut.decryptRefresh('any_token')
       await expect(promise).rejects.toThrow(new AuthExpiredError())
@@ -131,7 +131,7 @@ const makeSut = (): JwtAdapter => {
   return new JwtAdapter('secret', 'access time', 'refresh time')
 }
 
-const makeTokenError = (): jwt.TokenExpiredError => {
+const mockTokenError = (): jwt.TokenExpiredError => {
   class TokenExpiredError extends Error {
     expiredAt: Date
     inner: Error

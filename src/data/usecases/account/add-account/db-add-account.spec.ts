@@ -65,7 +65,7 @@ describe('DbAccount Usecase', () => {
   })
 })
 
-const makeLoadAccountByEmailRepo = (): LoadAccountByEmailRepository => {
+const mockLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepoStub implements LoadAccountByEmailRepository {
     async loadByEmail (email: string): Promise<AccountModel> {
       return await Promise.resolve(null as any)
@@ -84,7 +84,7 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const addAccountRepositoryStub = mockAddAccountRepositoryStub()
   const hasherStub = mockHasher()
-  const loadAccountByEmailRepository = makeLoadAccountByEmailRepo()
+  const loadAccountByEmailRepository = mockLoadAccountByEmailRepository()
   const sut = new DbAddAccount(
     hasherStub,
     addAccountRepositoryStub,

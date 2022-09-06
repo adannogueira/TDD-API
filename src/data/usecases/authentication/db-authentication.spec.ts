@@ -1,4 +1,12 @@
-import { Encrypter, mockLoadAccountByEmailRepositoryStub, mockUpdateAccessTokenRepositoryStub, mockUpdateRefreshTokenRepositoryStub, mockEncrypter, mockHashComparer, mockIdGenerator } from '$/data/test'
+import {
+  Encrypter,
+  mockEncrypter,
+  mockHashComparer,
+  mockIdGenerator,
+  mockLoadAccountByEmailRepositoryStub,
+  mockUpdateAccessTokenRepositoryStub,
+  mockUpdateRefreshTokenRepositoryStub
+} from '$/data/test'
 import { mockAccount, mockAuthentication } from '$/domain/test'
 import { DbAuthentication } from './db-authentication'
 import {
