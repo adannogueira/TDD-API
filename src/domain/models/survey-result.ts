@@ -1,7 +1,13 @@
 export type SurveyResultModel = {
-  id: string
   surveyId: string
-  accountId: string
-  answer: string
+  question: string
+  answers: SurveyAnswerModel[]
   date: Date
+}
+
+export type SurveyAnswerModel = {
+  image?: string
+  answer: string
+  count: number
+  percent: number
 }
