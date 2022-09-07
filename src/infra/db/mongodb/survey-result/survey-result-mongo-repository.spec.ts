@@ -1,5 +1,5 @@
 import { MongoHelper } from '../helpers/mongo-helper'
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 
 describe('Survey Result Mongodb Repository', () => {
@@ -25,20 +25,22 @@ describe('Survey Result Mongodb Repository', () => {
       const accountId = await makeAccountId()
       const sut = makeSut()
       const surveyResult = await sut.save({
-        surveyId,
-        accountId,
-        answer: 'other_answer',
+        surveyId: surveyId.toString(),
+        accountId: accountId.toString(),
+        answer: 'any_answer',
         date: new Date()
       })
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toBeTruthy()
-      expect(surveyResult.answer).toBe('other_answer')
+      expect(surveyResult.surveyId).toEqual(surveyId.toString())
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
+      expect(surveyResult.answers[0].answer).toBe('any_answer')
     })
 
     test('Should update an existing survey result', async () => {
       const surveyId = await makeSurveyId()
       const accountId = await makeAccountId()
-      const existingSurveyResult = await surveyResultCollection.insertOne({
+      await surveyResultCollection.insertOne({
         surveyId,
         accountId,
         answer: 'any_answer',
@@ -46,14 +48,16 @@ describe('Survey Result Mongodb Repository', () => {
       })
       const sut = makeSut()
       const surveyResult = await sut.save({
-        surveyId,
-        accountId,
+        surveyId: surveyId.toString(),
+        accountId: accountId.toString(),
         answer: 'other_answer',
         date: new Date()
       })
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toBe(existingSurveyResult.insertedId.toString())
-      expect(surveyResult.answer).toBe('other_answer')
+      expect(surveyResult.surveyId).toEqual(surveyId.toString())
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].percent).toBe(100)
+      expect(surveyResult.answers[0].answer).toBe('other_answer')
     })
   })
 })
@@ -66,7 +70,7 @@ const makeSut = (): SurveyResultMongoRepository => {
   return new SurveyResultMongoRepository()
 }
 
-const makeSurveyId = async (): Promise<string> => {
+const makeSurveyId = async (): Promise<ObjectId> => {
   const res = await surveyCollection.insertOne({
     question: 'any_question',
     answers: [{
@@ -77,14 +81,14 @@ const makeSurveyId = async (): Promise<string> => {
     }],
     date: new Date()
   })
-  return res.insertedId.toString()
+  return res.insertedId
 }
 
-const makeAccountId = async (): Promise<string> => {
+const makeAccountId = async (): Promise<ObjectId> => {
   const res = await accountCollection.insertOne({
     name: 'any_name',
     email: 'any@email.com',
     password: 'any_password'
   })
-  return res.insertedId.toString()
+  return res.insertedId
 }
