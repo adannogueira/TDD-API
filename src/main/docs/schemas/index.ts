@@ -1,4 +1,5 @@
 export * from './account-schema'
+export * from './add-survey-schema'
 export * from './authorization-schema'
 export * from './error-schema'
 export * from './password-login-schema'

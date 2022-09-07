@@ -2,6 +2,7 @@ import { badRequest, forbidden, serverError, unauthorized } from './components'
 import { passwordLoginPath, signupPath, surveyPath } from './paths'
 import {
   accountSchema,
+  addSurveySchema,
   authorizationSchema,
   errorSchema,
   passwordLoginSchema,
@@ -37,6 +38,7 @@ export default {
   },
   schemas: {
     account: accountSchema,
+    addSurvey: addSurveySchema,
     error: errorSchema,
     passwordLogin: passwordLoginSchema,
     signup: signupSchema,
