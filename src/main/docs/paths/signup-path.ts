@@ -1,13 +1,13 @@
-export const passwordLoginPath = {
+export const signupPath = {
   post: {
-    tags: ['PasswordLogin'],
-    summary: 'API de autenticação de usuário via email e senha',
+    tags: ['Login'],
+    summary: 'API de criação de usuário',
     requestBody: {
-      description: 'email e senha',
+      description: 'nome, email, senha e confirmação',
       content: {
         'application/json': {
           schema: {
-            $ref: '#/schemas/passwordLogin'
+            $ref: '#/schemas/signup'
           }
         }
       }
@@ -26,8 +26,8 @@ export const passwordLoginPath = {
       400: {
         $ref: '#/components/badRequest'
       },
-      401: {
-        $ref: '#/components/unauthorized'
+      403: {
+        $ref: '#/components/forbidden'
       },
       500: {
         $ref: '#/components/serverError'
