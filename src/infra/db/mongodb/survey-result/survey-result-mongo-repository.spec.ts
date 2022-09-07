@@ -35,6 +35,8 @@ describe('Survey Result Mongodb Repository', () => {
       expect(surveyResult.answers[0].count).toBe(1)
       expect(surveyResult.answers[0].percent).toBe(100)
       expect(surveyResult.answers[0].answer).toBe('any_answer')
+      expect(surveyResult.answers[1].count).toBe(0)
+      expect(surveyResult.answers[1].percent).toBe(0)
     })
 
     test('Should update an existing survey result', async () => {
@@ -58,6 +60,8 @@ describe('Survey Result Mongodb Repository', () => {
       expect(surveyResult.answers[0].count).toBe(1)
       expect(surveyResult.answers[0].percent).toBe(100)
       expect(surveyResult.answers[0].answer).toBe('other_answer')
+      expect(surveyResult.answers[1].count).toBe(0)
+      expect(surveyResult.answers[1].percent).toBe(0)
     })
   })
 })
