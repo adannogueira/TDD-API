@@ -7,6 +7,7 @@ import {
   signupSchema,
   surveyAnswerSchema,
   surveyResultSchema,
+  surveyResultAnswerSchema,
   surveySchema,
   surveysSchema
 } from './schemas/'
@@ -21,5 +22,6 @@ export const schemas = {
   surveyAnswer: surveyAnswerSchema,
   survey: surveySchema,
   surveyResult: surveyResultSchema,
+  surveyResultAnswer: surveyResultAnswerSchema,
   surveys: surveysSchema
 }
