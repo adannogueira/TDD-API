@@ -1,9 +1,10 @@
 import { badRequest, forbidden, serverError, unauthorized } from './components/'
-import { authorizationSchema } from './schemas/'
+import { authorizationSchema, refreshSchema } from './schemas/'
 
 export const components = {
   securitySchemes: {
-    authorization: authorizationSchema
+    authorization: authorizationSchema,
+    refresh: refreshSchema
   },
   badRequest,
   forbidden,
