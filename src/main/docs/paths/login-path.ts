@@ -1,4 +1,4 @@
-export const loginPath = {
+export const passwordLoginPath = {
   post: {
     tags: ['PasswordLogin'],
     summary: 'API de autenticação de usuário via email e senha',
@@ -24,13 +24,13 @@ export const loginPath = {
         }
       },
       400: {
-        description: 'Bad Request'
+        $ref: '#/components/badRequest'
       },
       401: {
-        description: 'Unauthorized'
+        $ref: '#/components/unauthorized'
       },
       500: {
-        description: 'Server Error'
+        $ref: '#/components/serverError'
       }
     }
   }

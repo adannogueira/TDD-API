@@ -1,6 +1,6 @@
-import { loginPath } from './paths/login-path'
-import { accountSchema } from './schemas/account-schema'
-import { passwordLoginSchema } from './schemas/password-login-schema'
+import { badRequest, serverError, unauthorized } from './components'
+import { passwordLoginPath } from './paths'
+import { accountSchema, errorSchema, passwordLoginSchema } from './schemas'
 
 export default {
   openapi: '3.0.0',
@@ -9,6 +9,10 @@ export default {
     description: 'API construída usando TDD e técnicas de clean code',
     version: '1.0.0'
   },
+  license: {
+    name: 'MIT',
+    url: 'https://opensource.org/licenses/MIT'
+  },
   servers: [{
     url: '/api'
   }],
@@ -16,10 +20,16 @@ export default {
     name: 'PasswordLogin'
   }],
   paths: {
-    '/login': loginPath
+    '/login': passwordLoginPath
   },
   schemas: {
     account: accountSchema,
-    passwordLogin: passwordLoginSchema
+    passwordLogin: passwordLoginSchema,
+    error: errorSchema
+  },
+  components: {
+    badRequest,
+    unauthorized,
+    serverError
   }
 }
