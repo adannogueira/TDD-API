@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { MongoHelper } from '../helpers/mongo-helper'
 import { Collection, ObjectId } from 'mongodb'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
@@ -102,6 +103,94 @@ describe('Survey Result Mongodb Repository', () => {
       expect(surveyResult.answers[1].percent).toBe(50)
       expect(surveyResult.answers[2].count).toBe(0)
       expect(surveyResult.answers[2].percent).toBe(0)
+    })
+
+    test('Should load a survey result within 3 milliseconds', async () => {
+      const surveyId = await makeSurveyId()
+      const accountId = await makeAccountId()
+      await surveyResultCollection.insertMany([{
+        surveyId,
+        accountId,
+        answer: 'answer 1',
+        date: new Date()
+      }, {
+        surveyId,
+        accountId,
+        answer: 'answer 1',
+        date: new Date()
+      }, {
+        surveyId,
+        accountId,
+        answer: 'answer 2',
+        date: new Date()
+      }, {
+        surveyId,
+        accountId,
+        answer: 'answer 2',
+        date: new Date()
+      }])
+      const sut = makeSut()
+      const counter: number[] = []
+      for await (const _ of Array(100).fill(1)) {
+        const start = new Date()
+        const surveyResult = await sut.loadBySurveyId(surveyId.toString())
+        const end = new Date()
+        counter.push((end.getMilliseconds() - start.getMilliseconds()))
+        expect(surveyResult).toBeTruthy()
+        expect(surveyResult.surveyId).toEqual(surveyId.toString())
+        expect(surveyResult.answers[0].count).toBe(2)
+        expect(surveyResult.answers[0].percent).toBe(50)
+        expect(surveyResult.answers[1].count).toBe(2)
+        expect(surveyResult.answers[1].percent).toBe(50)
+        expect(surveyResult.answers[2].count).toBe(0)
+        expect(surveyResult.answers[2].percent).toBe(0)
+      }
+      expect(counter.reduce((acc, cur) => acc + cur) / 100).toBeLessThan(3)
+    })
+
+    describe('loadInternally()', () => {
+      test('Should load a survey result within 3 milliseconds', async () => {
+        const surveyId = await makeSurveyId()
+        const accountId = await makeAccountId()
+        await surveyResultCollection.insertMany([{
+          surveyId,
+          accountId,
+          answer: 'answer 1',
+          date: new Date()
+        }, {
+          surveyId,
+          accountId,
+          answer: 'answer 1',
+          date: new Date()
+        }, {
+          surveyId,
+          accountId,
+          answer: 'answer 2',
+          date: new Date()
+        }, {
+          surveyId,
+          accountId,
+          answer: 'answer 2',
+          date: new Date()
+        }])
+        const sut = makeSut()
+        const counter: number[] = []
+        for await (const _ of Array(100).fill(1)) {
+          const start = new Date()
+          const surveyResult = await sut.loadInternally(surveyId.toString())
+          const end = new Date()
+          counter.push((end.getMilliseconds() - start.getMilliseconds()))
+          expect(surveyResult).toBeTruthy()
+          expect(surveyResult.surveyId).toEqual(surveyId.toString())
+          expect(surveyResult.answers[0].count).toBe(2)
+          expect(surveyResult.answers[0].percent).toBe(50)
+          expect(surveyResult.answers[1].count).toBe(2)
+          expect(surveyResult.answers[1].percent).toBe(50)
+          expect(surveyResult.answers[2].count).toBe(0)
+          expect(surveyResult.answers[2].percent).toBe(0)
+        }
+        expect(counter.reduce((acc, cur) => acc + cur) / 100).toBeLessThan(3)
+      })
     })
   })
 })
