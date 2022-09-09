@@ -1,6 +1,6 @@
 import { LoadSurveyResultRepository } from '$/data/protocols/db/survey-result/load-survey-result-repository'
 import { SaveSurveyResultRepository } from '$/data/protocols/db/survey-result/save-survey-result-repository'
-import { SurveyResultModel } from '$/domain/models/survey-result'
+import { SurveyAnswerModel, SurveyResultModel } from '$/domain/models/survey-result'
 import { SaveSurveyResultDTO } from '$/domain/usecases/survey-result/save-survey-result'
 import { MongoHelper, QueryBuilder } from '../helpers'
 import { ObjectId } from 'mongodb'
@@ -194,5 +194,33 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       .build()
     const surveyResult = await surveyResultCollection.aggregate(query).toArray()
     return surveyResult?.shift() as SurveyResultModel
+  }
+
+  async loadInternally (surveyId: string): Promise<SurveyResultModel> {
+    const surveyCollection = await MongoHelper.getCollection('surveys')
+    const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+    const [survey, surveyResults] = await Promise.all([
+      surveyCollection.findOne({ _id: new ObjectId(surveyId) }),
+      surveyResultCollection.find({ surveyId: new ObjectId(surveyId) }).toArray()
+    ])
+    const answers = survey.answers
+      .reduce((end: SurveyAnswerModel[], answer: { image: string, answer: string }) => {
+        const count = surveyResults.filter(result => result.answer === answer.answer).length
+        const percent = Math.round(100 * count / surveyResults.length)
+        const currentResult = {
+          image: answer.image,
+          answer: answer.answer,
+          count,
+          percent
+        }
+        end.push(currentResult)
+        return end
+      }, [])
+    return {
+      surveyId,
+      question: survey.question,
+      date: survey.date,
+      answers: answers.sort((a, b) => b.percent - a.percent)
+    }
   }
 }
