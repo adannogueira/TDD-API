@@ -24,19 +24,19 @@ describe('Survey Result Mongodb Repository', () => {
       const surveyId = await makeSurveyId()
       const accountId = await makeAccountId()
       const sut = makeSut()
-      const surveyResult = await sut.save({
+      await sut.save({
         surveyId: surveyId.toString(),
         accountId: accountId.toString(),
         answer: 'answer 1',
         date: new Date()
       })
+      const surveyResult = await surveyResultCollection.findOne({
+        surveyId,
+        accountId
+      })
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.surveyId).toEqual(surveyId.toString())
-      expect(surveyResult.answers[0].count).toBe(1)
-      expect(surveyResult.answers[0].percent).toBe(100)
-      expect(surveyResult.answers[0].answer).toBe('answer 1')
-      expect(surveyResult.answers[1].count).toBe(0)
-      expect(surveyResult.answers[1].percent).toBe(0)
+      expect(surveyResult.surveyId).toStrictEqual(surveyId)
+      expect(surveyResult.answer).toBe('answer 1')
     })
 
     test('Should update an existing survey result', async () => {
@@ -49,19 +49,21 @@ describe('Survey Result Mongodb Repository', () => {
         date: new Date()
       })
       const sut = makeSut()
-      const surveyResult = await sut.save({
+      await sut.save({
         surveyId: surveyId.toString(),
         accountId: accountId.toString(),
         answer: 'answer 2',
         date: new Date()
       })
-      expect(surveyResult).toBeTruthy()
-      expect(surveyResult.surveyId).toEqual(surveyId.toString())
-      expect(surveyResult.answers[0].count).toBe(1)
-      expect(surveyResult.answers[0].percent).toBe(100)
-      expect(surveyResult.answers[0].answer).toBe('answer 2')
-      expect(surveyResult.answers[1].count).toBe(0)
-      expect(surveyResult.answers[1].percent).toBe(0)
+      const surveyResult = await surveyResultCollection.find({
+        surveyId,
+        accountId
+      }).toArray()
+      expect(surveyResult).toBeInstanceOf(Array)
+      expect(surveyResult[0].surveyId).toStrictEqual(surveyId)
+      expect(surveyResult[0].accountId).toStrictEqual(accountId)
+      expect(surveyResult[0].answer).toBe('answer 2')
+      expect(surveyResult[1]).toBeUndefined()
     })
   })
 
