@@ -1,7 +1,7 @@
 import { mockSurveyResult } from '$/domain/test'
 import { InvalidParamError } from '$/presentation/errors'
 import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-helper'
-import { mmockLoadSurveyById, mockSaveSurveyResult } from '$/presentation/test'
+import { mockLoadSurveyById, mockSaveSurveyResult } from '$/presentation/test'
 import { SaveSurveyResultController } from './save-survey-result-controller'
 import {
   HttpRequest,
@@ -79,7 +79,7 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const loadSurveyByIdStub = mmockLoadSurveyById()
+  const loadSurveyByIdStub = mockLoadSurveyById()
   const saveSurveyResultStub = mockSaveSurveyResult()
   const sut = new SaveSurveyResultController(
     loadSurveyByIdStub,
