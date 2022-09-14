@@ -19,6 +19,29 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
   }
 
   async loadBySurveyId (surveyId: string): Promise<SurveyResultModel> {
+    const surveyCollection = await MongoHelper.getCollection('surveys')
+    const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+    const [survey, surveyResults] = await Promise.all([
+      surveyCollection.findOne({ _id: new ObjectId(surveyId) }),
+      surveyResultCollection.find({ surveyId: new ObjectId(surveyId) }).toArray()
+    ])
+    const answers = survey.answers
+      .reduce((end: SurveyAnswerModel[], answer: { image: string, answer: string }) => {
+        const count = surveyResults.filter(result => result.answer === answer.answer).length
+        const percent = Math.round(100 * count / surveyResults.length) || 0
+        const currentResult = { image: answer.image, answer: answer.answer, count, percent }
+        end.push(currentResult)
+        return end
+      }, [])
+    return {
+      surveyId,
+      question: survey.question,
+      date: survey.date,
+      answers: answers.sort((a, b) => b.percent - a.percent)
+    }
+  }
+
+  async loadBySurveyIdDeprecated (surveyId: string): Promise<SurveyResultModel> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     const query = new QueryBuilder()
       .match({
@@ -194,33 +217,5 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       .build()
     const surveyResult = await surveyResultCollection.aggregate(query).toArray()
     return surveyResult?.shift() as SurveyResultModel
-  }
-
-  async loadInternally (surveyId: string): Promise<SurveyResultModel> {
-    const surveyCollection = await MongoHelper.getCollection('surveys')
-    const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
-    const [survey, surveyResults] = await Promise.all([
-      surveyCollection.findOne({ _id: new ObjectId(surveyId) }),
-      surveyResultCollection.find({ surveyId: new ObjectId(surveyId) }).toArray()
-    ])
-    const answers = survey.answers
-      .reduce((end: SurveyAnswerModel[], answer: { image: string, answer: string }) => {
-        const count = surveyResults.filter(result => result.answer === answer.answer).length
-        const percent = Math.round(100 * count / surveyResults.length) || 0
-        const currentResult = {
-          image: answer.image,
-          answer: answer.answer,
-          count,
-          percent
-        }
-        end.push(currentResult)
-        return end
-      }, [])
-    return {
-      surveyId,
-      question: survey.question,
-      date: survey.date,
-      answers: answers.sort((a, b) => b.percent - a.percent)
-    }
   }
 }

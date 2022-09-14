@@ -148,7 +148,7 @@ describe('Survey Result Mongodb Repository', () => {
       expect(counter.reduce((acc, cur) => acc + cur) / 100).toBeLessThan(3)
     })
 
-    describe('loadInternally()', () => {
+    describe('loadBySurveyIdDeprecated()', () => {
       test('Should load a survey result within 3 milliseconds', async () => {
         const surveyId = await makeSurveyId()
         const accountId = await makeAccountId()
@@ -177,7 +177,7 @@ describe('Survey Result Mongodb Repository', () => {
         const counter: number[] = []
         for await (const _ of Array(100).fill(1)) {
           const start = new Date()
-          const surveyResult = await sut.loadInternally(surveyId.toString())
+          const surveyResult = await sut.loadBySurveyIdDeprecated(surveyId.toString())
           const end = new Date()
           counter.push((end.getMilliseconds() - start.getMilliseconds()))
           expect(surveyResult).toBeTruthy()
