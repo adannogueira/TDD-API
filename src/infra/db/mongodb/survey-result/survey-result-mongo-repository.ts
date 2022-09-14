@@ -206,7 +206,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
     const answers = survey.answers
       .reduce((end: SurveyAnswerModel[], answer: { image: string, answer: string }) => {
         const count = surveyResults.filter(result => result.answer === answer.answer).length
-        const percent = Math.round(100 * count / surveyResults.length)
+        const percent = Math.round(100 * count / surveyResults.length) || 0
         const currentResult = {
           image: answer.image,
           answer: answer.answer,
