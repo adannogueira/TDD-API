@@ -216,6 +216,6 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       })
       .build()
     const surveyResult = await surveyResultCollection.aggregate(query).toArray()
-    return surveyResult?.shift() as SurveyResultModel
+    return surveyResult.shift() as SurveyResultModel
   }
 }

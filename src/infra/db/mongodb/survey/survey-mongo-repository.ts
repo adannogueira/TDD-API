@@ -27,8 +27,7 @@ export class SurveyMongoRepository implements
       const survey = await surveyCollection.findOne({ _id: new ObjectId(id) })
       return survey && MongoHelper.map<SurveyModel>(survey)
     } catch (error) {
-      if (error.name === 'BSONTypeError') return null
-      throw error
+      return null
     }
   }
 }
