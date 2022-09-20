@@ -57,6 +57,32 @@ describe('Survey Result Routes', () => {
         .expect(403)
     })
   })
+
+  describe('[GET] /surveys/:surveyId/results', () => {
+    test('Should return 403 when user is not authorized', async () => {
+      await request(app)
+        .get('/api/surveys/any_id/results')
+        .expect(403)
+    })
+
+    test('Should return 200 on load survey result when user is authorized', async () => {
+      const accessToken = await makeUserToken()
+      const surveyId = await makeSurveyId()
+      await request(app)
+        .get(`/api/surveys/${surveyId}/results`)
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
+
+    test('Should return 403 when token is expired', async () => {
+      const accessToken = await makeUserToken({ admin: true, expired: true })
+      const surveyId = await makeSurveyId()
+      await request(app)
+        .put(`/api/surveys/${surveyId}/results`)
+        .set('x-access-token', accessToken)
+        .expect(403)
+    })
+  })
 })
 
 const makeUserToken = async (

@@ -55,6 +55,12 @@ describe('Survey Mongodb Repository', () => {
       expect(survey.id).toBeTruthy()
       expect(survey.question).toBe('any_question')
     })
+
+    test('Should return null when id is not a valid ObjectId', async () => {
+      const sut = makeSut()
+      const survey = await sut.loadById('invalid')
+      expect(survey).toBeNull()
+    })
   })
 })
 
