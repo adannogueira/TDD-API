@@ -73,6 +73,15 @@ describe('Survey Result Routes', () => {
         .set('x-access-token', accessToken)
         .expect(200)
     })
+
+    test('Should return 403 when token is expired', async () => {
+      const accessToken = await makeUserToken({ admin: true, expired: true })
+      const surveyId = await makeSurveyId()
+      await request(app)
+        .put(`/api/surveys/${surveyId}/results`)
+        .set('x-access-token', accessToken)
+        .expect(403)
+    })
   })
 })
 
