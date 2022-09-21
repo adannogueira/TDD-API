@@ -45,7 +45,8 @@ describe('Refresh Controller', () => {
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok({
       accessToken: 'any_access_token',
-      refreshToken: 'any_refresh_token'
+      refreshToken: 'any_refresh_token',
+      name: 'any_name'
     }))
   })
 

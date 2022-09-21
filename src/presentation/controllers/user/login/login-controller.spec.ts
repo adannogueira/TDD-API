@@ -40,7 +40,8 @@ describe('Login Controller', () => {
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(ok({
       accessToken: 'any_token',
-      refreshToken: 'any_refresh_token'
+      refreshToken: 'any_refresh_token',
+      name: 'any_name'
     }))
   })
 
