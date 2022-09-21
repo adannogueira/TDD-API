@@ -6,6 +6,9 @@ export const accountSchema = {
     },
     refreshToken: {
       type: 'string'
+    },
+    name: {
+      type: 'string'
     }
   }
 }

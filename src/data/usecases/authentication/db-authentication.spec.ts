@@ -38,8 +38,8 @@ describe('DbAuthentication UseCase', () => {
       const { sut, loadAccountByEmailRepository } = makeSut()
       jest.spyOn(loadAccountByEmailRepository, 'loadByEmail')
         .mockResolvedValueOnce(null)
-      const accessToken = await sut.authByPassword(mockAuthentication())
-      expect(accessToken).toBeNull()
+      const model = await sut.authByPassword(mockAuthentication())
+      expect(model).toBeNull()
     })
 
     test('Should call HashComparer with correct values', async () => {
@@ -61,8 +61,18 @@ describe('DbAuthentication UseCase', () => {
       const { sut, hashComparerStub } = makeSut()
       jest.spyOn(hashComparerStub, 'compare')
         .mockResolvedValueOnce(false)
-      const accessToken = await sut.authByPassword(mockAuthentication())
-      expect(accessToken).toBeNull()
+      const model = await sut.authByPassword(mockAuthentication())
+      expect(model).toBeNull()
+    })
+
+    test('Should return an AuthenticationModel on success', async () => {
+      const { sut } = makeSut()
+      const model = await sut.authByPassword(mockAuthentication())
+      expect(model).toEqual({
+        accessToken: 'any_token',
+        refreshToken: 'any_refresh_token',
+        name: 'any_name'
+      })
     })
   })
 
@@ -90,12 +100,6 @@ describe('DbAuthentication UseCase', () => {
         await expect(promise).rejects.toThrow()
       })
 
-      test('Should return an access token on auth success', async () => {
-        const { sut } = makeSut()
-        const tokens = await sut.authByAccount(mockAccount())
-        expect(tokens.accessToken).toBe('any_token')
-      })
-
       test('Should call UpdateAccessTokenRepository with correct values', async () => {
         const { sut, updateAccessTokenRepositoryStub } = makeSut()
         const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
@@ -110,6 +114,16 @@ describe('DbAuthentication UseCase', () => {
         const promise = sut.authByAccount(mockAccount())
         await expect(promise).rejects.toThrow()
       })
+
+      test('Should return an AuthenticationModel on success', async () => {
+        const { sut } = makeSut()
+        const model = await sut.authByAccount(mockAccount())
+        expect(model).toEqual({
+          accessToken: 'any_token',
+          refreshToken: 'any_refresh_token',
+          name: 'any_name'
+        })
+      })
     })
 
     describe('getRefreshToken()', () => {
@@ -119,12 +133,6 @@ describe('DbAuthentication UseCase', () => {
           .mockRejectedValueOnce(new Error())
         const promise = sut.authByAccount(mockAccount())
         await expect(promise).rejects.toThrow()
-      })
-
-      test('Should return a refresh token on auth success', async () => {
-        const { sut } = makeSut()
-        const tokens = await sut.authByAccount(mockAccount())
-        expect(tokens.refreshToken).toBe('any_refresh_token')
       })
 
       test('Should call UpdateRefreshTokenRepository with correct values', async () => {

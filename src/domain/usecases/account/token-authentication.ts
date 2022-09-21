@@ -1,10 +1,6 @@
 import { AccountModel } from '$/domain/models/account'
-
-export type Tokens = {
-  accessToken: string
-  refreshToken: string
-}
+import { AuthenticationModel } from '$/domain/models/authentication'
 
 export interface TokenAuthentication {
-  authByAccount: (account: AccountModel) => Promise<Tokens>
+  authByAccount: (account: AccountModel) => Promise<AuthenticationModel>
 }

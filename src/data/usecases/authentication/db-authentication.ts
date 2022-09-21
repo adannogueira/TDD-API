@@ -1,7 +1,6 @@
 import { TokenAuthentication } from '$/domain/usecases/account/token-authentication'
 import {
   PasswordAuthentication,
-  Tokens,
   AuthenticationDTO,
   HashComparer,
   AccessEncrypter,
@@ -10,7 +9,8 @@ import {
   RefreshEncrypter,
   IdGenerator,
   UpdateRefreshTokenRepository,
-  AccountModel
+  AccountModel,
+  AuthenticationModel
 } from './db-authentication-protocols'
 
 export class DbAuthentication implements PasswordAuthentication, TokenAuthentication {
@@ -23,23 +23,23 @@ export class DbAuthentication implements PasswordAuthentication, TokenAuthentica
     private readonly idGenerator: IdGenerator
   ) {}
 
-  async authByPassword (authentication: AuthenticationDTO): Promise<Tokens> {
+  async authByPassword (authentication: AuthenticationDTO): Promise<AuthenticationModel> {
     const account = await this.loadAccountByEmailRepository.loadByEmail(authentication.email)
     if (account) {
       const isValid = await this.hashComparer.compare(authentication.password, account.password)
       if (isValid) {
         const accessToken = await this.getAccessToken(account.id)
         const refreshToken = await this.getRefreshToken(account.id)
-        return { accessToken, refreshToken }
+        return { accessToken, refreshToken, name: account.name }
       }
     }
     return null
   }
 
-  async authByAccount (account: AccountModel): Promise<Tokens> {
+  async authByAccount (account: AccountModel): Promise<AuthenticationModel> {
     const accessToken = await this.getAccessToken(account.id)
     const refreshToken = await this.getRefreshToken(account.id)
-    return { accessToken, refreshToken }
+    return { accessToken, refreshToken, name: account.name }
   }
 
   private async getAccessToken (accountId: string): Promise<string> {

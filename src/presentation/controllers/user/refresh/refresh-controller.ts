@@ -18,8 +18,8 @@ export class RefreshController implements Controller {
       const { refreshToken } = httpRequest.body
       const account = await this.loadAccountByRefreshToken.load(refreshToken)
       if (!account) return unauthorized()
-      const tokens = await this.tokenAuthentication.authByAccount(account)
-      return ok(tokens)
+      const authenticationModel = await this.tokenAuthentication.authByAccount(account)
+      return ok(authenticationModel)
     } catch (error) {
       return error instanceof AuthExpiredError
         ? unauthorized()
