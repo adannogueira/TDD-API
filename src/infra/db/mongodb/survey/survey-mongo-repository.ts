@@ -1,10 +1,10 @@
 import { LoadSurveyRepository } from '$/data/protocols/db/survey/load-survey-repository'
 import { AddSurveyRepository } from '$/data/usecases/survey/add-survey/add-survey-protocols'
 import { SurveyModel } from '$/domain/models/survey'
+import { LoadSurveyByIdRepository } from '$/data/usecases/survey/load-survey-by-id/load-survey-by-id-protocols'
 import { AddSurveyDTO } from '$/domain/usecases/survey/add-survey'
-import { ObjectId } from 'mongodb'
-import { LoadSurveyByIdRepository } from '../../../../data/usecases/survey/load-survey-by-id/load-survey-by-id-protocols'
 import { MongoHelper } from '../helpers/mongo-helper'
+import { ObjectId } from 'mongodb'
 
 export class SurveyMongoRepository implements
   AddSurveyRepository,
@@ -15,10 +15,18 @@ export class SurveyMongoRepository implements
     await surveyCollection.insertOne(surveyData)
   }
 
-  async loadAll (): Promise<SurveyModel[]> {
+  async loadAll (accountId: string): Promise<SurveyModel[]> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
-    const surveys = await surveyCollection.find().toArray()
-    return surveys.map(survey => MongoHelper.map<SurveyModel>(survey))
+    const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+    const [surveys, surveyResults] = await Promise.all([
+      surveyCollection.find().toArray(),
+      surveyResultCollection.find({ accountId: new ObjectId(accountId) }).toArray()
+    ])
+    return surveys.map(survey => {
+      survey.didAnswer = surveyResults.some(result =>
+        result.surveyId.toString() === survey._id.toString())
+      return MongoHelper.map<SurveyModel>(survey)
+    })
   }
 
   async loadById (id: string): Promise<SurveyModel> {
