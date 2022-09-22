@@ -38,13 +38,6 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
     expect(account).toBeNull()
   })
 
-  test('Should throw if Decrypter throws', async () => {
-    const { sut, decrypterStub } = makeSut()
-    jest.spyOn(decrypterStub, 'decrypt').mockRejectedValueOnce(new Error())
-    const promise = sut.load('any_token', 'any_role')
-    await expect(promise).rejects.toThrow()
-  })
-
   test('Should throw if LoadAccountByAccessTokenRepo throws', async () => {
     const { sut, loadAccountByAccessTokenRepoStub } = makeSut()
     jest.spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken')

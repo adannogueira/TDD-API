@@ -29,7 +29,7 @@ export class JwtAdapter implements AccessEncrypter, AccessDecrypter, RefreshEncr
       if (error.name === 'TokenExpiredError') {
         throw new AuthExpiredError()
       }
-      throw error
+      return null
     }
   }
 
@@ -53,7 +53,7 @@ export class JwtAdapter implements AccessEncrypter, AccessDecrypter, RefreshEncr
       if (error.name === 'TokenExpiredError') {
         throw new AuthExpiredError()
       }
-      throw error
+      return null
     }
   }
 }
