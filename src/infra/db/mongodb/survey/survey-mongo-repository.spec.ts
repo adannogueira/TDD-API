@@ -1,7 +1,7 @@
 import { mockSurveyData, mockSurveysData } from '$/domain/test'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 import { MongoHelper } from '../helpers/mongo-helper'
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 
 describe('Survey Mongodb Repository', () => {
   beforeAll(async () => {
@@ -13,8 +13,12 @@ describe('Survey Mongodb Repository', () => {
   })
 
   beforeEach(async () => {
+    accountCollection = await MongoHelper.getCollection('accounts')
+    await accountCollection.deleteMany({})
     surveyCollection = await MongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
+    surveyResultCollection = await MongoHelper.getCollection('surveyResults')
+    await surveyResultCollection.deleteMany({})
   })
   describe('add()', () => {
     test('Should save a survey on add success', async () => {
@@ -27,19 +31,29 @@ describe('Survey Mongodb Repository', () => {
 
   describe('loadAll()', () => {
     test('Should load all surveys on loadAll success', async () => {
-      await surveyCollection.insertMany(mockSurveysData())
+      const accountId = await makeAccountId()
+      const result = await surveyCollection.insertMany(mockSurveysData())
+      await surveyResultCollection.insertOne({
+        accountId: new ObjectId(accountId),
+        surveyId: result.insertedIds[0],
+        answer: 'any_answer',
+        date: new Date()
+      })
       const sut = makeSut()
-      const surveys = await sut.loadAll()
+      const surveys = await sut.loadAll(accountId)
       expect(surveys).toBeInstanceOf(Array)
       expect(surveys[0].question).toBe('any_question')
       expect(surveys[0].id).toBeTruthy()
+      expect(surveys[0].didAnswer).toBeTruthy()
       expect(surveys[1].question).toBe('other_question')
       expect(surveys[1].id).toBeTruthy()
+      expect(surveys[1].didAnswer).toBeFalsy()
     })
 
     test('Should return an empty array when no data is found', async () => {
+      const accountId = await makeAccountId()
       const sut = makeSut()
-      const surveys = await sut.loadAll()
+      const surveys = await sut.loadAll(accountId)
       expect(surveys).toBeInstanceOf(Array)
       expect(surveys.length).toBe(0)
     })
@@ -64,7 +78,19 @@ describe('Survey Mongodb Repository', () => {
   })
 })
 
+let accountCollection: Collection
 let surveyCollection: Collection
+let surveyResultCollection: Collection
+
 const makeSut = (): SurveyMongoRepository => {
   return new SurveyMongoRepository()
+}
+
+const makeAccountId = async (): Promise<string> => {
+  const res = await accountCollection.insertOne({
+    name: 'any_name',
+    email: 'any@email.com',
+    password: 'any_password'
+  })
+  return res.insertedId.toString()
 }
