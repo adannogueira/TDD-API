@@ -71,38 +71,41 @@ describe('Survey Result Mongodb Repository', () => {
   describe('loadBySurveyId()', () => {
     test('Should load a survey result', async () => {
       const surveyId = await makeSurveyId()
-      const accountId = await makeAccountId()
+      const accountOne = await makeAccountId()
+      const accountTwo = await makeAccountId()
+      const accountThree = await makeAccountId()
       await surveyResultCollection.insertMany([{
         surveyId,
-        accountId,
+        accountId: accountOne,
         answer: 'answer 1',
         date: new Date()
       }, {
         surveyId,
-        accountId,
+        accountId: accountTwo,
+        answer: 'answer 2',
+        date: new Date()
+      }, {
+        surveyId,
+        accountId: accountThree,
         answer: 'answer 1',
-        date: new Date()
-      }, {
-        surveyId,
-        accountId,
-        answer: 'answer 2',
-        date: new Date()
-      }, {
-        surveyId,
-        accountId,
-        answer: 'answer 2',
         date: new Date()
       }])
       const sut = makeSut()
-      const surveyResult = await sut.loadBySurveyId(surveyId.toString())
+      const surveyResult = await sut.loadBySurveyId(
+        surveyId.toString(),
+        accountOne.toString()
+      )
       expect(surveyResult).toBeTruthy()
       expect(surveyResult.surveyId).toEqual(surveyId.toString())
       expect(surveyResult.answers[0].count).toBe(2)
-      expect(surveyResult.answers[0].percent).toBe(50)
-      expect(surveyResult.answers[1].count).toBe(2)
-      expect(surveyResult.answers[1].percent).toBe(50)
+      expect(surveyResult.answers[0].percent).toBe(67)
+      expect(surveyResult.answers[0].isCurrentAccountAnswer).toBeTruthy()
+      expect(surveyResult.answers[1].count).toBe(1)
+      expect(surveyResult.answers[1].percent).toBe(33)
+      expect(surveyResult.answers[1].isCurrentAccountAnswer).toBeFalsy()
       expect(surveyResult.answers[2].count).toBe(0)
       expect(surveyResult.answers[2].percent).toBe(0)
+      expect(surveyResult.answers[2].isCurrentAccountAnswer).toBeFalsy()
     })
 
     test('Should load a survey result within 3 milliseconds', async () => {
@@ -133,7 +136,10 @@ describe('Survey Result Mongodb Repository', () => {
       const counter: number[] = []
       for await (const _ of Array(100).fill(1)) {
         const start = new Date()
-        const surveyResult = await sut.loadBySurveyId(surveyId.toString())
+        const surveyResult = await sut.loadBySurveyId(
+          surveyId.toString(),
+          accountId.toString()
+        )
         const end = new Date()
         counter.push((end.getMilliseconds() - start.getMilliseconds()))
         expect(surveyResult).toBeTruthy()
