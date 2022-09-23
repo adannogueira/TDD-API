@@ -18,7 +18,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
     })
   }
 
-  async loadBySurveyId (surveyId: string): Promise<SurveyResultModel> {
+  async loadBySurveyId (surveyId: string, accountId: string): Promise<SurveyResultModel> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     const [survey, surveyResults] = await Promise.all([
@@ -29,7 +29,16 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       .reduce((end: SurveyAnswerModel[], answer: { image: string, answer: string }) => {
         const count = surveyResults.filter(result => result.answer === answer.answer).length
         const percent = Math.round(100 * count / surveyResults.length) || 0
-        const currentResult = { image: answer.image, answer: answer.answer, count, percent }
+        const isCurrentAccountAnswer = surveyResults.some(result => {
+          return result.accountId.toString() === accountId && result.answer === answer.answer
+        })
+        const currentResult = {
+          image: answer.image,
+          answer: answer.answer,
+          count,
+          percent,
+          isCurrentAccountAnswer
+        }
         end.push(currentResult)
         return end
       }, [])
