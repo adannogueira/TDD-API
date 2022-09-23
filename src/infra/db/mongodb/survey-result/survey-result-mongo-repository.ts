@@ -4,6 +4,7 @@ import { SurveyAnswerModel, SurveyResultModel } from '$/domain/models/survey-res
 import { SaveSurveyResultDTO } from '$/domain/usecases/survey-result/save-survey-result'
 import { MongoHelper, QueryBuilder } from '../helpers'
 import { ObjectId } from 'mongodb'
+import { SurveyModel } from '../../../../domain/models/survey'
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultRepository {
   async save ({ surveyId, accountId, answer, date }: SaveSurveyResultDTO): Promise<void> {
@@ -21,27 +22,11 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
   async loadBySurveyId (surveyId: string, accountId: string): Promise<SurveyResultModel> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
-    const [survey, surveyResults] = await Promise.all([
+    const [survey, surveyResults]: any[] = await Promise.all([
       surveyCollection.findOne({ _id: new ObjectId(surveyId) }),
       surveyResultCollection.find({ surveyId: new ObjectId(surveyId) }).toArray()
     ])
-    const answers = survey.answers
-      .reduce((end: SurveyAnswerModel[], answer: { image: string, answer: string }) => {
-        const count = surveyResults.filter(result => result.answer === answer.answer).length
-        const percent = Math.round(100 * count / surveyResults.length) || 0
-        const isCurrentAccountAnswer = surveyResults.some(result => {
-          return result.accountId.toString() === accountId && result.answer === answer.answer
-        })
-        const currentResult = {
-          image: answer.image,
-          answer: answer.answer,
-          count,
-          percent,
-          isCurrentAccountAnswer
-        }
-        end.push(currentResult)
-        return end
-      }, [])
+    const answers = this.calculateAnswers(survey, surveyResults, accountId)
     return {
       surveyId,
       question: survey.question,
@@ -226,5 +211,29 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       .build()
     const surveyResult = await surveyResultCollection.aggregate(query).toArray()
     return surveyResult.shift() as SurveyResultModel
+  }
+
+  private calculateAnswers (
+    survey: SurveyModel,
+    surveyResults: SaveSurveyResultDTO[],
+    accountId: string
+  ): SurveyAnswerModel[] {
+    return survey.answers
+      .reduce((end: SurveyAnswerModel[], answer: { image: string, answer: string }) => {
+        const count = surveyResults.filter(result => result.answer === answer.answer).length
+        const percent = Math.round(100 * count / surveyResults.length) || 0
+        const isCurrentAccountAnswer = surveyResults.some(result => {
+          return result.accountId.toString() === accountId && result.answer === answer.answer
+        })
+        const currentResult = {
+          image: answer.image,
+          answer: answer.answer,
+          count,
+          percent,
+          isCurrentAccountAnswer
+        }
+        end.push(currentResult)
+        return end
+      }, [])
   }
 }
