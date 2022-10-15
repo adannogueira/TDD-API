@@ -21,10 +21,18 @@ export class AccountMongoRepository implements
     return Boolean(account)
   }
 
-  async loadByEmail (email: string): Promise<AccountModel> {
+  async loadByEmail (email: string): Promise<LoadAccountByEmailRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
-    const account = await accountCollection.findOne({ email })
-    return account && MongoHelper.map<AccountModel>(account)
+    const account = await accountCollection.findOne({
+      email
+    }, {
+      projection: {
+        _id: 1,
+        name: 1,
+        password: 1
+      }
+    })
+    return account && MongoHelper.map<LoadAccountByEmailRepository.Result>(account)
   }
 
   async updateAccessToken (id: string, token: string): Promise<any> {
