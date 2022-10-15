@@ -1,6 +1,6 @@
 import { LogErrorRepository } from '$/data/protocols/db/log/log-error-repository'
 import { mockLogErrorRepositoryStub } from '$/data/test'
-import { mockAccount } from '$/domain/test'
+import { mockAccount } from '$/../tests/domain/test'
 import { ok, serverError } from '$/presentation/helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '$/presentation/protocols'
 import { mockController } from '$/presentation/test'

@@ -1,4 +1,4 @@
-import { mockAccount } from '$/domain/test'
+import { mockAccount } from '$/../tests/domain/test'
 import { AuthExpiredError } from '$/presentation/errors'
 import { ok, serverError, unauthorized } from '$/presentation/helpers/http/http-helper'
 import { mockLoadAccountByRefreshToken, mockTokenAuthentication } from '$/presentation/test'

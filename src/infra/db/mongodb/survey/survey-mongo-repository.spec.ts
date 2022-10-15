@@ -1,4 +1,4 @@
-import { mockSurveyData, mockSurveysData } from '$/domain/test'
+import { mockSurveyData, mockSurveysData } from '$/../tests/domain/test'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { Collection, ObjectId } from 'mongodb'

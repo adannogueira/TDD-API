@@ -1,6 +1,6 @@
 import { SurveyModel } from '$/domain/models/survey'
 import { LoadSurveyById } from '$/domain/usecases/survey/load-survey-by-id'
-import { mockSurvey } from '$/domain/test'
+import { mockSurvey } from '$/../tests/domain/test'
 
 export const mockLoadSurveyById = (): LoadSurveyById => {
   class LoadSurveyByIdStub implements LoadSurveyById {

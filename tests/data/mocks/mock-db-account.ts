@@ -3,7 +3,7 @@ import { LoadAccountByAccessTokenRepository } from '$/data/protocols/db/account/
 import { LoadAccountByRefreshTokenIdRepository } from '$/data/protocols/db/account/load-account-by-refresh-token-id-repository'
 import { AddAccountDTO, LoadAccountByEmailRepository } from '$/data/usecases/account/add-account/db-add-account-protocols'
 import { AccountModel, UpdateAccessTokenRepository, UpdateRefreshTokenRepository } from '$/data/usecases/authentication/db-authentication-protocols'
-import { mockAccount } from '$/domain/test'
+import { mockAccount } from '$/../tests/domain/test'
 
 export const mockAddAccountRepositoryStub = (): AddAccountRepository => {
   class AddAccountRepositoryStub implements AddAccountRepository {

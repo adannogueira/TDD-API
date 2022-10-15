@@ -1,5 +1,5 @@
 import { mockAddAccountRepositoryStub, mockHasher } from '$tests/data/mocks'
-import { mockAccount, mockAccountData } from '$/domain/test'
+import { mockAccount, mockAccountData } from '$/../tests/domain/test'
 import {
   AccountModel,
   Hasher,

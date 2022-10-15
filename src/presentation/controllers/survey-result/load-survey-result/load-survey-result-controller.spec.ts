@@ -1,4 +1,4 @@
-import { mockSurveyResult } from '$/domain/test'
+import { mockSurveyResult } from '$/../tests/domain/test'
 import { InvalidParamError } from '$/presentation/errors'
 import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-helper'
 import { mockLoadSurveyById, mockLoadSurveyResult } from '$/presentation/test'

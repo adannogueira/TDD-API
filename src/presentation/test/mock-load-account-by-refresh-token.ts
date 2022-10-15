@@ -1,6 +1,6 @@
 import { AccountModel } from '$/domain/models/account'
 import { LoadAccountByRefreshToken } from '$/domain/usecases/account/load-account-by-refresh-token'
-import { mockAccount } from '$/domain/test'
+import { mockAccount } from '$/../tests/domain/test'
 
 export const mockLoadAccountByRefreshToken = (): LoadAccountByRefreshToken => {
   class LoadAccountByRefreshTokenStub implements LoadAccountByRefreshToken {

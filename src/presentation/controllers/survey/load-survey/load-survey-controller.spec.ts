@@ -1,5 +1,5 @@
 
-import { mockSurveys } from '$/domain/test'
+import { mockSurveys } from '$/../tests/domain/test'
 import { noContent, ok, serverError } from '$/presentation/helpers/http/http-helper'
 import { mockLoadSurvey } from '$/presentation/test'
 import { LoadSurveyController } from './load-survey-controller'

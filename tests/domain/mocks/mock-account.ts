@@ -1,6 +1,6 @@
 import { AccountModel } from '$/domain/models/account'
 import { AddAccountDTO } from '$/domain/usecases/account/add-account'
-import { AuthenticationDTO } from '../usecases/account/password-authentication'
+import { AuthenticationDTO } from '../../../src/domain/usecases/account/password-authentication'
 
 export const mockAccount = (): AccountModel => ({
   id: 'any_id',

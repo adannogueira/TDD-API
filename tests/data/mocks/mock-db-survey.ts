@@ -2,7 +2,7 @@ import { AddSurveyRepository } from '$/data/protocols/db/survey/add-survey-repos
 import { LoadSurveyByIdRepository } from '$/data/protocols/db/survey/load-survey-by-id-repository'
 import { AddSurveyDTO } from '$/data/usecases/survey/add-survey/add-survey-protocols'
 import { SurveyModel } from '$/domain/models/survey'
-import { mockSurvey, mockSurveys } from '$/domain/test'
+import { mockSurvey, mockSurveys } from '$/../tests/domain/test'
 import { LoadSurveyRepository } from '../protocols/db/survey/load-survey-repository'
 
 export const mockAddSurveyRepositoryStub = (): AddSurveyRepository => {

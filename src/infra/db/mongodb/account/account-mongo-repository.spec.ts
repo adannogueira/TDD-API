@@ -1,4 +1,4 @@
-import { mockAccountData } from '$/domain/test'
+import { mockAccountData } from '$/../tests/domain/test'
 import { AccountMongoRepository } from './account-mongo-repository'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { Collection } from 'mongodb'

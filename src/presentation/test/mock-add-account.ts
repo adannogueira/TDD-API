@@ -1,6 +1,6 @@
 import { AccountModel } from '$/domain/models/account'
 import { AddAccount, AddAccountDTO } from '$/domain/usecases/account/add-account'
-import { mockAccount } from '$/domain/test'
+import { mockAccount } from '$/../tests/domain/test'
 
 export const mockAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
