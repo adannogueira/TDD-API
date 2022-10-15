@@ -43,7 +43,7 @@ describe('DbAccount Usecase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should return false if LoadAccountByEmailRepository returns false', async () => {
+  test('Should return false if LoadAccountByEmailRepository returns an account', async () => {
     const { sut, loadAccountByEmailRepository } = makeSut()
     jest.spyOn(loadAccountByEmailRepository, 'loadByEmail')
       .mockResolvedValueOnce(mockAccount())
