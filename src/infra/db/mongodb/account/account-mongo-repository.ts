@@ -3,7 +3,7 @@ import { LoadAccountByAccessTokenRepository } from '$/data/protocols/db/account/
 import { LoadAccountByEmailRepository } from '$/data/protocols/db/account/load-account-by-email-repository'
 import { LoadAccountByRefreshTokenIdRepository } from '$/data/protocols/db/account/load-account-by-refresh-token-id-repository'
 import { UpdateAccessTokenRepository } from '$/data/protocols/db/account/update-access-token-repository'
-import { AccountModel, UpdateRefreshTokenRepository } from '$/data/usecases/authentication/db-authentication-protocols'
+import { UpdateRefreshTokenRepository } from '$/data/usecases/authentication/db-authentication-protocols'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { ObjectId } from 'mongodb'
 
@@ -52,7 +52,7 @@ export class AccountMongoRepository implements
       accessToken,
       $or: [{ role }, { role: 'admin' }]
     })
-    return account && MongoHelper.map<AccountModel>(account)
+    return account && MongoHelper.map<LoadAccountByAccessTokenRepository.Result>(account)
   }
 
   async updateRefreshToken (id: string, tokenId: string): Promise<any> {
@@ -67,6 +67,6 @@ export class AccountMongoRepository implements
     const account = await accountCollection.findOne({
       tokenId
     })
-    return account && MongoHelper.map<AccountModel>(account)
+    return account && MongoHelper.map<LoadAccountByRefreshTokenIdRepository.Result>(account)
   }
 }

@@ -7,9 +7,7 @@ import {
   UpdateAccessTokenRepository,
   RefreshEncrypter,
   IdGenerator,
-  UpdateRefreshTokenRepository,
-  AccountModel,
-  AuthenticationModel
+  UpdateRefreshTokenRepository
 } from './db-authentication-protocols'
 
 export class DbAuthentication implements PasswordAuthentication, TokenAuthentication {
@@ -37,7 +35,9 @@ export class DbAuthentication implements PasswordAuthentication, TokenAuthentica
     return null
   }
 
-  async authByAccount (account: AccountModel): Promise<AuthenticationModel> {
+  async authByAccount (
+    account: TokenAuthentication.Params
+  ): Promise<TokenAuthentication.Result> {
     const accessToken = await this.getAccessToken(account.id)
     const refreshToken = await this.getRefreshToken(account.id)
     return { accessToken, refreshToken, name: account.name }
