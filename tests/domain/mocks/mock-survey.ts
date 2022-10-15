@@ -1,5 +1,5 @@
 import { SurveyModel } from '$/domain/models/survey'
-import { AddSurveyDTO } from '$/domain/usecases/survey/add-survey'
+import { AddSurvey } from '../usecases/survey/add-survey'
 
 export const mockSurvey = (): SurveyModel => ({
   id: 'any_id',
@@ -23,7 +23,7 @@ export const mockSurveys = (): SurveyModel[] => ([
   }
 ])
 
-export const mockSurveyData = (): AddSurveyDTO => ({
+export const mockSurveyData = (): AddSurvey.Params => ({
   question: 'any_question',
   answers: [{
     image: 'any_image',
@@ -32,7 +32,7 @@ export const mockSurveyData = (): AddSurveyDTO => ({
   date: new Date()
 })
 
-export const mockSurveysData = (): AddSurveyDTO[] => ([
+export const mockSurveysData = (): AddSurvey.Params[] => ([
   mockSurveyData(),
   {
     question: 'other_question',
