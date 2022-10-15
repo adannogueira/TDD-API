@@ -1,5 +1,5 @@
 import { SurveyResultModel } from '$/domain/models/survey-result'
-import { mockSurveyResult } from '$/../tests/domain/test'
+import { mockSurveyResult } from '$tests/domain/mocks'
 import { LoadSurveyResult } from '$/domain/usecases/survey-result/load-survey-result'
 
 export const mockLoadSurveyResult = (): LoadSurveyResult => {

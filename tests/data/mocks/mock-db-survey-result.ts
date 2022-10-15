@@ -2,7 +2,7 @@ import { LoadSurveyResultRepository } from '$/data/protocols/db/survey-result/lo
 import { SaveSurveyResultRepository } from '$/data/protocols/db/survey-result/save-survey-result-repository'
 import { SaveSurveyResultDTO } from '$/data/usecases/survey-result/save-survey-result/save-survey-result-protocols'
 import { SurveyResultModel } from '$/domain/models/survey-result'
-import { mockSurveyResult } from '$/../tests/domain/test'
+import { mockSurveyResult } from '$tests/domain/mocks'
 
 export const mockSaveSurveyResultRepositoryStub = (): SaveSurveyResultRepository => {
   class SaveSurveyResultRepoStub implements SaveSurveyResultRepository {

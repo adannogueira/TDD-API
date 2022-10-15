@@ -1,4 +1,4 @@
-import { mockAccount } from '$/../tests/domain/test'
+import { mockAccount } from '$tests/domain/mocks'
 import { ok } from '$/presentation/helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '$/presentation/protocols'
 

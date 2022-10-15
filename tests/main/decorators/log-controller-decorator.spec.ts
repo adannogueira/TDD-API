@@ -1,10 +1,10 @@
 import { LogErrorRepository } from '$/data/protocols/db/log/log-error-repository'
-import { mockLogErrorRepositoryStub } from '$/data/test'
-import { mockAccount } from '$/../tests/domain/test'
+import { mockLogErrorRepositoryStub } from '$tests/data/mocks'
+import { mockAccount } from '$tests/domain/mocks'
 import { ok, serverError } from '$/presentation/helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '$/presentation/protocols'
 import { mockController } from '$/presentation/test'
-import { LogControllerDecorator } from './log-controller-decorator'
+import { LogControllerDecorator } from '$/main/decorators/log-controller-decorator'
 
 describe('LogControllerDecorator', () => {
   test('Should call controller handle', async () => {
