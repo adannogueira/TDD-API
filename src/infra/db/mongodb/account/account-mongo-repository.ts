@@ -54,7 +54,7 @@ export class AccountMongoRepository implements
     }, { $set: { tokenId } })
   }
 
-  async loadByRefreshTokenId (tokenId: string): Promise<AccountModel> {
+  async loadByRefreshTokenId (tokenId: string): Promise<LoadAccountByRefreshTokenIdRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne({
       tokenId

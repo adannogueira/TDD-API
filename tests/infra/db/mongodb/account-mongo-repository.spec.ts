@@ -69,9 +69,6 @@ describe('Account Mongodb Repository', () => {
       })
       const account = await sut.loadByAccessToken({ accessToken: 'any_token' })
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('any_name')
-      expect(account.email).toBe('any_email@mail.com')
-      expect(account.password).toBe('any_password')
     })
 
     test('Should return an account on loadByAccessToken with admin role', async () => {
@@ -85,9 +82,6 @@ describe('Account Mongodb Repository', () => {
       })
       const account = await sut.loadByAccessToken({ accessToken: 'any_token', role: 'admin' })
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('any_name')
-      expect(account.email).toBe('any_email@mail.com')
-      expect(account.password).toBe('any_password')
     })
 
     test('Should return null on loadByAccessToken with invalid role', async () => {
@@ -113,9 +107,6 @@ describe('Account Mongodb Repository', () => {
       })
       const account = await sut.loadByAccessToken({ accessToken: 'any_token' })
       expect(account.id).toBeTruthy()
-      expect(account.name).toBe('any_name')
-      expect(account.email).toBe('any_email@mail.com')
-      expect(account.password).toBe('any_password')
     })
 
     test('Should return null if loadByAccessToken fails', async () => {

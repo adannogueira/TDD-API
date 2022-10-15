@@ -36,7 +36,7 @@ export const mockLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailReposi
 
 export const mockLoadAccountByRefreshTokenRepositoryStub = (): LoadAccountByRefreshTokenIdRepository => {
   class LoadAccountByRefreshTokenIdRepoStub implements LoadAccountByRefreshTokenIdRepository {
-    async loadByRefreshTokenId (tokenId: string): Promise<AccountModel> {
+    async loadByRefreshTokenId (tokenId: string): Promise<LoadAccountByRefreshTokenIdRepository.Result> {
       return await Promise.resolve(mockAccount())
     }
   }
