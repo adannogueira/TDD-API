@@ -1,5 +1,5 @@
 import { mockAccessDecrypter, mockLoadAccountByAccessTokenRepositoryStub } from '$tests/data/mocks'
-import { mockAccount } from '$/../tests/domain/test'
+import { mockAccount } from '$tests/domain/mocks'
 import { DbLoadAccountByAccessToken } from '$/data/usecases/account/load-account-by-access-token/db-load-account-by-access-token'
 import {
   AccessDecrypter,

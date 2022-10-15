@@ -1,5 +1,5 @@
 import { mockLoadSurveyResultRepositoryStub, mockSaveSurveyResultRepositoryStub } from '$tests/data/mocks'
-import { mockSurveyResult, mockSurveyResultData } from '$/../tests/domain/test'
+import { mockSurveyResult, mockSurveyResultData } from '$tests/domain/mocks'
 import { DbSaveSurveyResult } from '$/data/usecases/survey-result/save-survey-result/db-save-survey-result'
 import { SaveSurveyResultRepository } from '$/data/usecases/survey-result/save-survey-result/save-survey-result-protocols'
 import MockDate from 'mockdate'

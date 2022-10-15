@@ -7,7 +7,7 @@ import {
   mockUpdateAccessTokenRepositoryStub,
   mockUpdateRefreshTokenRepositoryStub
 } from '$tests/data/mocks'
-import { mockAccount, mockAuthentication } from '$/../tests/domain/test'
+import { mockAccount, mockAuthentication } from '$tests/domain/mocks'
 import { DbAuthentication } from '$/data/usecases/authentication/db-authentication'
 import {
   HashComparer,
