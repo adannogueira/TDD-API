@@ -1,5 +1,5 @@
 import { MissingParamError } from '$/presentation/errors'
-import { RequiredFieldValidation } from './required-field-validation'
+import { RequiredFieldValidation } from '../../../src/validation/validators/required-field-validation'
 
 describe('RequiredFieldValidation', () => {
   test('Should return a MissignParamError if validation fails', () => {

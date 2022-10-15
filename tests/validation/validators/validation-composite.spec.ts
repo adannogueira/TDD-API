@@ -1,7 +1,7 @@
 import { MissingParamError } from '$/presentation/errors'
 import { Validation } from '$/presentation/protocols'
-import { mockValidation } from '$/validation/test'
-import { ValidationComposite } from './validation-composite'
+import { mockValidation } from '$/../tests/validation/mocks'
+import { ValidationComposite } from '../../../src/validation/validators/validation-composite'
 
 describe('ValidationComposite', () => {
   test('Should return an error if any validation fails', () => {

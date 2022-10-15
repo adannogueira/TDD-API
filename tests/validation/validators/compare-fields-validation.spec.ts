@@ -1,5 +1,5 @@
 import { InvalidParamError } from '$/presentation/errors'
-import { CompareFieldsValidation } from './compare-fields-validation'
+import { CompareFieldsValidation } from '../../../src/validation/validators/compare-fields-validation'
 
 describe('CompareFieldsValidation', () => {
   test('Should return a InvalidParamError if validation fails', () => {

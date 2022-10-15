@@ -1,7 +1,7 @@
 import { InvalidParamError } from '$/presentation/errors'
 import { EmailValidator } from '$/validation/protocols/email-validator'
-import { mockEmailValidator } from '$/validation/test'
-import { EmailValidation } from './email-validation'
+import { mockEmailValidator } from '$/../tests/validation/mocks'
+import { EmailValidation } from '../../../src/validation/validators/email-validation'
 
 describe('Email Validation', () => {
   test('Should return an error if EmailValidator returns false', () => {
