@@ -1,9 +1,9 @@
-import { mockLoadAccountByRefreshTokenRepositoryStub, mockRefreshDecrypter } from '$/data/test'
-import { DbLoadAccountByRefreshToken } from './db-load-account-by-refresh-token'
+import { mockLoadAccountByRefreshTokenRepositoryStub, mockRefreshDecrypter } from '$tests/data/mocks'
+import { DbLoadAccountByRefreshToken } from '$/data/usecases/account/load-account-by-refresh-token/db-load-account-by-refresh-token'
 import {
   LoadAccountByRefreshTokenIdRepository,
   RefreshDecrypter
-} from './load-account-by-refresh-token-protocols'
+} from '$/data/usecases/account/load-account-by-refresh-token/load-account-by-refresh-token-protocols'
 
 describe('DbLoadAccountByRefreshToken Usecase', () => {
   test('Should call RefreshDecrypter with correct values', async () => {

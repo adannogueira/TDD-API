@@ -1,7 +1,7 @@
-import { mockLoadSurveyRepositoryStub } from '$/data/test'
+import { mockLoadSurveyRepositoryStub } from '$tests/data/mocks'
 import { mockSurveys } from '$/domain/test'
-import { DbLoadSurvey } from './db-load-survey'
-import { LoadSurveyRepository } from './load-survey-protocols'
+import { DbLoadSurvey } from '$/data/usecases/survey/load-survey/db-load-survey'
+import { LoadSurveyRepository } from '$/data/usecases/survey/load-survey/load-survey-protocols'
 import MockDate from 'mockdate'
 
 describe('DbLoadSurvey', () => {

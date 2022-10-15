@@ -6,16 +6,16 @@ import {
   mockLoadAccountByEmailRepositoryStub,
   mockUpdateAccessTokenRepositoryStub,
   mockUpdateRefreshTokenRepositoryStub
-} from '$/data/test'
+} from '$tests/data/mocks'
 import { mockAccount, mockAuthentication } from '$/domain/test'
-import { DbAuthentication } from './db-authentication'
+import { DbAuthentication } from '$/data/usecases/authentication/db-authentication'
 import {
   HashComparer,
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository,
   IdGenerator,
   UpdateRefreshTokenRepository
-} from './db-authentication-protocols'
+} from '$/data/usecases/authentication/db-authentication-protocols'
 
 describe('DbAuthentication UseCase', () => {
   describe('authByPassword()', () => {

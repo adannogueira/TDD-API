@@ -1,9 +1,9 @@
-import { mockLoadSurveyResultRepositoryStub, mockSaveSurveyResultRepositoryStub } from '$/data/test'
+import { mockLoadSurveyResultRepositoryStub, mockSaveSurveyResultRepositoryStub } from '$tests/data/mocks'
 import { mockSurveyResult, mockSurveyResultData } from '$/domain/test'
-import { DbSaveSurveyResult } from './db-save-survey-result'
-import { SaveSurveyResultRepository } from './save-survey-result-protocols'
+import { DbSaveSurveyResult } from '$/data/usecases/survey-result/save-survey-result/db-save-survey-result'
+import { SaveSurveyResultRepository } from '$/data/usecases/survey-result/save-survey-result/save-survey-result-protocols'
 import MockDate from 'mockdate'
-import { LoadSurveyResultRepository } from '../load-survey-result/load-survey-results-protocols'
+import { LoadSurveyResultRepository } from '$/data/usecases/survey-result/load-survey-result/load-survey-results-protocols'
 
 describe('DbSaveSurveyResult Usecase', () => {
   beforeAll(() => MockDate.set(new Date()))

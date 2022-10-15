@@ -1,12 +1,12 @@
-import { mockAddAccountRepositoryStub, mockHasher } from '$/data/test'
+import { mockAddAccountRepositoryStub, mockHasher } from '$tests/data/mocks'
 import { mockAccount, mockAccountData } from '$/domain/test'
 import {
   AccountModel,
   Hasher,
   AddAccountRepository,
   LoadAccountByEmailRepository
-} from './db-add-account-protocols'
-import { DbAddAccount } from './db-add-account'
+} from '$/data/usecases/account/add-account/db-add-account-protocols'
+import { DbAddAccount } from '$/data/usecases/account/add-account/db-add-account'
 
 describe('DbAccount Usecase', () => {
   test('Should call Hasher with correct password', async () => {

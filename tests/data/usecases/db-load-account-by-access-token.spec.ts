@@ -1,10 +1,10 @@
-import { mockAccessDecrypter, mockLoadAccountByAccessTokenRepositoryStub } from '$/data/test'
+import { mockAccessDecrypter, mockLoadAccountByAccessTokenRepositoryStub } from '$tests/data/mocks'
 import { mockAccount } from '$/domain/test'
-import { DbLoadAccountByAccessToken } from './db-load-account-by-access-token'
+import { DbLoadAccountByAccessToken } from '$/data/usecases/account/load-account-by-access-token/db-load-account-by-access-token'
 import {
   AccessDecrypter,
   LoadAccountByAccessTokenRepository
-} from './load-account-by-access-token-protocols'
+} from '$/data/usecases/account/load-account-by-access-token/load-account-by-access-token-protocols'
 
 describe('DbLoadAccountByAccessToken Usecase', () => {
   test('Should call Decrypter with correct values', async () => {
