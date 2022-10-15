@@ -1,5 +1,5 @@
 import { IdGenerator } from '$/data/protocols/criptography/id-generator'
-import { UuidAdapter } from './uuid-adapter'
+import { UuidAdapter } from '$/infra/criptography/uuid-adapter/uuid-adapter'
 import { v4, validate } from 'uuid'
 
 describe('UuidAdapter', () => {

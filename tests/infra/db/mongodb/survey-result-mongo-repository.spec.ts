@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { MongoHelper } from '../helpers/mongo-helper'
+import { MongoHelper } from '$/infra/db/mongodb/helpers/mongo-helper'
 import { Collection, ObjectId } from 'mongodb'
-import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
+import { SurveyResultMongoRepository } from '$/infra/db/mongodb/survey-result/survey-result-mongo-repository'
 
 describe('Survey Result Mongodb Repository', () => {
   beforeAll(async () => {

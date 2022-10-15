@@ -1,6 +1,6 @@
-import { mockSurveyData, mockSurveysData } from '$/../tests/domain/test'
-import { SurveyMongoRepository } from './survey-mongo-repository'
-import { MongoHelper } from '../helpers/mongo-helper'
+import { mockSurveyData, mockSurveysData } from '$tests/domain/mocks'
+import { SurveyMongoRepository } from '$/infra/db/mongodb/survey/survey-mongo-repository'
+import { MongoHelper } from '$/infra/db/mongodb/helpers/mongo-helper'
 import { Collection, ObjectId } from 'mongodb'
 
 describe('Survey Mongodb Repository', () => {

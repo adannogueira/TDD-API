@@ -1,6 +1,6 @@
-import { mockAccountData } from '$/../tests/domain/test'
-import { AccountMongoRepository } from './account-mongo-repository'
-import { MongoHelper } from '../helpers/mongo-helper'
+import { mockAccountData } from '$tests/domain/mocks'
+import { AccountMongoRepository } from '$/infra/db/mongodb/account/account-mongo-repository'
+import { MongoHelper } from '$/infra/db/mongodb/helpers/mongo-helper'
 import { Collection } from 'mongodb'
 
 describe('Account Mongodb Repository', () => {

@@ -1,5 +1,5 @@
 import { AuthExpiredError } from '$/presentation/errors'
-import { JwtAdapter } from './jwt-adapter'
+import { JwtAdapter } from '$/infra/criptography/jwt-adapter/jwt-adapter'
 import jwt from 'jsonwebtoken'
 
 describe('Jwt Adapter', () => {
