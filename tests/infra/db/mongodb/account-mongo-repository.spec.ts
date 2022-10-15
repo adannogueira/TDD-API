@@ -67,7 +67,7 @@ describe('Account Mongodb Repository', () => {
         password: 'any_password',
         accessToken: 'any_token'
       })
-      const account = await sut.loadByAccessToken('any_token')
+      const account = await sut.loadByAccessToken({ accessToken: 'any_token' })
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('any_name')
       expect(account.email).toBe('any_email@mail.com')
@@ -83,7 +83,7 @@ describe('Account Mongodb Repository', () => {
         accessToken: 'any_token',
         role: 'admin'
       })
-      const account = await sut.loadByAccessToken('any_token', 'admin')
+      const account = await sut.loadByAccessToken({ accessToken: 'any_token', role: 'admin' })
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('any_name')
       expect(account.email).toBe('any_email@mail.com')
@@ -98,7 +98,7 @@ describe('Account Mongodb Repository', () => {
         password: 'any_password',
         accessToken: 'any_token'
       })
-      const account = await sut.loadByAccessToken('any_token', 'admin')
+      const account = await sut.loadByAccessToken({ accessToken: 'any_token', role: 'admin' })
       expect(account).toBeFalsy()
     })
 
@@ -111,7 +111,7 @@ describe('Account Mongodb Repository', () => {
         accessToken: 'any_token',
         role: 'admin'
       })
-      const account = await sut.loadByAccessToken('any_token')
+      const account = await sut.loadByAccessToken({ accessToken: 'any_token' })
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('any_name')
       expect(account.email).toBe('any_email@mail.com')
@@ -120,7 +120,7 @@ describe('Account Mongodb Repository', () => {
 
     test('Should return null if loadByAccessToken fails', async () => {
       const sut = makeSut()
-      const account = await sut.loadByAccessToken('any_email@mail.com')
+      const account = await sut.loadByAccessToken({ accessToken: 'any_email@mail.com' })
       expect(account).toBeFalsy()
     })
   })

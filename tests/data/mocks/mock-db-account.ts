@@ -16,7 +16,9 @@ export const mockAddAccountRepositoryStub = (): AddAccountRepository => {
 
 export const mockLoadAccountByAccessTokenRepositoryStub = (): LoadAccountByAccessTokenRepository => {
   class LoadAccountByAccessTokenRepoStub implements LoadAccountByAccessTokenRepository {
-    async loadByAccessToken (accessToken: string, role?: string): Promise<AccountModel> {
+    async loadByAccessToken (
+      { accessToken, role }: LoadAccountByAccessTokenRepository.Params
+    ): Promise<LoadAccountByAccessTokenRepository.Result> {
       return await Promise.resolve(mockAccount())
     }
   }

@@ -10,7 +10,7 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
   test('Should call Decrypter with correct values', async () => {
     const { sut, decrypterStub } = makeSut()
     const decryptSpy = jest.spyOn(decrypterStub, 'decrypt')
-    await sut.load('any_token', 'any_role')
+    await sut.load({ accessToken: 'any_token', role: 'any_role' })
     expect(decryptSpy).toHaveBeenCalledWith('any_token', 'any_role')
   })
 
@@ -18,15 +18,15 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
     const { sut, decrypterStub } = makeSut()
     jest.spyOn(decrypterStub, 'decrypt')
       .mockResolvedValueOnce(null)
-    const account = await sut.load('any_token', 'any_role')
+    const account = await sut.load({ accessToken: 'any_token', role: 'any_role' })
     expect(account).toBeNull()
   })
 
   test('Should call LoadAccountByAccessTokenRepo with correct values', async () => {
     const { sut, loadAccountByAccessTokenRepoStub } = makeSut()
     const loadByTokenSpy = jest.spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken')
-    await sut.load('any_token', 'any_role')
-    expect(loadByTokenSpy).toHaveBeenCalledWith('any_token', 'any_role')
+    await sut.load({ accessToken: 'any_token', role: 'any_role' })
+    expect(loadByTokenSpy).toHaveBeenCalledWith({ accessToken: 'any_token', role: 'any_role' })
   })
 
   test('Should return null if LoadAccountByAccessTokenRepo returns null', async () => {
@@ -34,7 +34,7 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
     jest
       .spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken')
       .mockResolvedValueOnce(null)
-    const account = await sut.load('any_token', 'any_role')
+    const account = await sut.load({ accessToken: 'any_token', role: 'any_role' })
     expect(account).toBeNull()
   })
 
@@ -42,13 +42,13 @@ describe('DbLoadAccountByAccessToken Usecase', () => {
     const { sut, loadAccountByAccessTokenRepoStub } = makeSut()
     jest.spyOn(loadAccountByAccessTokenRepoStub, 'loadByAccessToken')
       .mockRejectedValueOnce(new Error())
-    const promise = sut.load('any_token', 'any_role')
+    const promise = sut.load({ accessToken: 'any_token', role: 'any_role' })
     await expect(promise).rejects.toThrow()
   })
 
   test('Should return an account on success', async () => {
     const { sut } = makeSut()
-    const account = await sut.load('any_token', 'any_role')
+    const account = await sut.load({ accessToken: 'any_token', role: 'any_role' })
     expect(account).toEqual(mockAccount())
   })
 })

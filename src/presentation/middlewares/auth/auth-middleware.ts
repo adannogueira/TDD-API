@@ -1,6 +1,6 @@
 import { LoadAccountByAccessToken, HttpResponse, Middleware } from './auth-middleware-protocols'
-import { AccessDeniedError, AuthExpiredError } from '../../errors'
-import { forbidden, ok, serverError } from '../../helpers/http/http-helper'
+import { AccessDeniedError, AuthExpiredError } from '$/presentation/errors'
+import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-helper'
 
 export class AuthMiddleware implements Middleware {
   constructor (
@@ -11,7 +11,10 @@ export class AuthMiddleware implements Middleware {
   async handle ({ accessToken }: AuthMiddleware.Request): Promise<HttpResponse> {
     try {
       if (accessToken) {
-        const account = await this.loadAccountByAccessToken.load(accessToken, this.role)
+        const account = await this.loadAccountByAccessToken.load({
+          accessToken,
+          role: this.role
+        })
         if (account) {
           return ok({ accountId: account.id })
         }
