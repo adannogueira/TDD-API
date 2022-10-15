@@ -1,10 +1,15 @@
 import { AuthenticationModel } from '$/domain/models/authentication'
 
-export type AuthenticationDTO = {
-  email: string
-  password: string
+export interface PasswordAuthentication {
+  authByPassword: (
+    authentication: PasswordAuthentication.Params
+  ) => Promise<PasswordAuthentication.Result>
 }
 
-export interface PasswordAuthentication {
-  authByPassword: (authentication: AuthenticationDTO) => Promise<AuthenticationModel>
+export namespace PasswordAuthentication {
+  export type Params = {
+    email: string
+    password: string
+  }
+  export type Result = AuthenticationModel
 }
