@@ -3,7 +3,7 @@ import { mockSurveys } from '$tests/domain/mocks'
 import { noContent, ok, serverError } from '$/presentation/helpers/http/http-helper'
 import { mockLoadSurvey } from '$tests/presentation/mocks'
 import { LoadSurveyController } from '$/presentation/controllers/survey/load-survey/load-survey-controller'
-import { LoadSurvey, HttpRequest } from '$/presentation/controllers/survey/load-survey/load-survey-controller-protocols'
+import { LoadSurvey } from '$/presentation/controllers/survey/load-survey/load-survey-controller-protocols'
 import MockDate from 'mockdate'
 
 describe('LoadSurveyController', () => {
@@ -50,6 +50,6 @@ const makeSut = (): SutTypes => {
   return { sut, loadSurveyStub }
 }
 
-const mockRequest = (): HttpRequest => ({
+const mockRequest = (): LoadSurveyController.Request => ({
   accountId: 'any_id'
 })

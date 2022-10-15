@@ -3,7 +3,7 @@ import { InvalidParamError } from '$/presentation/errors'
 import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-helper'
 import { mockLoadSurveyById, mockLoadSurveyResult } from '$tests/presentation/mocks'
 import { LoadSurveyResultController } from '$/presentation/controllers/survey-result/load-survey-result/load-survey-result-controller'
-import { HttpRequest, LoadSurveyById, LoadSurveyResult } from '$/presentation/controllers/survey-result/load-survey-result/load-survey-result-protocols'
+import { LoadSurveyById, LoadSurveyResult } from '$/presentation/controllers/survey-result/load-survey-result/load-survey-result-protocols'
 import MockDate from 'mockdate'
 
 describe('LoadSurveyResultController', () => {
@@ -54,10 +54,8 @@ describe('LoadSurveyResultController', () => {
   })
 })
 
-const mockRequest = (): HttpRequest => ({
-  params: {
-    surveyId: 'any_survey_id'
-  },
+const mockRequest = (): LoadSurveyResultController.Request => ({
+  surveyId: 'any_survey_id',
   accountId: 'any_account_id'
 })
 

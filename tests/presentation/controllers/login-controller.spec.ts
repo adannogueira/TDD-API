@@ -2,7 +2,6 @@ import { MissingParamError } from '$/presentation/errors'
 import { badRequest, ok, serverError, unauthorized } from '$/presentation/helpers/http/http-helper'
 import { mockValidation, mockPasswordAuthentication } from '$tests/presentation/mocks'
 import {
-  HttpRequest,
   PasswordAuthentication,
   Validation
 } from '$/presentation/controllers/user/login/login-controller-protocols'
@@ -49,7 +48,7 @@ describe('Login Controller', () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockRequest())
-    expect(validateSpy).toHaveBeenCalledWith(mockRequest().body)
+    expect(validateSpy).toHaveBeenCalledWith(mockRequest())
   })
 
   test('Should return 400 if Validation throws', async () => {
@@ -61,11 +60,9 @@ describe('Login Controller', () => {
   })
 })
 
-const mockRequest = (): HttpRequest => ({
-  body: {
-    email: 'any_email@mail.com',
-    password: 'any_password'
-  }
+const mockRequest = (): LoginController.Request => ({
+  email: 'any_email@mail.com',
+  password: 'any_password'
 })
 
 type SutTypes = {

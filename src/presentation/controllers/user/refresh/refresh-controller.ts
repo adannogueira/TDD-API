@@ -2,7 +2,6 @@ import { AuthExpiredError } from '../../../errors'
 import { ok, serverError, unauthorized } from '../../../helpers/http/http-helper'
 import {
   Controller,
-  HttpRequest,
   LoadAccountByRefreshToken,
   TokenAuthentication
 } from './refresh-controller-protocols'
@@ -13,9 +12,8 @@ export class RefreshController implements Controller {
     private readonly tokenAuthentication: TokenAuthentication
   ) {}
 
-  async handle (httpRequest: HttpRequest): Promise<any> {
+  async handle ({ refreshToken }: RefreshController.Request): Promise<any> {
     try {
-      const { refreshToken } = httpRequest.body
       const account = await this.loadAccountByRefreshToken.load(refreshToken)
       if (!account) return unauthorized()
       const authenticationModel = await this.tokenAuthentication.authByAccount(account)
@@ -25,5 +23,11 @@ export class RefreshController implements Controller {
         ? unauthorized()
         : serverError(error)
     }
+  }
+}
+
+export namespace RefreshController {
+  export type Request = {
+    refreshToken: string
   }
 }

@@ -2,7 +2,7 @@ import { AccessDeniedError, AuthExpiredError } from '$/presentation/errors'
 import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-helper'
 import { mockLoadAccountByAccessToken } from '$tests/presentation/mocks'
 import { AuthMiddleware } from '$/presentation/middlewares/auth/auth-middleware'
-import { LoadAccountByAccessToken, HttpRequest } from '$/presentation/middlewares/auth/auth-middleware-protocols'
+import { LoadAccountByAccessToken } from '$/presentation/middlewares/auth/auth-middleware-protocols'
 
 describe('Auth Middleware', () => {
   test('Should return 403 if no x-access-token exists in headers', async () => {
@@ -56,10 +56,8 @@ type SutTypes = {
   loadAccountByAccessTokenStub: LoadAccountByAccessToken
 }
 
-const mockRequest = (): HttpRequest => ({
-  headers: {
-    'x-access-token': 'any_token'
-  }
+const mockRequest = (): AuthMiddleware.Request => ({
+  accessToken: 'any_token'
 })
 
 const makeSut = (role?: string): SutTypes => {

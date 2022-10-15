@@ -3,7 +3,6 @@ import { badRequest, forbidden, ok, serverError } from '$/presentation/helpers/h
 import { mockAddAccount, mockPasswordAuthentication, mockValidation } from '$tests/presentation/mocks'
 import {
   AddAccount,
-  HttpRequest,
   Validation,
   PasswordAuthentication
 } from '$/presentation/controllers/user/signup/signup-controller-protocols'
@@ -51,7 +50,7 @@ describe('SignUp Controller', () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockRequest())
-    expect(validateSpy).toHaveBeenCalledWith(mockRequest().body)
+    expect(validateSpy).toHaveBeenCalledWith(mockRequest())
   })
 
   test('Should return 400 if Validation throws', async () => {
@@ -81,13 +80,11 @@ describe('SignUp Controller', () => {
   })
 })
 
-const mockRequest = (): HttpRequest => ({
-  body: {
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password',
-    passwordConfirmation: 'any_password'
-  }
+const mockRequest = (): SignUpController.Request => ({
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'any_password',
+  passwordConfirmation: 'any_password'
 })
 
 type SutTypes = {

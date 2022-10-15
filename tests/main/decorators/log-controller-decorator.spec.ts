@@ -2,7 +2,7 @@ import { LogErrorRepository } from '$/data/protocols/db/log/log-error-repository
 import { mockLogErrorRepositoryStub } from '$tests/data/mocks'
 import { mockAccount } from '$tests/domain/mocks'
 import { ok, serverError } from '$/presentation/helpers/http/http-helper'
-import { Controller, HttpRequest, HttpResponse } from '$/presentation/protocols'
+import { Controller, HttpResponse } from '$/presentation/protocols'
 import { mockController } from '$/../tests/presentation/mocks'
 import { LogControllerDecorator } from '$/main/decorators/log-controller-decorator'
 
@@ -30,13 +30,11 @@ describe('LogControllerDecorator', () => {
   })
 })
 
-const mockRequest = (): HttpRequest => ({
-  body: {
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password',
-    passwordConfirmation: 'any_password'
-  }
+const mockRequest = (): any => ({
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'any_password',
+  passwordConfirmation: 'any_password'
 })
 
 const mockServerError = (): HttpResponse => {

@@ -2,7 +2,7 @@ import { mockAccessDecrypter } from '$tests/data/mocks'
 import { AuthExpiredError } from '$/presentation/errors'
 import { ok, serverError, unauthorized } from '$/presentation/helpers/http/http-helper'
 import { RefreshMiddleware } from '$/presentation/middlewares/refresh/refresh-middleware'
-import { HttpRequest, AccessDecrypter } from '$/presentation/middlewares/refresh/refresh-middleware-protocols'
+import { AccessDecrypter } from '$/presentation/middlewares/refresh/refresh-middleware-protocols'
 
 describe('Refresh Middleware', () => {
   test('Should return 401 if no token exists in headers', async () => {
@@ -14,9 +14,7 @@ describe('Refresh Middleware', () => {
   test('Should return 401 if no x-access-token exists in headers', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({
-      headers: {
-        'x-refresh-token': 'any_refresh_token'
-      }
+      refreshToken: 'any_refresh_token'
     })
     expect(httpResponse).toEqual(unauthorized())
   })
@@ -24,9 +22,7 @@ describe('Refresh Middleware', () => {
   test('Should return 401 if no x-refresh-token exists in headers', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({
-      headers: {
-        'x-access-token': 'any_access_token'
-      }
+      accessToken: 'any_access_token'
     })
     expect(httpResponse).toEqual(unauthorized())
   })
@@ -54,11 +50,9 @@ describe('Refresh Middleware', () => {
   })
 })
 
-const mockRequest = (): HttpRequest => ({
-  headers: {
-    'x-access-token': 'any_access_token',
-    'x-refresh-token': 'any_refresh_token'
-  }
+const mockRequest = (): RefreshMiddleware.Request => ({
+  accessToken: 'any_access_token',
+  refreshToken: 'any_refresh_token'
 })
 
 type SutTypes = {

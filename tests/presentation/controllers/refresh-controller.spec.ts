@@ -3,7 +3,6 @@ import { AuthExpiredError } from '$/presentation/errors'
 import { ok, serverError, unauthorized } from '$/presentation/helpers/http/http-helper'
 import { mockLoadAccountByRefreshToken, mockTokenAuthentication } from '$tests/presentation/mocks'
 import {
-  HttpRequest,
   LoadAccountByRefreshToken,
   TokenAuthentication
 } from '$/presentation/controllers/user/refresh/refresh-controller-protocols'
@@ -69,10 +68,8 @@ describe('Refresh Controller', () => {
   })
 })
 
-const mockRequest = (): HttpRequest => ({
-  body: {
-    refreshToken: 'any_token'
-  }
+const mockRequest = (): RefreshController.Request => ({
+  refreshToken: 'any_token'
 })
 
 type SutTypes = {

@@ -4,7 +4,6 @@ import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-hel
 import { mockLoadSurveyById, mockSaveSurveyResult } from '$tests/presentation/mocks'
 import { SaveSurveyResultController } from '$/presentation/controllers/survey-result/save-survey-result/save-survey-result-controller'
 import {
-  HttpRequest,
   LoadSurveyById,
   SaveSurveyResult
 } from '$/presentation/controllers/survey-result/save-survey-result/save-survey-result-protocols'
@@ -39,8 +38,9 @@ describe('SaveSurveyResultController', () => {
   test('Should return 403 if an invalid answer is provided', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({
-      body: { answer: 'invalid_answer' },
-      params: { surveyId: 'any_id' }
+      answer: 'invalid_answer',
+      surveyId: 'any_id',
+      accountId: 'any_account_id'
     })
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('answer')))
   })
@@ -88,12 +88,8 @@ const makeSut = (): SutTypes => {
   return { sut, loadSurveyByIdStub, saveSurveyResultStub }
 }
 
-const mockRequest = (): HttpRequest => ({
-  params: {
-    surveyId: 'any_id'
-  },
-  body: {
-    answer: 'any_answer',
-    accountId: 'any_account_id'
-  }
+const mockRequest = (): SaveSurveyResultController.Request => ({
+  surveyId: 'any_id',
+  answer: 'any_answer',
+  accountId: 'any_account_id'
 })
