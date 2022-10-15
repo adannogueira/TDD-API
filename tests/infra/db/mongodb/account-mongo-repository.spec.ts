@@ -152,6 +152,21 @@ describe('Account Mongodb Repository', () => {
       expect(account.password).toBe('any_password')
     })
   })
+
+  describe('checkByEmail()', () => {
+    test('Should return true on load success', async () => {
+      const sut = makeSut()
+      await accountCollection.insertOne(mockAccountData())
+      const account = await sut.checkByEmail('any_email@mail.com')
+      expect(account).toBe(true)
+    })
+
+    test('Should return false if checkByEmail fails', async () => {
+      const sut = makeSut()
+      const account = await sut.checkByEmail('any_email@mail.com')
+      expect(account).toBe(false)
+    })
+  })
 })
 
 let accountCollection: Collection
