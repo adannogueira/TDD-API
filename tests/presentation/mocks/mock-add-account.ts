@@ -1,11 +1,9 @@
-import { AccountModel } from '$/domain/models/account'
-import { AddAccount, AddAccountDTO } from '$/domain/usecases/account/add-account'
-import { mockAccount } from '$tests/domain/mocks'
+import { AddAccount } from '$/domain/usecases/account/add-account'
 
 export const mockAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (account: AddAccountDTO): Promise<AccountModel> {
-      return await new Promise(resolve => resolve(mockAccount()))
+    async add (account: AddAccount.Params): Promise<AddAccount.Result> {
+      return await new Promise(resolve => resolve(true))
     }
   }
   return new AddAccountStub()

@@ -3,9 +3,7 @@ import { LoadAccountByAccessTokenRepository } from '$/data/protocols/db/account/
 import { LoadAccountByEmailRepository } from '$/data/protocols/db/account/load-account-by-email-repository'
 import { LoadAccountByRefreshTokenIdRepository } from '$/data/protocols/db/account/load-account-by-refresh-token-id-repository'
 import { UpdateAccessTokenRepository } from '$/data/protocols/db/account/update-access-token-repository'
-import { UpdateRefreshTokenRepository } from '$/data/usecases/authentication/db-authentication-protocols'
-import { AccountModel } from '$/domain/models/account'
-import { AddAccountDTO } from '$/domain/usecases/account/add-account'
+import { AccountModel, UpdateRefreshTokenRepository } from '$/data/usecases/authentication/db-authentication-protocols'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { ObjectId } from 'mongodb'
 
@@ -16,11 +14,11 @@ export class AccountMongoRepository implements
   LoadAccountByAccessTokenRepository,
   UpdateRefreshTokenRepository,
   LoadAccountByRefreshTokenIdRepository {
-  async add (accountData: AddAccountDTO): Promise<AccountModel> {
+  async add (accountData: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = await accountCollection.insertOne(accountData)
     const account = await accountCollection.findOne(result.insertedId)
-    return account && MongoHelper.map<AccountModel>(account)
+    return Boolean(account)
   }
 
   async loadByEmail (email: string): Promise<AccountModel> {

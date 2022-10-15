@@ -1,5 +1,5 @@
 import { AccountModel } from '$/domain/models/account'
-import { AddAccountDTO } from '$/domain/usecases/account/add-account'
+import { AddAccount } from '$/domain/usecases/account/add-account'
 import { AuthenticationDTO } from '../../../src/domain/usecases/account/password-authentication'
 
 export const mockAccount = (): AccountModel => ({
@@ -9,7 +9,7 @@ export const mockAccount = (): AccountModel => ({
   password: 'hashed_password'
 })
 
-export const mockAccountData = (): AddAccountDTO => ({
+export const mockAccountData = (): AddAccount.Params => ({
   name: 'any_name',
   email: 'any_email@mail.com',
   password: 'any_password'

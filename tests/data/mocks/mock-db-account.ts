@@ -1,14 +1,14 @@
 import { AddAccountRepository } from '$/data/protocols/db/account/add-account-repository'
 import { LoadAccountByAccessTokenRepository } from '$/data/protocols/db/account/load-account-by-access-token-repository'
 import { LoadAccountByRefreshTokenIdRepository } from '$/data/protocols/db/account/load-account-by-refresh-token-id-repository'
-import { AddAccountDTO, LoadAccountByEmailRepository } from '$/data/usecases/account/add-account/db-add-account-protocols'
+import { LoadAccountByEmailRepository } from '$/data/usecases/account/add-account/db-add-account-protocols'
 import { AccountModel, UpdateAccessTokenRepository, UpdateRefreshTokenRepository } from '$/data/usecases/authentication/db-authentication-protocols'
 import { mockAccount } from '$tests/domain/mocks'
 
 export const mockAddAccountRepositoryStub = (): AddAccountRepository => {
   class AddAccountRepositoryStub implements AddAccountRepository {
-    async add (accountData: AddAccountDTO): Promise<AccountModel> {
-      return await new Promise(resolve => resolve(mockAccount()))
+    async add (accountData: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
+      return await new Promise(resolve => resolve(true))
     }
   }
   return new AddAccountRepositoryStub()

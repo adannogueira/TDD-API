@@ -1,6 +1,10 @@
-import { AccountModel } from '$/domain/models/account'
-import { AddAccountDTO } from '$/domain/usecases/account/add-account'
+import { AddAccount } from '$/data/usecases/account/add-account/db-add-account-protocols'
 
 export interface AddAccountRepository {
-  add: (accountData: AddAccountDTO) => Promise<AccountModel>
+  add: (accountData: AddAccount.Params) => Promise<AddAccountRepository.Result>
+}
+
+export namespace AddAccountRepository {
+  export type Params = AddAccount.Params
+  export type Result = AddAccount.Result
 }
