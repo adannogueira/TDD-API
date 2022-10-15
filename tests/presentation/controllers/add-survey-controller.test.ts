@@ -1,7 +1,7 @@
 import { badRequest, noContent, serverError } from '$/presentation/helpers/http/http-helper'
-import { mockAddSurvey, mockValidation } from '$/presentation/test'
-import { AddSurveyController } from './add-survey-controller'
-import { AddSurvey, HttpRequest, Validation } from './add-survey-controller-protocols'
+import { mockAddSurvey, mockValidation } from '$tests/presentation/mocks'
+import { AddSurveyController } from '$/presentation/controllers/survey/add-survey/add-survey-controller'
+import { AddSurvey, HttpRequest, Validation } from '$/presentation/controllers/survey/add-survey/add-survey-controller-protocols'
 import MockDate from 'mockdate'
 
 describe('AddSurvey Controller', () => {

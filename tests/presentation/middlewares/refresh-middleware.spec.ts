@@ -1,8 +1,8 @@
-import { mockAccessDecrypter } from '$/data/test'
+import { mockAccessDecrypter } from '$tests/data/mocks'
 import { AuthExpiredError } from '$/presentation/errors'
 import { ok, serverError, unauthorized } from '$/presentation/helpers/http/http-helper'
-import { RefreshMiddleware } from './refresh-middleware'
-import { HttpRequest, AccessDecrypter } from './refresh-middleware-protocols'
+import { RefreshMiddleware } from '$/presentation/middlewares/refresh/refresh-middleware'
+import { HttpRequest, AccessDecrypter } from '$/presentation/middlewares/refresh/refresh-middleware-protocols'
 
 describe('Refresh Middleware', () => {
   test('Should return 401 if no token exists in headers', async () => {

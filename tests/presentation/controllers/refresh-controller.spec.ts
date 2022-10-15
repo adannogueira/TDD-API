@@ -1,13 +1,13 @@
 import { mockAccount } from '$tests/domain/mocks'
 import { AuthExpiredError } from '$/presentation/errors'
 import { ok, serverError, unauthorized } from '$/presentation/helpers/http/http-helper'
-import { mockLoadAccountByRefreshToken, mockTokenAuthentication } from '$/presentation/test'
+import { mockLoadAccountByRefreshToken, mockTokenAuthentication } from '$tests/presentation/mocks'
 import {
   HttpRequest,
   LoadAccountByRefreshToken,
   TokenAuthentication
-} from './refresh-controller-protocols'
-import { RefreshController } from './refresh-controller'
+} from '$/presentation/controllers/user/refresh/refresh-controller-protocols'
+import { RefreshController } from '$/presentation/controllers/user/refresh/refresh-controller'
 
 describe('Refresh Controller', () => {
   test('Should call LoadAccountByRefreshToken with correct values', async () => {

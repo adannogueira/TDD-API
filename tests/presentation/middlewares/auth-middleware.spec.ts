@@ -1,8 +1,8 @@
 import { AccessDeniedError, AuthExpiredError } from '$/presentation/errors'
 import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-helper'
-import { mockLoadAccountByAccessToken } from '$/presentation/test'
-import { AuthMiddleware } from './auth-middleware'
-import { LoadAccountByAccessToken, HttpRequest } from './auth-middleware-protocols'
+import { mockLoadAccountByAccessToken } from '$tests/presentation/mocks'
+import { AuthMiddleware } from '$/presentation/middlewares/auth/auth-middleware'
+import { LoadAccountByAccessToken, HttpRequest } from '$/presentation/middlewares/auth/auth-middleware-protocols'
 
 describe('Auth Middleware', () => {
   test('Should return 403 if no x-access-token exists in headers', async () => {

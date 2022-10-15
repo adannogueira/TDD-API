@@ -1,12 +1,12 @@
 import { MissingParamError } from '$/presentation/errors'
 import { badRequest, ok, serverError, unauthorized } from '$/presentation/helpers/http/http-helper'
-import { mockValidation, mockPasswordAuthentication } from '$/presentation/test'
+import { mockValidation, mockPasswordAuthentication } from '$tests/presentation/mocks'
 import {
   HttpRequest,
   PasswordAuthentication,
   Validation
-} from './login-controller-protocols'
-import { LoginController } from './login-controller'
+} from '$/presentation/controllers/user/login/login-controller-protocols'
+import { LoginController } from '$/presentation/controllers/user/login/login-controller'
 
 describe('Login Controller', () => {
   test('Should return 500 if Authentication throws', async () => {

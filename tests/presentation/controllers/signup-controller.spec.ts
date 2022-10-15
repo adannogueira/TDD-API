@@ -1,13 +1,13 @@
 import { EmailInUseError, MissingParamError, ServerError } from '$/presentation/errors'
 import { badRequest, forbidden, ok, serverError } from '$/presentation/helpers/http/http-helper'
-import { mockAddAccount, mockPasswordAuthentication, mockValidation } from '$/presentation/test'
+import { mockAddAccount, mockPasswordAuthentication, mockValidation } from '$tests/presentation/mocks'
 import {
   AddAccount,
   HttpRequest,
   Validation,
   PasswordAuthentication
-} from './signup-controller-protocols'
-import { SignUpController } from './signup-controller'
+} from '$/presentation/controllers/user/signup/signup-controller-protocols'
+import { SignUpController } from '$/presentation/controllers/user/signup/signup-controller'
 
 describe('SignUp Controller', () => {
   test('Should call AddAccount with correct values', async () => {

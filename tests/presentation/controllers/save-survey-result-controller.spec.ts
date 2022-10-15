@@ -1,13 +1,13 @@
 import { mockSurveyResult } from '$tests/domain/mocks'
 import { InvalidParamError } from '$/presentation/errors'
 import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-helper'
-import { mockLoadSurveyById, mockSaveSurveyResult } from '$/presentation/test'
-import { SaveSurveyResultController } from './save-survey-result-controller'
+import { mockLoadSurveyById, mockSaveSurveyResult } from '$tests/presentation/mocks'
+import { SaveSurveyResultController } from '$/presentation/controllers/survey-result/save-survey-result/save-survey-result-controller'
 import {
   HttpRequest,
   LoadSurveyById,
   SaveSurveyResult
-} from './save-survey-result-protocols'
+} from '$/presentation/controllers/survey-result/save-survey-result/save-survey-result-protocols'
 import MockDate from 'mockdate'
 
 describe('SaveSurveyResultController', () => {
