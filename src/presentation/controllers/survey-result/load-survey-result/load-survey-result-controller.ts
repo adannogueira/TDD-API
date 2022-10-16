@@ -3,19 +3,19 @@ import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-hel
 import {
   Controller,
   HttpResponse,
-  LoadSurveyById,
+  CheckSurveyById,
   LoadSurveyResult
 } from './load-survey-result-protocols'
 
 export class LoadSurveyResultController implements Controller {
   constructor (
-    private readonly loadSurveyById: LoadSurveyById,
+    private readonly checkSurveyById: CheckSurveyById,
     private readonly loadSurveyResult: LoadSurveyResult
   ) {}
 
   async handle ({ surveyId, accountId }: LoadSurveyResultController.Request): Promise<HttpResponse> {
     try {
-      const survey = await this.loadSurveyById.loadById(surveyId)
+      const survey = await this.checkSurveyById.checkById(surveyId)
       if (!survey) return forbidden(new InvalidParamError('surveyId'))
       const surveyResult = await this.loadSurveyResult.load(surveyId, accountId)
       return ok(surveyResult)

@@ -76,6 +76,22 @@ describe('Survey Mongodb Repository', () => {
       expect(survey).toBeNull()
     })
   })
+
+  describe('checkById()', () => {
+    test('Should return true on success', async () => {
+      const res = await surveyCollection.insertOne(mockSurveyData())
+      const id = res.insertedId.toString()
+      const sut = makeSut()
+      const survey = await sut.checkById(id)
+      expect(survey).toBe(true)
+    })
+
+    test('Should return false when id is not a valid ObjectId', async () => {
+      const sut = makeSut()
+      const survey = await sut.checkById('invalid')
+      expect(survey).toBe(false)
+    })
+  })
 })
 
 let accountCollection: Collection
