@@ -28,7 +28,7 @@ export class SurveyMongoRepository implements
     })
   }
 
-  async loadById (id: string): Promise<SurveyModel> {
+  async loadById (id: string): Promise<LoadSurveyByIdRepository.Result> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
     try {
       const survey = await surveyCollection.findOne({ _id: new ObjectId(id) })
