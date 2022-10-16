@@ -7,7 +7,7 @@ export default gql`
 
   type Account {
     accessToken: String!
-    RefreshToken: String!
+    refreshToken: String!
     name: String!
   }
 `
