@@ -1,14 +1,13 @@
-import { SurveyResultModel } from '$/domain/models/survey-result'
-import { SaveSurveyResultDTO } from '$/domain/usecases/survey-result/save-survey-result'
+import { SaveSurveyResult } from '$/domain/usecases/survey-result/save-survey-result'
 
-export const mockSurveyResultData = (): SaveSurveyResultDTO => ({
+export const mockSurveyResultData = (): SaveSurveyResult.Params => ({
   accountId: 'any_account_id',
   surveyId: 'any_survey_id',
   answer: 'any_answer',
   date: new Date()
 })
 
-export const mockSurveyResult = (): SurveyResultModel => ({
+export const mockSurveyResult = (): SaveSurveyResult.Result => ({
   surveyId: 'any_survey_id',
   question: 'any_question',
   answers: [{
