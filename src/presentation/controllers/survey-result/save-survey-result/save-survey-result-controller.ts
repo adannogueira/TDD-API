@@ -3,13 +3,13 @@ import { forbidden, ok, serverError } from '$/presentation/helpers/http/http-hel
 import {
   Controller,
   HttpResponse,
-  LoadSurveyById,
+  LoadAnswersBySurveyId,
   SaveSurveyResult
 } from './save-survey-result-protocols'
 
 export class SaveSurveyResultController implements Controller {
   constructor (
-    private readonly loadSurveyById: LoadSurveyById,
+    private readonly loadAnswersBySurveyId: LoadAnswersBySurveyId,
     private readonly saveSurveyResult: SaveSurveyResult
   ) {}
 
@@ -19,13 +19,12 @@ export class SaveSurveyResultController implements Controller {
     surveyId
   }: SaveSurveyResultController.Request): Promise<HttpResponse> {
     try {
-      const survey = await this.loadSurveyById.loadById(surveyId)
-      if (!survey) return forbidden(new InvalidParamError('surveyId'))
-      const answers = survey.answers.map(answer => answer.answer)
+      const answers = await this.loadAnswersBySurveyId.loadAnswers(surveyId)
+      if (!answers.length) return forbidden(new InvalidParamError('surveyId'))
       if (!answers.includes(answer)) return forbidden(new InvalidParamError('answer'))
       const surveyResult = await this.saveSurveyResult.save({
         accountId,
-        surveyId: survey.id,
+        surveyId,
         answer,
         date: new Date()
       })
