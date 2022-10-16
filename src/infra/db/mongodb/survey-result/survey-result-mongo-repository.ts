@@ -4,7 +4,7 @@ import { SurveyAnswerModel, SurveyResultModel } from '$/domain/models/survey-res
 import { SaveSurveyResultDTO } from '$/domain/usecases/survey-result/save-survey-result'
 import { MongoHelper, QueryBuilder } from '../helpers'
 import { ObjectId } from 'mongodb'
-import { SurveyModel } from '../../../../domain/models/survey'
+import { SurveyModel } from '$/domain/models/survey'
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultRepository {
   async save ({ surveyId, accountId, answer, date }: SaveSurveyResultDTO): Promise<void> {
@@ -19,7 +19,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
     })
   }
 
-  async loadBySurveyId (surveyId: string, accountId: string): Promise<SurveyResultModel> {
+  async loadBySurveyId (surveyId: string, accountId: string): Promise<LoadSurveyResultRepository.Result> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     const [survey, surveyResults]: any[] = await Promise.all([
@@ -35,7 +35,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
     }
   }
 
-  async loadBySurveyIdDeprecated (surveyId: string): Promise<SurveyResultModel> {
+  async loadBySurveyIdDeprecated (surveyId: string): Promise<LoadSurveyResultRepository.Result> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     const query = new QueryBuilder()
       .match({
