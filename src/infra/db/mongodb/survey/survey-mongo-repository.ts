@@ -1,10 +1,10 @@
 import { LoadSurveyRepository } from '$/data/protocols/db/survey/load-survey-repository'
 import { AddSurveyRepository } from '$/data/usecases/survey/add-survey/add-survey-protocols'
 import { SurveyModel } from '$/domain/models/survey'
-import { LoadSurveyByIdRepository } from '$/data/usecases/survey/load-survey-by-id/load-survey-by-id-protocols'
+import { LoadSurveyByIdRepository } from '$/data/protocols/db/survey/load-survey-by-id-repository'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { ObjectId } from 'mongodb'
-import { CheckSurveyByIdRepository } from '../../../../data/usecases/survey/check-survey-by-id/check-survey-by-id-protocols'
+import { CheckSurveyByIdRepository } from '$/data/protocols/db/survey/check-survey-by-id-repository'
 
 export class SurveyMongoRepository implements
   AddSurveyRepository,
@@ -16,7 +16,7 @@ export class SurveyMongoRepository implements
     await surveyCollection.insertOne(surveyData)
   }
 
-  async loadAll (accountId: string): Promise<SurveyModel[]> {
+  async loadAll (accountId: string): Promise<LoadSurveyRepository.Result> {
     const surveyCollection = await MongoHelper.getCollection('surveys')
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     const [surveys, surveyResults] = await Promise.all([
