@@ -1,6 +1,6 @@
 import resolvers from '$/main/graphql/resolvers'
 import typeDefs from '$/main/graphql/type-defs'
-import { authDirectiveTransformer } from '../graphql/directives'
+import { authDirectiveTransformer } from '../directives'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { ApolloServer } from 'apollo-server-express'
 import { GraphQLError } from 'graphql'

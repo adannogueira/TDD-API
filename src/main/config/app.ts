@@ -1,9 +1,9 @@
-import setupSwagger from './swagger'
-import setupMiddlewares from './middlewares'
-import setupStaticFiles from './static-files'
-import setupRoutes from './routes'
+import setupMiddlewares from '$/main/config/middlewares'
+import setupRoutes from '$/main/config/routes'
+import setupStaticFiles from '$/main/config/static-files'
+import setupSwagger from '$/main/config/swagger'
+import { setupApolloServer } from '$/main/graphql/apollo/apollo-server'
 import express, { Express } from 'express'
-import { setupApolloServer } from './apollo-server'
 
 export const setupApp = async (): Promise<Express> => {
   const app = express()
