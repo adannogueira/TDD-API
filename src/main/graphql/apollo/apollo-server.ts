@@ -27,6 +27,7 @@ const schema = authDirectiveTransformer(
 
 export const setupApolloServer = (): ApolloServer => new ApolloServer({
   schema,
+  context: ({ req }) => ({ req }),
   plugins: [{
     requestDidStart: async () => ({
       willSendResponse: async ({ response, errors }) => handleErrors(response, errors)
