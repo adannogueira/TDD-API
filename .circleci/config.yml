@@ -12,6 +12,7 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
+      - run: sudo apt-get update && sudo apt-get install libssl-dev=1.1
       - run: yarn test:coveralls
 
 workflows:
