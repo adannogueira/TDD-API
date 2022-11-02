@@ -1,18 +1,18 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@5.0.2
+  node: circleci/node@5.0.3
 
 jobs:
   build:
     executor:
       name: node/default
-      tag: '16.18'
+      tag: '16.15.1'
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
-      - run: sudo apt-get update && sudo apt-get install libssl-dev=1.1
+      - run: sudo apt-get update && sudo apt-get install libssl=1.1
       - run: yarn test:coveralls
 
 workflows:
