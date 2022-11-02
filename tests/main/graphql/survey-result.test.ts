@@ -82,6 +82,55 @@ describe('SurveyResult GraphQL', () => {
       expect(response.errors[0].message).toBe('Access Denied')
     })
   })
+
+  describe('SaveSurveyResult Mutation', () => {
+    const query = `
+      mutation saveSurveyResult ($surveyId: String!, $answer: String!) {
+        saveSurveyResult (surveyId: $surveyId, answer: $answer) {
+          question
+          answers {
+            answer
+            count
+            percent
+            isCurrentAccountAnswer
+          }
+          date
+        }
+      }
+    `
+    it('Should return surveyResults', async () => {
+      const token = await makeUserToken()
+      const now = new Date()
+      const survey = await surveyCollection.insertMany([{
+        question: 'any_question',
+        answers: [{ answer: 'First' }, { answer: 'Second' }],
+        date: now
+      }])
+      const response = await apolloServer.executeOperation({
+        query,
+        variables: {
+          surveyId: survey.insertedIds[0].toString(),
+          answer: 'First'
+        }
+      }, {
+        req: { headers: { 'x-access-token': token } }
+      } as any)
+      const { saveSurveyResult } = response.data
+      expect(saveSurveyResult.question).toBe('any_question')
+      expect(saveSurveyResult.date).toStrictEqual(now)
+      expect(saveSurveyResult.answers).toEqual([{
+        answer: 'First',
+        count: 1,
+        percent: 100,
+        isCurrentAccountAnswer: true
+      }, {
+        answer: 'Second',
+        count: 0,
+        percent: 0,
+        isCurrentAccountAnswer: false
+      }])
+    })
+  })
 })
 
 const makeUserToken = async (
