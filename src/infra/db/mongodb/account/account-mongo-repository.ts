@@ -4,10 +4,9 @@ import { LoadAccountByEmailRepository } from '$/data/protocols/db/account/load-a
 import { LoadAccountByRefreshTokenIdRepository } from '$/data/protocols/db/account/load-account-by-refresh-token-id-repository'
 import { UpdateAccessTokenRepository } from '$/data/protocols/db/account/update-access-token-repository'
 import { UpdateRefreshTokenRepository } from '$/data/usecases/authentication/db-authentication-protocols'
-import { AccountModel } from '$/domain/models/account'
-import { AddAccountDTO } from '$/domain/usecases/account/add-account'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { ObjectId } from 'mongodb'
+import { CheckAccountByEmailRepository } from '../../../../data/protocols/db/account/check-account-by-email-repository'
 
 export class AccountMongoRepository implements
   AddAccountRepository,
@@ -15,18 +14,27 @@ export class AccountMongoRepository implements
   UpdateAccessTokenRepository,
   LoadAccountByAccessTokenRepository,
   UpdateRefreshTokenRepository,
-  LoadAccountByRefreshTokenIdRepository {
-  async add (accountData: AddAccountDTO): Promise<AccountModel> {
+  LoadAccountByRefreshTokenIdRepository,
+  CheckAccountByEmailRepository {
+  async add (accountData: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = await accountCollection.insertOne(accountData)
     const account = await accountCollection.findOne(result.insertedId)
-    return account && MongoHelper.map<AccountModel>(account)
+    return Boolean(account)
   }
 
-  async loadByEmail (email: string): Promise<AccountModel> {
+  async loadByEmail (email: string): Promise<LoadAccountByEmailRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
-    const account = await accountCollection.findOne({ email })
-    return account && MongoHelper.map<AccountModel>(account)
+    const account = await accountCollection.findOne({
+      email
+    }, {
+      projection: {
+        _id: 1,
+        name: 1,
+        password: 1
+      }
+    })
+    return account && MongoHelper.map<LoadAccountByEmailRepository.Result>(account)
   }
 
   async updateAccessToken (id: string, token: string): Promise<any> {
@@ -38,13 +46,15 @@ export class AccountMongoRepository implements
     })
   }
 
-  async loadByAccessToken (token: string, role?: string): Promise<AccountModel> {
+  async loadByAccessToken (
+    { accessToken, role }: LoadAccountByAccessTokenRepository.Params
+  ): Promise<LoadAccountByAccessTokenRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne({
-      accessToken: token,
+      accessToken,
       $or: [{ role }, { role: 'admin' }]
     })
-    return account && MongoHelper.map<AccountModel>(account)
+    return account && MongoHelper.map<LoadAccountByAccessTokenRepository.Result>(account)
   }
 
   async updateRefreshToken (id: string, tokenId: string): Promise<any> {
@@ -54,11 +64,23 @@ export class AccountMongoRepository implements
     }, { $set: { tokenId } })
   }
 
-  async loadByRefreshTokenId (tokenId: string): Promise<AccountModel> {
+  async loadByRefreshTokenId (tokenId: string): Promise<LoadAccountByRefreshTokenIdRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne({
       tokenId
     })
-    return account && MongoHelper.map<AccountModel>(account)
+    return account && MongoHelper.map<LoadAccountByRefreshTokenIdRepository.Result>(account)
+  }
+
+  async checkByEmail (email: string): Promise<CheckAccountByEmailRepository.Result> {
+    const accountCollection = await MongoHelper.getCollection('accounts')
+    const account = await accountCollection.findOne({
+      email
+    }, {
+      projection: {
+        _id: 1
+      }
+    })
+    return Boolean(account)
   }
 }

@@ -1,5 +1,4 @@
 import {
-  AccountModel,
   LoadAccountByRefreshToken,
   LoadAccountByRefreshTokenIdRepository,
   RefreshDecrypter
@@ -11,7 +10,7 @@ export class DbLoadAccountByRefreshToken implements LoadAccountByRefreshToken {
     private readonly loadAccountByRefreshTokenIdRepository: LoadAccountByRefreshTokenIdRepository
   ) {}
 
-  async load (refreshToken: string): Promise<AccountModel> {
+  async load (refreshToken: string): Promise<LoadAccountByRefreshToken.Result> {
     const tokenId = await this.decrypter.decryptRefresh(refreshToken)
     if (tokenId) {
       const account = await this.loadAccountByRefreshTokenIdRepository.loadByRefreshTokenId(tokenId)

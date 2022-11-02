@@ -1,16 +1,13 @@
 import { TokenAuthentication } from '$/domain/usecases/account/token-authentication'
 import {
   PasswordAuthentication,
-  AuthenticationDTO,
   HashComparer,
   AccessEncrypter,
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository,
   RefreshEncrypter,
   IdGenerator,
-  UpdateRefreshTokenRepository,
-  AccountModel,
-  AuthenticationModel
+  UpdateRefreshTokenRepository
 } from './db-authentication-protocols'
 
 export class DbAuthentication implements PasswordAuthentication, TokenAuthentication {
@@ -23,7 +20,9 @@ export class DbAuthentication implements PasswordAuthentication, TokenAuthentica
     private readonly idGenerator: IdGenerator
   ) {}
 
-  async authByPassword (authentication: AuthenticationDTO): Promise<AuthenticationModel> {
+  async authByPassword (
+    authentication: PasswordAuthentication.Params
+  ): Promise<PasswordAuthentication.Result> {
     const account = await this.loadAccountByEmailRepository.loadByEmail(authentication.email)
     if (account) {
       const isValid = await this.hashComparer.compare(authentication.password, account.password)
@@ -36,7 +35,9 @@ export class DbAuthentication implements PasswordAuthentication, TokenAuthentica
     return null
   }
 
-  async authByAccount (account: AccountModel): Promise<AuthenticationModel> {
+  async authByAccount (
+    account: TokenAuthentication.Params
+  ): Promise<TokenAuthentication.Result> {
     const accessToken = await this.getAccessToken(account.id)
     const refreshToken = await this.getRefreshToken(account.id)
     return { accessToken, refreshToken, name: account.name }
