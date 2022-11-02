@@ -87,5 +87,25 @@ describe('Account GraphQL', () => {
       expect(response.data.signup.refreshToken).toBeTruthy()
       expect(response.data.signup.name).toBe('John Doe')
     })
+
+    it('Should return Error when user already exists', async () => {
+      const password = await hash('123456', 12)
+      await accountCollection.insertOne({
+        name: 'John Doe',
+        email: 'john@gmail.com',
+        password
+      })
+      const response = await apolloServer.executeOperation({
+        query,
+        variables: {
+          name: 'John Doe',
+          email: 'john@gmail.com',
+          password: '123456',
+          passwordConfirmation: '123456'
+        }
+      })
+      expect(response.data).toBeFalsy()
+      expect(response.errors[0].message).toBe('The received email is already in use')
+    })
   })
 })
