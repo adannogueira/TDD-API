@@ -1,5 +1,6 @@
 [![Build Status](https://circleci.com/gh/adannogueira/TDD-API.svg?style=svg)](https://circleci.com/gh/adannogueira/TDD-API)
 [![Coverage Status](https://coveralls.io/repos/github/adannogueira/TDD-API/badge.svg?branch=main)](https://coveralls.io/github/adannogueira/TDD-API?branch=main)
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/summary/new_code?id=adannogueira_TDD-API)
 
 # **TDD-API**
 
