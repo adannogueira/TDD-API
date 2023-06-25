@@ -6,14 +6,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: ['18', '20']
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 18
       - run: yarn
       - run: yarn test:ci
   build:
@@ -33,4 +30,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: adannogueira/TDD-API:latest
+          tags: adannogueira/tdd-api:latest
