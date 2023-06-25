@@ -11,8 +11,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+          fetch-depth: 0
       - run: yarn
       - run: yarn test:ci
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   build:
     runs-on: ubuntu-latest
     steps:
